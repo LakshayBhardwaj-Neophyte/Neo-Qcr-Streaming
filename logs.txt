@@ -16,65 +16,15 @@ Connected to MongoDB database: neo-icr
 Initializing utils...
 ⚠️ Redis unavailable, falling back to in-memory: Error -2 connecting to redis:6379. Name or service not known.
 Orchestrator initialization completed successfully
-[PatchCropper] YOLO model loaded from src/models/yolo11m_patch_detector_classifier.pt
+[PatchCropper] CROP_MODEL_PATH not set — heuristic mode
 [SdkAPI] Loading YOLO classifier for WS stream quality gate...
-[Classifier] YOLOX Model loaded from /home/lakshya/Projects/NeoQcr/neoqcr-prod-instance2/Neo-Qcr-Streaming/src/YOLOX/best_ckpt.pth
-[SdkAPI] YOLO classifier ready
-Instrumenting FastAPI app for Prometheus...
-Instrumentation complete. /metrics endpoint is active.
-INFO:     Started server process [3968105]
-INFO:     Waiting for application startup.
-INFO:     Application startup complete.
-INFO:     Uvicorn running on http://0.0.0.0:4097 (Press CTRL+C to quit)
-INFO:     10.8.0.24:52918 - "WebSocket /ws/stream?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJ0ZXN0X3VzZXIiLCJpc3MiOiJ0cnVzdGVkLWlzc3VlciIsImF1ZCI6InZhbGlkLWF1ZGllbmNlIiwiaWF0IjoxNzg1ODM0NjY3LCJleHAiOjE3ODg0MjY2Njd9.W_7fkdLHTFaHZjjuN73NGZI6OPlJ6CCiz-Sf8Xl4tx8&image_name=S001_reliance_SDK-01_stream.jpg&ean_code=8906067021502&env_id=82836720260810005818&client_name=reliance&request_id=35443534gfdgbfdbd&capture_type=false&metadata_id=&is_recapture=false&x1=30&y1=514&x2=1050&y2=1406" [accepted]
-INFO:     connection open
-2026-08-09 19:33:22.006 | INFO     | tools.demo:inference:165 - Infer time: 0.5059s
-2026-08-09 19:33:22.110 | INFO     | tools.demo:inference:165 - Infer time: 0.0905s
-2026-08-09 19:33:22.142 | INFO     | tools.demo:inference:165 - Infer time: 0.0159s
-2026-08-09 19:33:22.169 | INFO     | tools.demo:inference:165 - Infer time: 0.0159s
-[WS /ws/stream] Session opened — env_id=82836720260810005818  client=reliance  request_id=35443534gfdgbfdbd  ean=8906067021502  max_duration=30s  save_frames=False
-[WS] Frame seq=1  ts=0.31s  detections=0  top=none  clean=False  consecutive_clean=0
-[WS] Frame seq=2  ts=0.83s  detections=1  top=real/clean  clean=True  consecutive_clean=1
-[WS] Frame seq=3  ts=0.94s  detections=1  top=real/clean  clean=True  consecutive_clean=2
-[WS] Frame seq=4  ts=0.97s  detections=1  top=real/clean  clean=True  consecutive_clean=3
-[WS] 3 consecutive clean frames — last clean seq=4  sending stop_stream
-
-[WS] === Session receive loop ended — 4 total frames, consecutive_clean=3 ===
-[WS] Using last clean frame: seq=4 — cropping patch
-[WS] Image encoded to JPEG: 33754 bytes
-[WS] POSTing to http://localhost:4097/process — image_name=S001_reliance_SDK-01_stream.jpg  ean=8906067021502  env=82836720260810005818  client=reliance
-[Image] (808, 225) (w,h)  mode=RGB
-[DEBUG token] len=213  segments=3  preview='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ'
-✅ Token is valid and passes all checklist tests.
-[/process] image=S001_reliance_SDK-01_stream.jpg  ean=8906067021502  env=82836720260810005818  capture_type=False  client=reliance
-[Mongo] Tenant set → client_name=reliance, db=neo-icr, metadata_col=metadata, env_col=environment
-user_id:reliance
-user_doc:{'_id': ObjectId('69e5e75bd0abb82417e0b1d3'), 'id': 'reliance', 'name': 'reliance', 'format_id': ['S004'], 'number': '7077516077', 'email': '', 'status': True, 'role': 'NHQ', 'department_id': 'S004', 'timestamp': datetime.datetime(2026, 4, 20, 21, 38, 31, 258000), 'warehouse_id': 'S004', 'user_id': 'reliance'}
-store doc:{'_id': ObjectId('67d00634a5812263edbc5c2c'), 'id': 'S004', 'name': 'Tira-seawood - Test', 'layout': 'Open Layout', 'format': 'Tira store', 'type': 'Retail', 'country': 'India', 'state': 'Maharashtra', 'region': 'East', 'city': 'Navi Mumbai', 'address': 'Seawoods Mall, Nerul East, Sector 28 ', 'latitude': 19.129896, 'longitude': 72.833481, 'status': True, 'check': '1'}
-Starting process_image_get_metadata...
-Finished process_image_get_metadata in 0.0000 seconds.
-Processing for client: reliance...
-[Processed image] PIL image size: (808, 225) (w x h)
-[TIMER] Inference: 292.62 ms
-Inference result: ['The maximum retail price of the product is 1099.0, the manufacturing date of the product is nan, the expiry period is nan and the batch number is nan']
-Starting _extract_metadata...
-
-Mfg/exp dates: [None, None, None]
-
-Finished _extract_metadata in 0.0014 seconds.
-[TIMER] Regex extraction: 1.51 ms
-[MULTICAPTURE] Final Metadata Returned: {'mrp': 1099.0, 'mfg_date': None, 'expiry_date': None, 'batch_no': None}
-[/process] env_id=82836720260810005818  capture_type=False  metadata={'mrp': 1099.0, 'mfg_date': None, 'expiry_date': None, 'batch_no': None}
-[/process] metadata={'mrp': 1099.0, 'mfg_date': None, 'expiry_date': None, 'batch_no': None, 'qty': 1, 'metadata_id': '82836720260810005818stream'}
-[/process] Reliance request_id received from SDK: 35443534gfdgbfdbd
-[BG save] image=S001_reliance_SDK-01_stream.jpg  skip_upload=False  pid=None
-[Mongo] Tenant set → client_name=reliance, db=neo-icr, metadata_col=metadata, env_col=environment
-Starting process_image_save_metadata...
-Starting process_image_save_metadata (skip_upload=False)...
-['S001', 'reliance', 'SDK-01', 'stream.jpg']
-['stream', '']
-[save_metadata] Uploading image...
-blob name:reliance/reliance/82836720260810005818stream.jpg
-qcrstorage
-INFO:     127.0.0.1:58772 - "POST /process HTTP/1.1" 200 OK
-INFO:     connection closed
+Traceback (most recent call last):
+  File "/home/lakshya/Projects/NeoQcr/neoqcr-prod-instance2/Neo-Qcr-Streaming/src/main.py", line 8, in <module>
+    app_instance = SdkAPI()
+  File "/home/lakshya/Projects/NeoQcr/neoqcr-prod-instance2/src/comms/server/api.py", line 195, in __init__
+    self.classifier = ImageClassifier()
+  File "/home/lakshya/Projects/NeoQcr/neoqcr-prod-instance2/src/utils/classifier.py", line 40, in __init__
+    self._load()
+  File "/home/lakshya/Projects/NeoQcr/neoqcr-prod-instance2/src/utils/classifier.py", line 50, in _load
+    raise FileNotFoundError(f"[Classifier] YOLOX ckpt file not found: {YOLOX_CKPT_PATH}")
+FileNotFoundError: [Classifier] YOLOX ckpt file not found: /home/lakshya/Projects/NeoQcr/neoqcr-prod-instance2/Neo-Qcr-Streaming/src/YOLOX/best_ckpt.pth
