@@ -1501,6 +1501,21 @@ static const char* const __pyx_f[] = {
 /* #### Code section: type_declarations ### */
 
 /*--- Type declarations ---*/
+struct __pyx_defaults;
+
+/* "src/utils/session_cache.py":10
+ * 
+ * class SessionCache:
+ *     def __init__(             # <<<<<<<<<<<<<<
+ *         self,
+ *         host: str = os.getenv("REDIS_HOST", "redis-server"),
+*/
+struct __pyx_defaults {
+  PyObject_HEAD
+  PyObject *arg0;
+  PyObject *arg1;
+};
+
 /* #### Code section: utility_code_proto ### */
 
 /* --- Runtime support code (head) --- */
@@ -1963,6 +1978,38 @@ static CYTHON_INLINE int __Pyx_PySequence_ContainsTF(PyObject* item, PyObject* s
     return unlikely(result < 0) ? result : (result == (eq == Py_EQ));
 }
 
+/* LimitedApiGetTypeDict.proto */
+#if CYTHON_COMPILING_IN_LIMITED_API
+static PyObject *__Pyx_GetTypeDict(PyTypeObject *tp);
+#endif
+
+/* SetItemOnTypeDict.proto */
+static int __Pyx__SetItemOnTypeDict(PyTypeObject *tp, PyObject *k, PyObject *v);
+#define __Pyx_SetItemOnTypeDict(tp, k, v) __Pyx__SetItemOnTypeDict((PyTypeObject*)tp, k, v)
+
+/* FixUpExtensionType.proto */
+static CYTHON_INLINE int __Pyx_fix_up_extension_type_from_spec(PyType_Spec *spec, PyTypeObject *type);
+
+/* PyObjectCallNoArg.proto */
+static CYTHON_INLINE PyObject* __Pyx_PyObject_CallNoArg(PyObject *func);
+
+/* PyObjectCallOneArg.proto */
+static CYTHON_INLINE PyObject* __Pyx_PyObject_CallOneArg(PyObject *func, PyObject *arg);
+
+/* PyObjectGetMethod.proto */
+static int __Pyx_PyObject_GetMethod(PyObject *obj, PyObject *name, PyObject **method);
+
+/* PyObjectCallMethod0.proto */
+static PyObject* __Pyx_PyObject_CallMethod0(PyObject* obj, PyObject* method_name);
+
+/* ValidateBasesTuple.proto */
+#if CYTHON_COMPILING_IN_CPYTHON || CYTHON_COMPILING_IN_LIMITED_API || CYTHON_USE_TYPE_SPECS
+static int __Pyx_validate_bases_tuple(const char *type_name, Py_ssize_t dictoffset, PyObject *bases);
+#endif
+
+/* PyType_Ready.proto */
+CYTHON_UNUSED static int __Pyx_PyType_Ready(PyTypeObject *t);
+
 /* Import.proto */
 static PyObject *__Pyx_Import(PyObject *name, PyObject *from_list, int level);
 
@@ -1975,18 +2022,6 @@ static PyObject *__Pyx_PyList_Pack(Py_ssize_t n, ...);
 
 /* ImportFrom.proto */
 static PyObject* __Pyx_ImportFrom(PyObject* module, PyObject* name);
-
-/* LimitedApiGetTypeDict.proto */
-#if CYTHON_COMPILING_IN_LIMITED_API
-static PyObject *__Pyx_GetTypeDict(PyTypeObject *tp);
-#endif
-
-/* SetItemOnTypeDict.proto */
-static int __Pyx__SetItemOnTypeDict(PyTypeObject *tp, PyObject *k, PyObject *v);
-#define __Pyx_SetItemOnTypeDict(tp, k, v) __Pyx__SetItemOnTypeDict((PyTypeObject*)tp, k, v)
-
-/* FixUpExtensionType.proto */
-static CYTHON_INLINE int __Pyx_fix_up_extension_type_from_spec(PyType_Spec *spec, PyTypeObject *type);
 
 /* FetchSharedCythonModule.proto */
 static PyObject *__Pyx_FetchSharedCythonABIModule(void);
@@ -2298,11 +2333,14 @@ int __pyx_module_is_main_src__utils__session_cache = 0;
 /* #### Code section: global_var ### */
 static PyObject *__pyx_builtin_print;
 /* #### Code section: string_decls ### */
-static const char __pyx_k_[] = ")";
+static const char __pyx_k_[] = ":";
 static const char __pyx_k_e[] = "e";
-static const char __pyx_k__2[] = ".";
-static const char __pyx_k__3[] = "?";
+static const char __pyx_k__2[] = ")";
+static const char __pyx_k__3[] = ".";
+static const char __pyx_k__4[] = "?";
 static const char __pyx_k_db[] = "db";
+static const char __pyx_k_gc[] = "gc";
+static const char __pyx_k_os[] = "os";
 static const char __pyx_k_doc[] = "__doc__";
 static const char __pyx_k_get[] = "get";
 static const char __pyx_k_int[] = "int";
@@ -2311,9 +2349,11 @@ static const char __pyx_k_set[] = "set";
 static const char __pyx_k_str[] = "str";
 static const char __pyx_k_ttl[] = "ttl";
 static const char __pyx_k_val[] = "val";
+static const char __pyx_k_6379[] = "6379";
 static const char __pyx_k_None[] = "None";
 static const char __pyx_k_bool[] = "bool";
 static const char __pyx_k_data[] = "data";
+static const char __pyx_k_db_2[] = " \342\234\205 (db=";
 static const char __pyx_k_dict[] = "dict";
 static const char __pyx_k_func[] = "__func__";
 static const char __pyx_k_host[] = "host";
@@ -2334,12 +2374,16 @@ static const char __pyx_k_redis[] = "redis";
 static const char __pyx_k_setex[] = "setex";
 static const char __pyx_k_ttl_2[] = "_ttl";
 static const char __pyx_k_delete[] = "delete";
+static const char __pyx_k_dotenv[] = "dotenv";
+static const char __pyx_k_enable[] = "enable";
 static const char __pyx_k_env_id[] = "env_id";
 static const char __pyx_k_exists[] = "exists";
+static const char __pyx_k_getenv[] = "getenv";
 static const char __pyx_k_module[] = "__module__";
 static const char __pyx_k_return[] = "return";
 static const char __pyx_k_typing[] = "typing";
 static const char __pyx_k_default[] = "default";
+static const char __pyx_k_disable[] = "disable";
 static const char __pyx_k_prepare[] = "__prepare__";
 static const char __pyx_k_redis_2[] = "_redis";
 static const char __pyx_k_session[] = "session:";
@@ -2348,11 +2392,16 @@ static const char __pyx_k_add_note[] = "add_note";
 static const char __pyx_k_fallback[] = "_fallback";
 static const char __pyx_k_qualname[] = "__qualname__";
 static const char __pyx_k_set_name[] = "__set_name__";
+static const char __pyx_k_isenabled[] = "isenabled";
 static const char __pyx_k_metaclass[] = "__metaclass__";
-static const char __pyx_k_redis_qcr[] = "redis.qcr";
+static const char __pyx_k_REDIS_HOST[] = "REDIS_HOST";
+static const char __pyx_k_REDIS_PORT[] = "REDIS_PORT";
+static const char __pyx_k_load_dotenv[] = "load_dotenv";
 static const char __pyx_k_SessionCache[] = "SessionCache";
 static const char __pyx_k_initializing[] = "_initializing";
 static const char __pyx_k_is_coroutine[] = "_is_coroutine";
+static const char __pyx_k_redis_server[] = "redis-server";
+static const char __pyx_k_src_config_env[] = "src/config/.env";
 static const char __pyx_k_Redis_GET_error[] = "Redis GET error: ";
 static const char __pyx_k_Redis_SET_error[] = "Redis SET error: ";
 static const char __pyx_k_SessionCache_get[] = "SessionCache.get";
@@ -2372,15 +2421,17 @@ static const char __pyx_k_4q_d_Qb_A_t6_1_Qb_Q_q_t_T[] = "\320\004\032\230(\240!\
 static const char __pyx_k_src_utils_session_cache_py[] = "src/utils/session_cache.py";
 static const char __pyx_k_XQ_4q_t1D_war_Q_Qb_0_q_wc_Q[] = "\320\004\035\230X\240Q\330\010\013\2104\210q\330\014\r\330\020\027\220t\2301\230D\240\007\240w\250a\250r\260\034\270Q\330\014\023\220=\240\001\330\020\025\220Q\220b\320\0300\260\001\330\020\027\220q\330\010\017\210w\220c\230\024\230Q";
 static const char __pyx_k_Redis_unavailable_falling_back[] = "\342\232\240\357\270\217 Redis unavailable, falling back to in-memory: ";
-static const char __pyx_k_v_0_l_iuTU_HA_vQe6_fCtCTTU_uA_Q[] = "\320\004\027\220v\320\0350\260\006\260l\300$\300i\310u\320TU\330\010\014\210H\220A\330\010\t\330\014\020\220\n\230%\230v\240Q\240e\2506\260\025\260f\270C\270t\320CT\320TU\330\014\020\220\007\220u\230A\330\014\020\220\r\230Q\330\014\021\220\021\220\"\320\024<\270A\330\010\017\210}\230A\330\014\021\220\021\220\"\320\024I\310\021\330\014\020\220\n\230!\330\014\020\220\r\230Q";
+static const char __pyx_k_A_BgQnA_Cq_A_Q_HA_vQ_Q_Q_1_uA_Q[] = "\200A\340\016\024\220B\220g\230Q\230n\250A\330\016\024\220C\220q\230\002\230'\240\021\240.\260\001\330\010\014\210A\330\010\r\210Q\340\010\014\210H\220A\330\010\t\330\014\020\220\n\230%\230v\240Q\330\020\025\220Q\330\020\025\220Q\330\020\023\2201\330\020!\240\021\340\014\020\220\007\220u\230A\330\014\020\220\r\230Q\330\014\021\220\021\220\"\320\0249\270\027\300\r\310Q\330\010\017\210}\230A\330\014\021\220\021\220\"\320\024I\310\021\330\014\020\220\n\230!\330\014\020\220\r\230Q";
 static const char __pyx_k_Note_that_Cython_is_deliberately[] = "Note that Cython is deliberately stricter than PEP-484 and rejects subclasses of builtin types. If you need to pass subclasses then set the 'annotation_typing' directive to False.";
-static const char __pyx_k_Redis_session_cache_connected_db[] = "Redis session cache connected \342\234\205 (db=";
+static const char __pyx_k_Redis_session_cache_connected_to[] = "Redis session cache connected to ";
 /* #### Code section: decls ### */
+static PyObject *__pyx_pf_3src_5utils_13session_cache___defaults__(CYTHON_UNUSED PyObject *__pyx_self); /* proto */
 static PyObject *__pyx_pf_3src_5utils_13session_cache_12SessionCache___init__(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_self, PyObject *__pyx_v_host, PyObject *__pyx_v_port, PyObject *__pyx_v_db, PyObject *__pyx_v_ttl); /* proto */
 static PyObject *__pyx_pf_3src_5utils_13session_cache_12SessionCache_2get(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_self, PyObject *__pyx_v_env_id); /* proto */
 static PyObject *__pyx_pf_3src_5utils_13session_cache_12SessionCache_4set(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_self, PyObject *__pyx_v_env_id, PyObject *__pyx_v_data); /* proto */
 static PyObject *__pyx_pf_3src_5utils_13session_cache_12SessionCache_6delete(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_self, PyObject *__pyx_v_env_id); /* proto */
 static PyObject *__pyx_pf_3src_5utils_13session_cache_12SessionCache_8exists(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_self, PyObject *__pyx_v_env_id); /* proto */
+static PyObject *__pyx_tp_new_3src_5utils_13session_cache___pyx_defaults(PyTypeObject *t, PyObject *a, PyObject *k); /*proto*/
 /* #### Code section: late_includes ### */
 /* #### Code section: module_state ### */
 /* SmallCodeConfig */
@@ -2419,13 +2470,14 @@ typedef struct {
   #ifdef __Pyx_Coroutine_USED
   PyTypeObject *__pyx_CoroutineType;
   #endif
+  PyObject *__pyx_type_3src_5utils_13session_cache___pyx_defaults;
+  PyTypeObject *__pyx_ptype_3src_5utils_13session_cache___pyx_defaults;
   __Pyx_CachedCFunction __pyx_umethod_PyDict_Type_pop;
-  PyObject *__pyx_tuple[1];
+  PyObject *__pyx_tuple[2];
   PyObject *__pyx_codeobj_tab[5];
-  PyObject *__pyx_string_tab[72];
+  PyObject *__pyx_string_tab[86];
   PyObject *__pyx_int_1;
   PyObject *__pyx_int_600;
-  PyObject *__pyx_int_6379;
 /* #### Code section: module_state_contents ### */
 /* CommonTypesMetaclass.module_state_decls */
 PyTypeObject *__pyx_CommonTypesMetaclassType;
@@ -2464,77 +2516,91 @@ static __pyx_mstatetype * const __pyx_mstate_global = &__pyx_mstate_global_stati
 #endif
 /* #### Code section: constant_name_defines ### */
 #define __pyx_kp_u_ __pyx_string_tab[0]
-#define __pyx_n_u_None __pyx_string_tab[1]
-#define __pyx_kp_u_Note_that_Cython_is_deliberately __pyx_string_tab[2]
-#define __pyx_n_u_Optional __pyx_string_tab[3]
-#define __pyx_n_u_Redis __pyx_string_tab[4]
-#define __pyx_kp_u_Redis_DELETE_error __pyx_string_tab[5]
-#define __pyx_kp_u_Redis_EXISTS_error __pyx_string_tab[6]
-#define __pyx_kp_u_Redis_GET_error __pyx_string_tab[7]
-#define __pyx_kp_u_Redis_SET_error __pyx_string_tab[8]
-#define __pyx_kp_u_Redis_session_cache_connected_db __pyx_string_tab[9]
-#define __pyx_kp_u_Redis_unavailable_falling_back __pyx_string_tab[10]
-#define __pyx_n_u_SessionCache __pyx_string_tab[11]
-#define __pyx_n_u_SessionCache___init __pyx_string_tab[12]
-#define __pyx_n_u_SessionCache_delete __pyx_string_tab[13]
-#define __pyx_n_u_SessionCache_exists __pyx_string_tab[14]
-#define __pyx_n_u_SessionCache_get __pyx_string_tab[15]
-#define __pyx_n_u_SessionCache_set __pyx_string_tab[16]
-#define __pyx_kp_u__2 __pyx_string_tab[17]
-#define __pyx_kp_u__3 __pyx_string_tab[18]
-#define __pyx_kp_u_add_note __pyx_string_tab[19]
-#define __pyx_n_u_asyncio_coroutines __pyx_string_tab[20]
-#define __pyx_n_u_bool __pyx_string_tab[21]
-#define __pyx_n_u_cline_in_traceback __pyx_string_tab[22]
-#define __pyx_n_u_data __pyx_string_tab[23]
-#define __pyx_n_u_db __pyx_string_tab[24]
-#define __pyx_n_u_decode_responses __pyx_string_tab[25]
-#define __pyx_n_u_default __pyx_string_tab[26]
-#define __pyx_n_u_delete __pyx_string_tab[27]
-#define __pyx_n_u_dict __pyx_string_tab[28]
-#define __pyx_n_u_doc __pyx_string_tab[29]
-#define __pyx_n_u_dumps __pyx_string_tab[30]
-#define __pyx_n_u_e __pyx_string_tab[31]
-#define __pyx_n_u_env_id __pyx_string_tab[32]
-#define __pyx_n_u_exists __pyx_string_tab[33]
-#define __pyx_n_u_fallback __pyx_string_tab[34]
-#define __pyx_n_u_func __pyx_string_tab[35]
-#define __pyx_n_u_get __pyx_string_tab[36]
-#define __pyx_n_u_host __pyx_string_tab[37]
-#define __pyx_n_u_init __pyx_string_tab[38]
-#define __pyx_n_u_initializing __pyx_string_tab[39]
-#define __pyx_n_u_int __pyx_string_tab[40]
-#define __pyx_n_u_is_coroutine __pyx_string_tab[41]
-#define __pyx_n_u_json __pyx_string_tab[42]
-#define __pyx_n_u_loads __pyx_string_tab[43]
-#define __pyx_n_u_main __pyx_string_tab[44]
-#define __pyx_n_u_metaclass __pyx_string_tab[45]
-#define __pyx_n_u_module __pyx_string_tab[46]
-#define __pyx_n_u_name __pyx_string_tab[47]
-#define __pyx_n_u_ping __pyx_string_tab[48]
-#define __pyx_n_u_pop __pyx_string_tab[49]
-#define __pyx_n_u_port __pyx_string_tab[50]
-#define __pyx_n_u_prepare __pyx_string_tab[51]
-#define __pyx_n_u_print __pyx_string_tab[52]
-#define __pyx_n_u_qualname __pyx_string_tab[53]
-#define __pyx_n_u_redis __pyx_string_tab[54]
-#define __pyx_n_u_redis_2 __pyx_string_tab[55]
-#define __pyx_kp_u_redis_qcr __pyx_string_tab[56]
-#define __pyx_n_u_return __pyx_string_tab[57]
-#define __pyx_n_u_self __pyx_string_tab[58]
-#define __pyx_kp_u_session __pyx_string_tab[59]
-#define __pyx_n_u_set __pyx_string_tab[60]
-#define __pyx_n_u_set_name __pyx_string_tab[61]
-#define __pyx_n_u_setex __pyx_string_tab[62]
-#define __pyx_n_u_spec __pyx_string_tab[63]
-#define __pyx_n_u_src_utils_session_cache __pyx_string_tab[64]
-#define __pyx_kp_u_src_utils_session_cache_py __pyx_string_tab[65]
-#define __pyx_n_u_str __pyx_string_tab[66]
-#define __pyx_n_u_test __pyx_string_tab[67]
-#define __pyx_n_u_ttl __pyx_string_tab[68]
-#define __pyx_n_u_ttl_2 __pyx_string_tab[69]
-#define __pyx_n_u_typing __pyx_string_tab[70]
-#define __pyx_n_u_val __pyx_string_tab[71]
+#define __pyx_kp_u_6379 __pyx_string_tab[1]
+#define __pyx_n_u_None __pyx_string_tab[2]
+#define __pyx_kp_u_Note_that_Cython_is_deliberately __pyx_string_tab[3]
+#define __pyx_n_u_Optional __pyx_string_tab[4]
+#define __pyx_n_u_REDIS_HOST __pyx_string_tab[5]
+#define __pyx_n_u_REDIS_PORT __pyx_string_tab[6]
+#define __pyx_n_u_Redis __pyx_string_tab[7]
+#define __pyx_kp_u_Redis_DELETE_error __pyx_string_tab[8]
+#define __pyx_kp_u_Redis_EXISTS_error __pyx_string_tab[9]
+#define __pyx_kp_u_Redis_GET_error __pyx_string_tab[10]
+#define __pyx_kp_u_Redis_SET_error __pyx_string_tab[11]
+#define __pyx_kp_u_Redis_session_cache_connected_to __pyx_string_tab[12]
+#define __pyx_kp_u_Redis_unavailable_falling_back __pyx_string_tab[13]
+#define __pyx_n_u_SessionCache __pyx_string_tab[14]
+#define __pyx_n_u_SessionCache___init __pyx_string_tab[15]
+#define __pyx_n_u_SessionCache_delete __pyx_string_tab[16]
+#define __pyx_n_u_SessionCache_exists __pyx_string_tab[17]
+#define __pyx_n_u_SessionCache_get __pyx_string_tab[18]
+#define __pyx_n_u_SessionCache_set __pyx_string_tab[19]
+#define __pyx_kp_u__2 __pyx_string_tab[20]
+#define __pyx_kp_u__3 __pyx_string_tab[21]
+#define __pyx_kp_u__4 __pyx_string_tab[22]
+#define __pyx_kp_u_add_note __pyx_string_tab[23]
+#define __pyx_n_u_asyncio_coroutines __pyx_string_tab[24]
+#define __pyx_n_u_bool __pyx_string_tab[25]
+#define __pyx_n_u_cline_in_traceback __pyx_string_tab[26]
+#define __pyx_n_u_data __pyx_string_tab[27]
+#define __pyx_n_u_db __pyx_string_tab[28]
+#define __pyx_kp_u_db_2 __pyx_string_tab[29]
+#define __pyx_n_u_decode_responses __pyx_string_tab[30]
+#define __pyx_n_u_default __pyx_string_tab[31]
+#define __pyx_n_u_delete __pyx_string_tab[32]
+#define __pyx_n_u_dict __pyx_string_tab[33]
+#define __pyx_kp_u_disable __pyx_string_tab[34]
+#define __pyx_n_u_doc __pyx_string_tab[35]
+#define __pyx_n_u_dotenv __pyx_string_tab[36]
+#define __pyx_n_u_dumps __pyx_string_tab[37]
+#define __pyx_n_u_e __pyx_string_tab[38]
+#define __pyx_kp_u_enable __pyx_string_tab[39]
+#define __pyx_n_u_env_id __pyx_string_tab[40]
+#define __pyx_n_u_exists __pyx_string_tab[41]
+#define __pyx_n_u_fallback __pyx_string_tab[42]
+#define __pyx_n_u_func __pyx_string_tab[43]
+#define __pyx_kp_u_gc __pyx_string_tab[44]
+#define __pyx_n_u_get __pyx_string_tab[45]
+#define __pyx_n_u_getenv __pyx_string_tab[46]
+#define __pyx_n_u_host __pyx_string_tab[47]
+#define __pyx_n_u_init __pyx_string_tab[48]
+#define __pyx_n_u_initializing __pyx_string_tab[49]
+#define __pyx_n_u_int __pyx_string_tab[50]
+#define __pyx_n_u_is_coroutine __pyx_string_tab[51]
+#define __pyx_kp_u_isenabled __pyx_string_tab[52]
+#define __pyx_n_u_json __pyx_string_tab[53]
+#define __pyx_n_u_load_dotenv __pyx_string_tab[54]
+#define __pyx_n_u_loads __pyx_string_tab[55]
+#define __pyx_n_u_main __pyx_string_tab[56]
+#define __pyx_n_u_metaclass __pyx_string_tab[57]
+#define __pyx_n_u_module __pyx_string_tab[58]
+#define __pyx_n_u_name __pyx_string_tab[59]
+#define __pyx_n_u_os __pyx_string_tab[60]
+#define __pyx_n_u_ping __pyx_string_tab[61]
+#define __pyx_n_u_pop __pyx_string_tab[62]
+#define __pyx_n_u_port __pyx_string_tab[63]
+#define __pyx_n_u_prepare __pyx_string_tab[64]
+#define __pyx_n_u_print __pyx_string_tab[65]
+#define __pyx_n_u_qualname __pyx_string_tab[66]
+#define __pyx_n_u_redis __pyx_string_tab[67]
+#define __pyx_n_u_redis_2 __pyx_string_tab[68]
+#define __pyx_kp_u_redis_server __pyx_string_tab[69]
+#define __pyx_n_u_return __pyx_string_tab[70]
+#define __pyx_n_u_self __pyx_string_tab[71]
+#define __pyx_kp_u_session __pyx_string_tab[72]
+#define __pyx_n_u_set __pyx_string_tab[73]
+#define __pyx_n_u_set_name __pyx_string_tab[74]
+#define __pyx_n_u_setex __pyx_string_tab[75]
+#define __pyx_n_u_spec __pyx_string_tab[76]
+#define __pyx_kp_u_src_config_env __pyx_string_tab[77]
+#define __pyx_n_u_src_utils_session_cache __pyx_string_tab[78]
+#define __pyx_kp_u_src_utils_session_cache_py __pyx_string_tab[79]
+#define __pyx_n_u_str __pyx_string_tab[80]
+#define __pyx_n_u_test __pyx_string_tab[81]
+#define __pyx_n_u_ttl __pyx_string_tab[82]
+#define __pyx_n_u_ttl_2 __pyx_string_tab[83]
+#define __pyx_n_u_typing __pyx_string_tab[84]
+#define __pyx_n_u_val __pyx_string_tab[85]
 /* #### Code section: module_state_clear ### */
 #if CYTHON_USE_MODULE_STATE
 static CYTHON_SMALL_CODE int __pyx_m_clear(PyObject *m) {
@@ -2555,12 +2621,13 @@ static CYTHON_SMALL_CODE int __pyx_m_clear(PyObject *m) {
   #if CYTHON_PEP489_MULTI_PHASE_INIT
   __Pyx_State_RemoveModule(NULL);
   #endif
-  for (int i=0; i<1; ++i) { Py_CLEAR(clear_module_state->__pyx_tuple[i]); }
+  Py_CLEAR(clear_module_state->__pyx_ptype_3src_5utils_13session_cache___pyx_defaults);
+  Py_CLEAR(clear_module_state->__pyx_type_3src_5utils_13session_cache___pyx_defaults);
+  for (int i=0; i<2; ++i) { Py_CLEAR(clear_module_state->__pyx_tuple[i]); }
   for (int i=0; i<5; ++i) { Py_CLEAR(clear_module_state->__pyx_codeobj_tab[i]); }
-  for (int i=0; i<72; ++i) { Py_CLEAR(clear_module_state->__pyx_string_tab[i]); }
+  for (int i=0; i<86; ++i) { Py_CLEAR(clear_module_state->__pyx_string_tab[i]); }
   Py_CLEAR(clear_module_state->__pyx_int_1);
   Py_CLEAR(clear_module_state->__pyx_int_600);
-  Py_CLEAR(clear_module_state->__pyx_int_6379);
   return 0;
 }
 #endif
@@ -2581,24 +2648,73 @@ static CYTHON_SMALL_CODE int __pyx_m_traverse(PyObject *m, visitproc visit, void
   #ifdef __Pyx_FusedFunction_USED
   Py_VISIT(traverse_module_state->__pyx_FusedFunctionType);
   #endif
-  for (int i=0; i<1; ++i) { __Pyx_VISIT_CONST(traverse_module_state->__pyx_tuple[i]); }
+  Py_VISIT(traverse_module_state->__pyx_ptype_3src_5utils_13session_cache___pyx_defaults);
+  Py_VISIT(traverse_module_state->__pyx_type_3src_5utils_13session_cache___pyx_defaults);
+  for (int i=0; i<2; ++i) { __Pyx_VISIT_CONST(traverse_module_state->__pyx_tuple[i]); }
   for (int i=0; i<5; ++i) { __Pyx_VISIT_CONST(traverse_module_state->__pyx_codeobj_tab[i]); }
-  for (int i=0; i<72; ++i) { __Pyx_VISIT_CONST(traverse_module_state->__pyx_string_tab[i]); }
+  for (int i=0; i<86; ++i) { __Pyx_VISIT_CONST(traverse_module_state->__pyx_string_tab[i]); }
   __Pyx_VISIT_CONST(traverse_module_state->__pyx_int_1);
   __Pyx_VISIT_CONST(traverse_module_state->__pyx_int_600);
-  __Pyx_VISIT_CONST(traverse_module_state->__pyx_int_6379);
   return 0;
 }
 #endif
 /* #### Code section: module_code ### */
 
-/* "src/utils/session_cache.py":7
+/* "src/utils/session_cache.py":10
  * 
  * class SessionCache:
- *     def __init__(self, host: str = 'redis.qcr', port: int = 6379, db: int = 1, ttl: int = 600):             # <<<<<<<<<<<<<<
- *         self._ttl = ttl
- *         try:
+ *     def __init__(             # <<<<<<<<<<<<<<
+ *         self,
+ *         host: str = os.getenv("REDIS_HOST", "redis-server"),
 */
+
+static PyObject *__pyx_pf_3src_5utils_13session_cache___defaults__(CYTHON_UNUSED PyObject *__pyx_self) {
+  PyObject *__pyx_r = NULL;
+  __Pyx_RefNannyDeclarations
+  PyObject *__pyx_t_1 = NULL;
+  PyObject *__pyx_t_2 = NULL;
+  int __pyx_lineno = 0;
+  const char *__pyx_filename = NULL;
+  int __pyx_clineno = 0;
+  __Pyx_RefNannySetupContext("__defaults__", 0);
+  __Pyx_XDECREF(__pyx_r);
+  __pyx_t_1 = PyTuple_New(4); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 10, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_1);
+  __Pyx_INCREF(__Pyx_CyFunction_Defaults(struct __pyx_defaults, __pyx_self)->arg0);
+  __Pyx_GIVEREF(__Pyx_CyFunction_Defaults(struct __pyx_defaults, __pyx_self)->arg0);
+  if (__Pyx_PyTuple_SET_ITEM(__pyx_t_1, 0, __Pyx_CyFunction_Defaults(struct __pyx_defaults, __pyx_self)->arg0) != (0)) __PYX_ERR(0, 10, __pyx_L1_error);
+  __Pyx_INCREF(__Pyx_CyFunction_Defaults(struct __pyx_defaults, __pyx_self)->arg1);
+  __Pyx_GIVEREF(__Pyx_CyFunction_Defaults(struct __pyx_defaults, __pyx_self)->arg1);
+  if (__Pyx_PyTuple_SET_ITEM(__pyx_t_1, 1, __Pyx_CyFunction_Defaults(struct __pyx_defaults, __pyx_self)->arg1) != (0)) __PYX_ERR(0, 10, __pyx_L1_error);
+  __Pyx_INCREF(((PyObject*)__pyx_mstate_global->__pyx_int_1));
+  __Pyx_GIVEREF(((PyObject*)__pyx_mstate_global->__pyx_int_1));
+  if (__Pyx_PyTuple_SET_ITEM(__pyx_t_1, 2, ((PyObject*)__pyx_mstate_global->__pyx_int_1)) != (0)) __PYX_ERR(0, 10, __pyx_L1_error);
+  __Pyx_INCREF(((PyObject*)__pyx_mstate_global->__pyx_int_600));
+  __Pyx_GIVEREF(((PyObject*)__pyx_mstate_global->__pyx_int_600));
+  if (__Pyx_PyTuple_SET_ITEM(__pyx_t_1, 3, ((PyObject*)__pyx_mstate_global->__pyx_int_600)) != (0)) __PYX_ERR(0, 10, __pyx_L1_error);
+  __pyx_t_2 = PyTuple_New(2); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 10, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_2);
+  __Pyx_GIVEREF(__pyx_t_1);
+  if (__Pyx_PyTuple_SET_ITEM(__pyx_t_2, 0, __pyx_t_1) != (0)) __PYX_ERR(0, 10, __pyx_L1_error);
+  __Pyx_INCREF(Py_None);
+  __Pyx_GIVEREF(Py_None);
+  if (__Pyx_PyTuple_SET_ITEM(__pyx_t_2, 1, Py_None) != (0)) __PYX_ERR(0, 10, __pyx_L1_error);
+  __pyx_t_1 = 0;
+  __pyx_r = __pyx_t_2;
+  __pyx_t_2 = 0;
+  goto __pyx_L0;
+
+  /* function exit code */
+  __pyx_L1_error:;
+  __Pyx_XDECREF(__pyx_t_1);
+  __Pyx_XDECREF(__pyx_t_2);
+  __Pyx_AddTraceback("src.utils.session_cache.__defaults__", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __pyx_r = NULL;
+  __pyx_L0:;
+  __Pyx_XGIVEREF(__pyx_r);
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
 
 /* Python wrapper */
 static PyObject *__pyx_pw_3src_5utils_13session_cache_12SessionCache_1__init__(PyObject *__pyx_self, 
@@ -2642,68 +2758,69 @@ PyObject *__pyx_args, PyObject *__pyx_kwds
   __pyx_kwvalues = __Pyx_KwValues_FASTCALL(__pyx_args, __pyx_nargs);
   {
     PyObject ** const __pyx_pyargnames[] = {&__pyx_mstate_global->__pyx_n_u_self,&__pyx_mstate_global->__pyx_n_u_host,&__pyx_mstate_global->__pyx_n_u_port,&__pyx_mstate_global->__pyx_n_u_db,&__pyx_mstate_global->__pyx_n_u_ttl,0};
+    struct __pyx_defaults *__pyx_dynamic_args = __Pyx_CyFunction_Defaults(struct __pyx_defaults, __pyx_self);
     const Py_ssize_t __pyx_kwds_len = (__pyx_kwds) ? __Pyx_NumKwargs_FASTCALL(__pyx_kwds) : 0;
-    if (unlikely(__pyx_kwds_len) < 0) __PYX_ERR(0, 7, __pyx_L3_error)
+    if (unlikely(__pyx_kwds_len) < 0) __PYX_ERR(0, 10, __pyx_L3_error)
     if (__pyx_kwds_len > 0) {
       switch (__pyx_nargs) {
         case  5:
         values[4] = __Pyx_ArgRef_FASTCALL(__pyx_args, 4);
-        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[4])) __PYX_ERR(0, 7, __pyx_L3_error)
+        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[4])) __PYX_ERR(0, 10, __pyx_L3_error)
         CYTHON_FALLTHROUGH;
         case  4:
         values[3] = __Pyx_ArgRef_FASTCALL(__pyx_args, 3);
-        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[3])) __PYX_ERR(0, 7, __pyx_L3_error)
+        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[3])) __PYX_ERR(0, 10, __pyx_L3_error)
         CYTHON_FALLTHROUGH;
         case  3:
         values[2] = __Pyx_ArgRef_FASTCALL(__pyx_args, 2);
-        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[2])) __PYX_ERR(0, 7, __pyx_L3_error)
+        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[2])) __PYX_ERR(0, 10, __pyx_L3_error)
         CYTHON_FALLTHROUGH;
         case  2:
         values[1] = __Pyx_ArgRef_FASTCALL(__pyx_args, 1);
-        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[1])) __PYX_ERR(0, 7, __pyx_L3_error)
+        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[1])) __PYX_ERR(0, 10, __pyx_L3_error)
         CYTHON_FALLTHROUGH;
         case  1:
         values[0] = __Pyx_ArgRef_FASTCALL(__pyx_args, 0);
-        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[0])) __PYX_ERR(0, 7, __pyx_L3_error)
+        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[0])) __PYX_ERR(0, 10, __pyx_L3_error)
         CYTHON_FALLTHROUGH;
         case  0: break;
         default: goto __pyx_L5_argtuple_error;
       }
       const Py_ssize_t kwd_pos_args = __pyx_nargs;
-      if (__Pyx_ParseKeywords(__pyx_kwds, __pyx_kwvalues, __pyx_pyargnames, 0, values, kwd_pos_args, __pyx_kwds_len, "__init__", 0) < 0) __PYX_ERR(0, 7, __pyx_L3_error)
-      if (!values[1]) values[1] = __Pyx_NewRef(((PyObject*)((PyObject*)__pyx_mstate_global->__pyx_kp_u_redis_qcr)));
-      if (!values[2]) values[2] = __Pyx_NewRef(((PyObject*)((PyObject*)__pyx_mstate_global->__pyx_int_6379)));
+      if (__Pyx_ParseKeywords(__pyx_kwds, __pyx_kwvalues, __pyx_pyargnames, 0, values, kwd_pos_args, __pyx_kwds_len, "__init__", 0) < 0) __PYX_ERR(0, 10, __pyx_L3_error)
+      if (!values[1]) values[1] = __Pyx_NewRef(__pyx_dynamic_args->arg0);
+      if (!values[2]) values[2] = __Pyx_NewRef(__pyx_dynamic_args->arg1);
       if (!values[3]) values[3] = __Pyx_NewRef(((PyObject*)((PyObject*)__pyx_mstate_global->__pyx_int_1)));
       if (!values[4]) values[4] = __Pyx_NewRef(((PyObject*)((PyObject*)__pyx_mstate_global->__pyx_int_600)));
       for (Py_ssize_t i = __pyx_nargs; i < 1; i++) {
-        if (unlikely(!values[i])) { __Pyx_RaiseArgtupleInvalid("__init__", 0, 1, 5, i); __PYX_ERR(0, 7, __pyx_L3_error) }
+        if (unlikely(!values[i])) { __Pyx_RaiseArgtupleInvalid("__init__", 0, 1, 5, i); __PYX_ERR(0, 10, __pyx_L3_error) }
       }
     } else {
       switch (__pyx_nargs) {
         case  5:
         values[4] = __Pyx_ArgRef_FASTCALL(__pyx_args, 4);
-        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[4])) __PYX_ERR(0, 7, __pyx_L3_error)
+        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[4])) __PYX_ERR(0, 10, __pyx_L3_error)
         CYTHON_FALLTHROUGH;
         case  4:
         values[3] = __Pyx_ArgRef_FASTCALL(__pyx_args, 3);
-        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[3])) __PYX_ERR(0, 7, __pyx_L3_error)
+        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[3])) __PYX_ERR(0, 10, __pyx_L3_error)
         CYTHON_FALLTHROUGH;
         case  3:
         values[2] = __Pyx_ArgRef_FASTCALL(__pyx_args, 2);
-        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[2])) __PYX_ERR(0, 7, __pyx_L3_error)
+        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[2])) __PYX_ERR(0, 10, __pyx_L3_error)
         CYTHON_FALLTHROUGH;
         case  2:
         values[1] = __Pyx_ArgRef_FASTCALL(__pyx_args, 1);
-        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[1])) __PYX_ERR(0, 7, __pyx_L3_error)
+        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[1])) __PYX_ERR(0, 10, __pyx_L3_error)
         CYTHON_FALLTHROUGH;
         case  1:
         values[0] = __Pyx_ArgRef_FASTCALL(__pyx_args, 0);
-        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[0])) __PYX_ERR(0, 7, __pyx_L3_error)
+        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[0])) __PYX_ERR(0, 10, __pyx_L3_error)
         break;
         default: goto __pyx_L5_argtuple_error;
       }
-      if (!values[1]) values[1] = __Pyx_NewRef(((PyObject*)((PyObject*)__pyx_mstate_global->__pyx_kp_u_redis_qcr)));
-      if (!values[2]) values[2] = __Pyx_NewRef(((PyObject*)((PyObject*)__pyx_mstate_global->__pyx_int_6379)));
+      if (!values[1]) values[1] = __Pyx_NewRef(__pyx_dynamic_args->arg0);
+      if (!values[2]) values[2] = __Pyx_NewRef(__pyx_dynamic_args->arg1);
       if (!values[3]) values[3] = __Pyx_NewRef(((PyObject*)((PyObject*)__pyx_mstate_global->__pyx_int_1)));
       if (!values[4]) values[4] = __Pyx_NewRef(((PyObject*)((PyObject*)__pyx_mstate_global->__pyx_int_600)));
     }
@@ -2715,7 +2832,7 @@ PyObject *__pyx_args, PyObject *__pyx_kwds
   }
   goto __pyx_L6_skip;
   __pyx_L5_argtuple_error:;
-  __Pyx_RaiseArgtupleInvalid("__init__", 0, 1, 5, __pyx_nargs); __PYX_ERR(0, 7, __pyx_L3_error)
+  __Pyx_RaiseArgtupleInvalid("__init__", 0, 1, 5, __pyx_nargs); __PYX_ERR(0, 10, __pyx_L3_error)
   __pyx_L6_skip:;
   goto __pyx_L4_argument_unpacking_done;
   __pyx_L3_error:;
@@ -2726,10 +2843,10 @@ PyObject *__pyx_args, PyObject *__pyx_kwds
   __Pyx_RefNannyFinishContext();
   return NULL;
   __pyx_L4_argument_unpacking_done:;
-  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_host), (&PyUnicode_Type), 0, "host", 2))) __PYX_ERR(0, 7, __pyx_L1_error)
-  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_port), (&PyLong_Type), 0, "port", 2))) __PYX_ERR(0, 7, __pyx_L1_error)
-  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_db), (&PyLong_Type), 0, "db", 2))) __PYX_ERR(0, 7, __pyx_L1_error)
-  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_ttl), (&PyLong_Type), 0, "ttl", 2))) __PYX_ERR(0, 7, __pyx_L1_error)
+  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_host), (&PyUnicode_Type), 0, "host", 2))) __PYX_ERR(0, 12, __pyx_L1_error)
+  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_port), (&PyLong_Type), 0, "port", 2))) __PYX_ERR(0, 13, __pyx_L1_error)
+  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_db), (&PyLong_Type), 0, "db", 2))) __PYX_ERR(0, 14, __pyx_L1_error)
+  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_ttl), (&PyLong_Type), 0, "ttl", 2))) __PYX_ERR(0, 15, __pyx_L1_error)
   __pyx_r = __pyx_pf_3src_5utils_13session_cache_12SessionCache___init__(__pyx_self, __pyx_v_self, __pyx_v_host, __pyx_v_port, __pyx_v_db, __pyx_v_ttl);
 
   /* function exit code */
@@ -2761,10 +2878,10 @@ static PyObject *__pyx_pf_3src_5utils_13session_cache_12SessionCache___init__(CY
   PyObject *__pyx_t_6 = NULL;
   PyObject *__pyx_t_7 = NULL;
   size_t __pyx_t_8;
-  PyObject *__pyx_t_9[3];
-  PyObject *__pyx_t_10 = NULL;
-  int __pyx_t_11;
-  PyObject *__pyx_t_12 = NULL;
+  PyObject *__pyx_t_9 = NULL;
+  PyObject *__pyx_t_10[7];
+  PyObject *__pyx_t_11 = NULL;
+  int __pyx_t_12;
   PyObject *__pyx_t_13 = NULL;
   PyObject *__pyx_t_14 = NULL;
   int __pyx_t_15;
@@ -2780,21 +2897,21 @@ static PyObject *__pyx_pf_3src_5utils_13session_cache_12SessionCache___init__(CY
   int __pyx_clineno = 0;
   __Pyx_RefNannySetupContext("__init__", 0);
 
-  /* "src/utils/session_cache.py":8
- * class SessionCache:
- *     def __init__(self, host: str = 'redis.qcr', port: int = 6379, db: int = 1, ttl: int = 600):
+  /* "src/utils/session_cache.py":17
+ *         ttl: int = 600,
+ *     ):
  *         self._ttl = ttl             # <<<<<<<<<<<<<<
  *         try:
- *             self._redis = redis.Redis(host=host, port=port, db=db, decode_responses=True)
+ *             self._redis = redis.Redis(
 */
-  if (__Pyx_PyObject_SetAttrStr(__pyx_v_self, __pyx_mstate_global->__pyx_n_u_ttl_2, __pyx_v_ttl) < 0) __PYX_ERR(0, 8, __pyx_L1_error)
+  if (__Pyx_PyObject_SetAttrStr(__pyx_v_self, __pyx_mstate_global->__pyx_n_u_ttl_2, __pyx_v_ttl) < 0) __PYX_ERR(0, 17, __pyx_L1_error)
 
-  /* "src/utils/session_cache.py":9
- *     def __init__(self, host: str = 'redis.qcr', port: int = 6379, db: int = 1, ttl: int = 600):
+  /* "src/utils/session_cache.py":18
+ *     ):
  *         self._ttl = ttl
  *         try:             # <<<<<<<<<<<<<<
- *             self._redis = redis.Redis(host=host, port=port, db=db, decode_responses=True)
- *             self._redis.ping()
+ *             self._redis = redis.Redis(
+ *                 host=host,
 */
   {
     __Pyx_PyThreadState_declare
@@ -2805,19 +2922,27 @@ static PyObject *__pyx_pf_3src_5utils_13session_cache_12SessionCache___init__(CY
     __Pyx_XGOTREF(__pyx_t_3);
     /*try:*/ {
 
-      /* "src/utils/session_cache.py":10
+      /* "src/utils/session_cache.py":19
  *         self._ttl = ttl
  *         try:
- *             self._redis = redis.Redis(host=host, port=port, db=db, decode_responses=True)             # <<<<<<<<<<<<<<
- *             self._redis.ping()
- *             self._fallback = None
+ *             self._redis = redis.Redis(             # <<<<<<<<<<<<<<
+ *                 host=host,
+ *                 port=port,
 */
       __pyx_t_5 = NULL;
-      __Pyx_GetModuleGlobalName(__pyx_t_6, __pyx_mstate_global->__pyx_n_u_redis); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 10, __pyx_L3_error)
+      __Pyx_GetModuleGlobalName(__pyx_t_6, __pyx_mstate_global->__pyx_n_u_redis); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 19, __pyx_L3_error)
       __Pyx_GOTREF(__pyx_t_6);
-      __pyx_t_7 = __Pyx_PyObject_GetAttrStr(__pyx_t_6, __pyx_mstate_global->__pyx_n_u_Redis); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 10, __pyx_L3_error)
+      __pyx_t_7 = __Pyx_PyObject_GetAttrStr(__pyx_t_6, __pyx_mstate_global->__pyx_n_u_Redis); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 19, __pyx_L3_error)
       __Pyx_GOTREF(__pyx_t_7);
       __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
+
+      /* "src/utils/session_cache.py":23
+ *                 port=port,
+ *                 db=db,
+ *                 decode_responses=True             # <<<<<<<<<<<<<<
+ *             )
+ *             self._redis.ping()
+*/
       __pyx_t_8 = 1;
       #if CYTHON_UNPACK_METHODS
       if (unlikely(PyMethod_Check(__pyx_t_7))) {
@@ -2832,30 +2957,38 @@ static PyObject *__pyx_pf_3src_5utils_13session_cache_12SessionCache___init__(CY
       #endif
       {
         PyObject *__pyx_callargs[2 + ((CYTHON_VECTORCALL) ? 4 : 0)] = {__pyx_t_5, NULL};
-        __pyx_t_6 = __Pyx_MakeVectorcallBuilderKwds(4); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 10, __pyx_L3_error)
+        __pyx_t_6 = __Pyx_MakeVectorcallBuilderKwds(4); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 19, __pyx_L3_error)
         __Pyx_GOTREF(__pyx_t_6);
-        if (__Pyx_VectorcallBuilder_AddArg(__pyx_mstate_global->__pyx_n_u_host, __pyx_v_host, __pyx_t_6, __pyx_callargs+1, 0) < 0) __PYX_ERR(0, 10, __pyx_L3_error)
-        if (__Pyx_VectorcallBuilder_AddArg(__pyx_mstate_global->__pyx_n_u_port, __pyx_v_port, __pyx_t_6, __pyx_callargs+1, 1) < 0) __PYX_ERR(0, 10, __pyx_L3_error)
-        if (__Pyx_VectorcallBuilder_AddArg(__pyx_mstate_global->__pyx_n_u_db, __pyx_v_db, __pyx_t_6, __pyx_callargs+1, 2) < 0) __PYX_ERR(0, 10, __pyx_L3_error)
-        if (__Pyx_VectorcallBuilder_AddArg(__pyx_mstate_global->__pyx_n_u_decode_responses, Py_True, __pyx_t_6, __pyx_callargs+1, 3) < 0) __PYX_ERR(0, 10, __pyx_L3_error)
+        if (__Pyx_VectorcallBuilder_AddArg(__pyx_mstate_global->__pyx_n_u_host, __pyx_v_host, __pyx_t_6, __pyx_callargs+1, 0) < 0) __PYX_ERR(0, 19, __pyx_L3_error)
+        if (__Pyx_VectorcallBuilder_AddArg(__pyx_mstate_global->__pyx_n_u_port, __pyx_v_port, __pyx_t_6, __pyx_callargs+1, 1) < 0) __PYX_ERR(0, 19, __pyx_L3_error)
+        if (__Pyx_VectorcallBuilder_AddArg(__pyx_mstate_global->__pyx_n_u_db, __pyx_v_db, __pyx_t_6, __pyx_callargs+1, 2) < 0) __PYX_ERR(0, 19, __pyx_L3_error)
+        if (__Pyx_VectorcallBuilder_AddArg(__pyx_mstate_global->__pyx_n_u_decode_responses, Py_True, __pyx_t_6, __pyx_callargs+1, 3) < 0) __PYX_ERR(0, 19, __pyx_L3_error)
         __pyx_t_4 = __Pyx_Object_Vectorcall_CallFromBuilder(__pyx_t_7, __pyx_callargs+__pyx_t_8, (1-__pyx_t_8) | (__pyx_t_8*__Pyx_PY_VECTORCALL_ARGUMENTS_OFFSET), __pyx_t_6);
         __Pyx_XDECREF(__pyx_t_5); __pyx_t_5 = 0;
         __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
         __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
-        if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 10, __pyx_L3_error)
+        if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 19, __pyx_L3_error)
         __Pyx_GOTREF(__pyx_t_4);
       }
-      if (__Pyx_PyObject_SetAttrStr(__pyx_v_self, __pyx_mstate_global->__pyx_n_u_redis_2, __pyx_t_4) < 0) __PYX_ERR(0, 10, __pyx_L3_error)
+
+      /* "src/utils/session_cache.py":19
+ *         self._ttl = ttl
+ *         try:
+ *             self._redis = redis.Redis(             # <<<<<<<<<<<<<<
+ *                 host=host,
+ *                 port=port,
+*/
+      if (__Pyx_PyObject_SetAttrStr(__pyx_v_self, __pyx_mstate_global->__pyx_n_u_redis_2, __pyx_t_4) < 0) __PYX_ERR(0, 19, __pyx_L3_error)
       __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
 
-      /* "src/utils/session_cache.py":11
- *         try:
- *             self._redis = redis.Redis(host=host, port=port, db=db, decode_responses=True)
+      /* "src/utils/session_cache.py":25
+ *                 decode_responses=True
+ *             )
  *             self._redis.ping()             # <<<<<<<<<<<<<<
  *             self._fallback = None
- *             print(f"Redis session cache connected  (db={db})")
+ *             print(f"Redis session cache connected to {host}:{port}  (db={db})")
 */
-      __pyx_t_6 = __Pyx_PyObject_GetAttrStr(__pyx_v_self, __pyx_mstate_global->__pyx_n_u_redis_2); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 11, __pyx_L3_error)
+      __pyx_t_6 = __Pyx_PyObject_GetAttrStr(__pyx_v_self, __pyx_mstate_global->__pyx_n_u_redis_2); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 25, __pyx_L3_error)
       __Pyx_GOTREF(__pyx_t_6);
       __pyx_t_7 = __pyx_t_6;
       __Pyx_INCREF(__pyx_t_7);
@@ -2865,57 +2998,64 @@ static PyObject *__pyx_pf_3src_5utils_13session_cache_12SessionCache___init__(CY
         __pyx_t_4 = __Pyx_PyObject_FastCallMethod(__pyx_mstate_global->__pyx_n_u_ping, __pyx_callargs+__pyx_t_8, (1-__pyx_t_8) | (1*__Pyx_PY_VECTORCALL_ARGUMENTS_OFFSET));
         __Pyx_XDECREF(__pyx_t_7); __pyx_t_7 = 0;
         __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
-        if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 11, __pyx_L3_error)
+        if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 25, __pyx_L3_error)
         __Pyx_GOTREF(__pyx_t_4);
       }
       __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
 
-      /* "src/utils/session_cache.py":12
- *             self._redis = redis.Redis(host=host, port=port, db=db, decode_responses=True)
+      /* "src/utils/session_cache.py":26
+ *             )
  *             self._redis.ping()
  *             self._fallback = None             # <<<<<<<<<<<<<<
- *             print(f"Redis session cache connected  (db={db})")
+ *             print(f"Redis session cache connected to {host}:{port}  (db={db})")
  *         except Exception as e:
 */
-      if (__Pyx_PyObject_SetAttrStr(__pyx_v_self, __pyx_mstate_global->__pyx_n_u_fallback, Py_None) < 0) __PYX_ERR(0, 12, __pyx_L3_error)
+      if (__Pyx_PyObject_SetAttrStr(__pyx_v_self, __pyx_mstate_global->__pyx_n_u_fallback, Py_None) < 0) __PYX_ERR(0, 26, __pyx_L3_error)
 
-      /* "src/utils/session_cache.py":13
+      /* "src/utils/session_cache.py":27
  *             self._redis.ping()
  *             self._fallback = None
- *             print(f"Redis session cache connected  (db={db})")             # <<<<<<<<<<<<<<
+ *             print(f"Redis session cache connected to {host}:{port}  (db={db})")             # <<<<<<<<<<<<<<
  *         except Exception as e:
  *             print(f" Redis unavailable, falling back to in-memory: {e}")
 */
       __pyx_t_6 = NULL;
       __Pyx_INCREF(__pyx_builtin_print);
       __pyx_t_7 = __pyx_builtin_print; 
-      __pyx_t_5 = __Pyx_PyObject_FormatSimple(__pyx_v_db, __pyx_mstate_global->__pyx_empty_unicode); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 13, __pyx_L3_error)
+      __pyx_t_5 = __Pyx_PyObject_FormatSimple(__pyx_v_port, __pyx_mstate_global->__pyx_empty_unicode); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 27, __pyx_L3_error)
       __Pyx_GOTREF(__pyx_t_5);
-      __pyx_t_9[0] = __pyx_mstate_global->__pyx_kp_u_Redis_session_cache_connected_db;
-      __pyx_t_9[1] = __pyx_t_5;
-      __pyx_t_9[2] = __pyx_mstate_global->__pyx_kp_u_;
-      __pyx_t_10 = __Pyx_PyUnicode_Join(__pyx_t_9, 3, 36 + __Pyx_PyUnicode_GET_LENGTH(__pyx_t_5) + 1, 65535 | __Pyx_PyUnicode_MAX_CHAR_VALUE(__pyx_t_5));
-      if (unlikely(!__pyx_t_10)) __PYX_ERR(0, 13, __pyx_L3_error)
-      __Pyx_GOTREF(__pyx_t_10);
+      __pyx_t_9 = __Pyx_PyObject_FormatSimple(__pyx_v_db, __pyx_mstate_global->__pyx_empty_unicode); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 27, __pyx_L3_error)
+      __Pyx_GOTREF(__pyx_t_9);
+      __pyx_t_10[0] = __pyx_mstate_global->__pyx_kp_u_Redis_session_cache_connected_to;
+      __pyx_t_10[1] = __pyx_v_host;
+      __pyx_t_10[2] = __pyx_mstate_global->__pyx_kp_u_;
+      __pyx_t_10[3] = __pyx_t_5;
+      __pyx_t_10[4] = __pyx_mstate_global->__pyx_kp_u_db_2;
+      __pyx_t_10[5] = __pyx_t_9;
+      __pyx_t_10[6] = __pyx_mstate_global->__pyx_kp_u__2;
+      __pyx_t_11 = __Pyx_PyUnicode_Join(__pyx_t_10, 7, 33 + __Pyx_PyUnicode_GET_LENGTH(__pyx_v_host) + 1 * 2 + __Pyx_PyUnicode_GET_LENGTH(__pyx_t_5) + 7 + __Pyx_PyUnicode_GET_LENGTH(__pyx_t_9), 65535 | __Pyx_PyUnicode_MAX_CHAR_VALUE(__pyx_v_host) | __Pyx_PyUnicode_MAX_CHAR_VALUE(__pyx_t_5) | __Pyx_PyUnicode_MAX_CHAR_VALUE(__pyx_t_9));
+      if (unlikely(!__pyx_t_11)) __PYX_ERR(0, 27, __pyx_L3_error)
+      __Pyx_GOTREF(__pyx_t_11);
       __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
+      __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
       __pyx_t_8 = 1;
       {
-        PyObject *__pyx_callargs[2] = {__pyx_t_6, __pyx_t_10};
+        PyObject *__pyx_callargs[2] = {__pyx_t_6, __pyx_t_11};
         __pyx_t_4 = __Pyx_PyObject_FastCall(__pyx_t_7, __pyx_callargs+__pyx_t_8, (2-__pyx_t_8) | (__pyx_t_8*__Pyx_PY_VECTORCALL_ARGUMENTS_OFFSET));
         __Pyx_XDECREF(__pyx_t_6); __pyx_t_6 = 0;
-        __Pyx_DECREF(__pyx_t_10); __pyx_t_10 = 0;
+        __Pyx_DECREF(__pyx_t_11); __pyx_t_11 = 0;
         __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
-        if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 13, __pyx_L3_error)
+        if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 27, __pyx_L3_error)
         __Pyx_GOTREF(__pyx_t_4);
       }
       __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
 
-      /* "src/utils/session_cache.py":9
- *     def __init__(self, host: str = 'redis.qcr', port: int = 6379, db: int = 1, ttl: int = 600):
+      /* "src/utils/session_cache.py":18
+ *     ):
  *         self._ttl = ttl
  *         try:             # <<<<<<<<<<<<<<
- *             self._redis = redis.Redis(host=host, port=port, db=db, decode_responses=True)
- *             self._redis.ping()
+ *             self._redis = redis.Redis(
+ *                 host=host,
 */
     }
     __Pyx_XDECREF(__pyx_t_1); __pyx_t_1 = 0;
@@ -2923,82 +3063,83 @@ static PyObject *__pyx_pf_3src_5utils_13session_cache_12SessionCache___init__(CY
     __Pyx_XDECREF(__pyx_t_3); __pyx_t_3 = 0;
     goto __pyx_L8_try_end;
     __pyx_L3_error:;
-    __Pyx_XDECREF(__pyx_t_10); __pyx_t_10 = 0;
+    __Pyx_XDECREF(__pyx_t_11); __pyx_t_11 = 0;
     __Pyx_XDECREF(__pyx_t_4); __pyx_t_4 = 0;
     __Pyx_XDECREF(__pyx_t_5); __pyx_t_5 = 0;
     __Pyx_XDECREF(__pyx_t_6); __pyx_t_6 = 0;
     __Pyx_XDECREF(__pyx_t_7); __pyx_t_7 = 0;
+    __Pyx_XDECREF(__pyx_t_9); __pyx_t_9 = 0;
 
-    /* "src/utils/session_cache.py":14
+    /* "src/utils/session_cache.py":28
  *             self._fallback = None
- *             print(f"Redis session cache connected  (db={db})")
+ *             print(f"Redis session cache connected to {host}:{port}  (db={db})")
  *         except Exception as e:             # <<<<<<<<<<<<<<
  *             print(f" Redis unavailable, falling back to in-memory: {e}")
  *             self._redis = None
 */
-    __pyx_t_11 = __Pyx_PyErr_ExceptionMatches(((PyObject *)(((PyTypeObject*)PyExc_Exception))));
-    if (__pyx_t_11) {
+    __pyx_t_12 = __Pyx_PyErr_ExceptionMatches(((PyObject *)(((PyTypeObject*)PyExc_Exception))));
+    if (__pyx_t_12) {
       __Pyx_AddTraceback("src.utils.session_cache.SessionCache.__init__", __pyx_clineno, __pyx_lineno, __pyx_filename);
-      if (__Pyx_GetException(&__pyx_t_4, &__pyx_t_7, &__pyx_t_10) < 0) __PYX_ERR(0, 14, __pyx_L5_except_error)
+      if (__Pyx_GetException(&__pyx_t_4, &__pyx_t_7, &__pyx_t_11) < 0) __PYX_ERR(0, 28, __pyx_L5_except_error)
       __Pyx_XGOTREF(__pyx_t_4);
       __Pyx_XGOTREF(__pyx_t_7);
-      __Pyx_XGOTREF(__pyx_t_10);
+      __Pyx_XGOTREF(__pyx_t_11);
       __Pyx_INCREF(__pyx_t_7);
       __pyx_v_e = __pyx_t_7;
       /*try:*/ {
 
-        /* "src/utils/session_cache.py":15
- *             print(f"Redis session cache connected  (db={db})")
+        /* "src/utils/session_cache.py":29
+ *             print(f"Redis session cache connected to {host}:{port}  (db={db})")
  *         except Exception as e:
  *             print(f" Redis unavailable, falling back to in-memory: {e}")             # <<<<<<<<<<<<<<
  *             self._redis = None
  *             self._fallback = {}
 */
-        __pyx_t_5 = NULL;
+        __pyx_t_9 = NULL;
         __Pyx_INCREF(__pyx_builtin_print);
-        __pyx_t_12 = __pyx_builtin_print; 
-        __pyx_t_13 = __Pyx_PyObject_FormatSimple(__pyx_v_e, __pyx_mstate_global->__pyx_empty_unicode); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 15, __pyx_L14_error)
+        __pyx_t_5 = __pyx_builtin_print; 
+        __pyx_t_13 = __Pyx_PyObject_FormatSimple(__pyx_v_e, __pyx_mstate_global->__pyx_empty_unicode); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 29, __pyx_L14_error)
         __Pyx_GOTREF(__pyx_t_13);
-        __pyx_t_14 = __Pyx_PyUnicode_Concat(__pyx_mstate_global->__pyx_kp_u_Redis_unavailable_falling_back, __pyx_t_13); if (unlikely(!__pyx_t_14)) __PYX_ERR(0, 15, __pyx_L14_error)
+        __pyx_t_14 = __Pyx_PyUnicode_Concat(__pyx_mstate_global->__pyx_kp_u_Redis_unavailable_falling_back, __pyx_t_13); if (unlikely(!__pyx_t_14)) __PYX_ERR(0, 29, __pyx_L14_error)
         __Pyx_GOTREF(__pyx_t_14);
         __Pyx_DECREF(__pyx_t_13); __pyx_t_13 = 0;
         __pyx_t_8 = 1;
         {
-          PyObject *__pyx_callargs[2] = {__pyx_t_5, __pyx_t_14};
-          __pyx_t_6 = __Pyx_PyObject_FastCall(__pyx_t_12, __pyx_callargs+__pyx_t_8, (2-__pyx_t_8) | (__pyx_t_8*__Pyx_PY_VECTORCALL_ARGUMENTS_OFFSET));
-          __Pyx_XDECREF(__pyx_t_5); __pyx_t_5 = 0;
+          PyObject *__pyx_callargs[2] = {__pyx_t_9, __pyx_t_14};
+          __pyx_t_6 = __Pyx_PyObject_FastCall(__pyx_t_5, __pyx_callargs+__pyx_t_8, (2-__pyx_t_8) | (__pyx_t_8*__Pyx_PY_VECTORCALL_ARGUMENTS_OFFSET));
+          __Pyx_XDECREF(__pyx_t_9); __pyx_t_9 = 0;
           __Pyx_DECREF(__pyx_t_14); __pyx_t_14 = 0;
-          __Pyx_DECREF(__pyx_t_12); __pyx_t_12 = 0;
-          if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 15, __pyx_L14_error)
+          __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
+          if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 29, __pyx_L14_error)
           __Pyx_GOTREF(__pyx_t_6);
         }
         __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
 
-        /* "src/utils/session_cache.py":16
+        /* "src/utils/session_cache.py":30
  *         except Exception as e:
  *             print(f" Redis unavailable, falling back to in-memory: {e}")
  *             self._redis = None             # <<<<<<<<<<<<<<
  *             self._fallback = {}
  * 
 */
-        if (__Pyx_PyObject_SetAttrStr(__pyx_v_self, __pyx_mstate_global->__pyx_n_u_redis_2, Py_None) < 0) __PYX_ERR(0, 16, __pyx_L14_error)
+        if (__Pyx_PyObject_SetAttrStr(__pyx_v_self, __pyx_mstate_global->__pyx_n_u_redis_2, Py_None) < 0) __PYX_ERR(0, 30, __pyx_L14_error)
 
-        /* "src/utils/session_cache.py":17
+        /* "src/utils/session_cache.py":31
  *             print(f" Redis unavailable, falling back to in-memory: {e}")
  *             self._redis = None
  *             self._fallback = {}             # <<<<<<<<<<<<<<
  * 
  *     def get(self, env_id: str) -> dict:
 */
-        __pyx_t_6 = __Pyx_PyDict_NewPresized(0); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 17, __pyx_L14_error)
+        __pyx_t_6 = __Pyx_PyDict_NewPresized(0); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 31, __pyx_L14_error)
         __Pyx_GOTREF(__pyx_t_6);
-        if (__Pyx_PyObject_SetAttrStr(__pyx_v_self, __pyx_mstate_global->__pyx_n_u_fallback, __pyx_t_6) < 0) __PYX_ERR(0, 17, __pyx_L14_error)
+        if (__Pyx_PyObject_SetAttrStr(__pyx_v_self, __pyx_mstate_global->__pyx_n_u_fallback, __pyx_t_6) < 0) __PYX_ERR(0, 31, __pyx_L14_error)
         __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
       }
 
-      /* "src/utils/session_cache.py":14
+      /* "src/utils/session_cache.py":28
  *             self._fallback = None
- *             print(f"Redis session cache connected  (db={db})")
+ *             print(f"Redis session cache connected to {host}:{port}  (db={db})")
  *         except Exception as e:             # <<<<<<<<<<<<<<
  *             print(f" Redis unavailable, falling back to in-memory: {e}")
  *             self._redis = None
@@ -3013,11 +3154,11 @@ static PyObject *__pyx_pf_3src_5utils_13session_cache_12SessionCache___init__(CY
           __Pyx_PyThreadState_declare
           __Pyx_PyThreadState_assign
           __pyx_t_17 = 0; __pyx_t_18 = 0; __pyx_t_19 = 0; __pyx_t_20 = 0; __pyx_t_21 = 0; __pyx_t_22 = 0;
-          __Pyx_XDECREF(__pyx_t_12); __pyx_t_12 = 0;
           __Pyx_XDECREF(__pyx_t_13); __pyx_t_13 = 0;
           __Pyx_XDECREF(__pyx_t_14); __pyx_t_14 = 0;
           __Pyx_XDECREF(__pyx_t_5); __pyx_t_5 = 0;
           __Pyx_XDECREF(__pyx_t_6); __pyx_t_6 = 0;
+          __Pyx_XDECREF(__pyx_t_9); __pyx_t_9 = 0;
            __Pyx_ExceptionSwap(&__pyx_t_20, &__pyx_t_21, &__pyx_t_22);
           if ( unlikely(__Pyx_GetException(&__pyx_t_17, &__pyx_t_18, &__pyx_t_19) < 0)) __Pyx_ErrFetch(&__pyx_t_17, &__pyx_t_18, &__pyx_t_19);
           __Pyx_XGOTREF(__pyx_t_17);
@@ -3026,7 +3167,7 @@ static PyObject *__pyx_pf_3src_5utils_13session_cache_12SessionCache___init__(CY
           __Pyx_XGOTREF(__pyx_t_20);
           __Pyx_XGOTREF(__pyx_t_21);
           __Pyx_XGOTREF(__pyx_t_22);
-          __pyx_t_11 = __pyx_lineno; __pyx_t_15 = __pyx_clineno; __pyx_t_16 = __pyx_filename;
+          __pyx_t_12 = __pyx_lineno; __pyx_t_15 = __pyx_clineno; __pyx_t_16 = __pyx_filename;
           {
             __Pyx_DECREF(__pyx_v_e); __pyx_v_e = 0;
           }
@@ -3039,24 +3180,24 @@ static PyObject *__pyx_pf_3src_5utils_13session_cache_12SessionCache___init__(CY
           __Pyx_XGIVEREF(__pyx_t_19);
           __Pyx_ErrRestore(__pyx_t_17, __pyx_t_18, __pyx_t_19);
           __pyx_t_17 = 0; __pyx_t_18 = 0; __pyx_t_19 = 0; __pyx_t_20 = 0; __pyx_t_21 = 0; __pyx_t_22 = 0;
-          __pyx_lineno = __pyx_t_11; __pyx_clineno = __pyx_t_15; __pyx_filename = __pyx_t_16;
+          __pyx_lineno = __pyx_t_12; __pyx_clineno = __pyx_t_15; __pyx_filename = __pyx_t_16;
           goto __pyx_L5_except_error;
         }
         __pyx_L15:;
       }
       __Pyx_XDECREF(__pyx_t_4); __pyx_t_4 = 0;
       __Pyx_XDECREF(__pyx_t_7); __pyx_t_7 = 0;
-      __Pyx_XDECREF(__pyx_t_10); __pyx_t_10 = 0;
+      __Pyx_XDECREF(__pyx_t_11); __pyx_t_11 = 0;
       goto __pyx_L4_exception_handled;
     }
     goto __pyx_L5_except_error;
 
-    /* "src/utils/session_cache.py":9
- *     def __init__(self, host: str = 'redis.qcr', port: int = 6379, db: int = 1, ttl: int = 600):
+    /* "src/utils/session_cache.py":18
+ *     ):
  *         self._ttl = ttl
  *         try:             # <<<<<<<<<<<<<<
- *             self._redis = redis.Redis(host=host, port=port, db=db, decode_responses=True)
- *             self._redis.ping()
+ *             self._redis = redis.Redis(
+ *                 host=host,
 */
     __pyx_L5_except_error:;
     __Pyx_XGIVEREF(__pyx_t_1);
@@ -3072,12 +3213,12 @@ static PyObject *__pyx_pf_3src_5utils_13session_cache_12SessionCache___init__(CY
     __pyx_L8_try_end:;
   }
 
-  /* "src/utils/session_cache.py":7
+  /* "src/utils/session_cache.py":10
  * 
  * class SessionCache:
- *     def __init__(self, host: str = 'redis.qcr', port: int = 6379, db: int = 1, ttl: int = 600):             # <<<<<<<<<<<<<<
- *         self._ttl = ttl
- *         try:
+ *     def __init__(             # <<<<<<<<<<<<<<
+ *         self,
+ *         host: str = os.getenv("REDIS_HOST", "redis-server"),
 */
 
   /* function exit code */
@@ -3088,8 +3229,8 @@ static PyObject *__pyx_pf_3src_5utils_13session_cache_12SessionCache___init__(CY
   __Pyx_XDECREF(__pyx_t_5);
   __Pyx_XDECREF(__pyx_t_6);
   __Pyx_XDECREF(__pyx_t_7);
-  __Pyx_XDECREF(__pyx_t_10);
-  __Pyx_XDECREF(__pyx_t_12);
+  __Pyx_XDECREF(__pyx_t_9);
+  __Pyx_XDECREF(__pyx_t_11);
   __Pyx_XDECREF(__pyx_t_13);
   __Pyx_XDECREF(__pyx_t_14);
   __Pyx_AddTraceback("src.utils.session_cache.SessionCache.__init__", __pyx_clineno, __pyx_lineno, __pyx_filename);
@@ -3101,7 +3242,7 @@ static PyObject *__pyx_pf_3src_5utils_13session_cache_12SessionCache___init__(CY
   return __pyx_r;
 }
 
-/* "src/utils/session_cache.py":19
+/* "src/utils/session_cache.py":33
  *             self._fallback = {}
  * 
  *     def get(self, env_id: str) -> dict:             # <<<<<<<<<<<<<<
@@ -3149,39 +3290,39 @@ PyObject *__pyx_args, PyObject *__pyx_kwds
   {
     PyObject ** const __pyx_pyargnames[] = {&__pyx_mstate_global->__pyx_n_u_self,&__pyx_mstate_global->__pyx_n_u_env_id,0};
     const Py_ssize_t __pyx_kwds_len = (__pyx_kwds) ? __Pyx_NumKwargs_FASTCALL(__pyx_kwds) : 0;
-    if (unlikely(__pyx_kwds_len) < 0) __PYX_ERR(0, 19, __pyx_L3_error)
+    if (unlikely(__pyx_kwds_len) < 0) __PYX_ERR(0, 33, __pyx_L3_error)
     if (__pyx_kwds_len > 0) {
       switch (__pyx_nargs) {
         case  2:
         values[1] = __Pyx_ArgRef_FASTCALL(__pyx_args, 1);
-        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[1])) __PYX_ERR(0, 19, __pyx_L3_error)
+        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[1])) __PYX_ERR(0, 33, __pyx_L3_error)
         CYTHON_FALLTHROUGH;
         case  1:
         values[0] = __Pyx_ArgRef_FASTCALL(__pyx_args, 0);
-        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[0])) __PYX_ERR(0, 19, __pyx_L3_error)
+        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[0])) __PYX_ERR(0, 33, __pyx_L3_error)
         CYTHON_FALLTHROUGH;
         case  0: break;
         default: goto __pyx_L5_argtuple_error;
       }
       const Py_ssize_t kwd_pos_args = __pyx_nargs;
-      if (__Pyx_ParseKeywords(__pyx_kwds, __pyx_kwvalues, __pyx_pyargnames, 0, values, kwd_pos_args, __pyx_kwds_len, "get", 0) < 0) __PYX_ERR(0, 19, __pyx_L3_error)
+      if (__Pyx_ParseKeywords(__pyx_kwds, __pyx_kwvalues, __pyx_pyargnames, 0, values, kwd_pos_args, __pyx_kwds_len, "get", 0) < 0) __PYX_ERR(0, 33, __pyx_L3_error)
       for (Py_ssize_t i = __pyx_nargs; i < 2; i++) {
-        if (unlikely(!values[i])) { __Pyx_RaiseArgtupleInvalid("get", 1, 2, 2, i); __PYX_ERR(0, 19, __pyx_L3_error) }
+        if (unlikely(!values[i])) { __Pyx_RaiseArgtupleInvalid("get", 1, 2, 2, i); __PYX_ERR(0, 33, __pyx_L3_error) }
       }
     } else if (unlikely(__pyx_nargs != 2)) {
       goto __pyx_L5_argtuple_error;
     } else {
       values[0] = __Pyx_ArgRef_FASTCALL(__pyx_args, 0);
-      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[0])) __PYX_ERR(0, 19, __pyx_L3_error)
+      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[0])) __PYX_ERR(0, 33, __pyx_L3_error)
       values[1] = __Pyx_ArgRef_FASTCALL(__pyx_args, 1);
-      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[1])) __PYX_ERR(0, 19, __pyx_L3_error)
+      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[1])) __PYX_ERR(0, 33, __pyx_L3_error)
     }
     __pyx_v_self = values[0];
     __pyx_v_env_id = ((PyObject*)values[1]);
   }
   goto __pyx_L6_skip;
   __pyx_L5_argtuple_error:;
-  __Pyx_RaiseArgtupleInvalid("get", 1, 2, 2, __pyx_nargs); __PYX_ERR(0, 19, __pyx_L3_error)
+  __Pyx_RaiseArgtupleInvalid("get", 1, 2, 2, __pyx_nargs); __PYX_ERR(0, 33, __pyx_L3_error)
   __pyx_L6_skip:;
   goto __pyx_L4_argument_unpacking_done;
   __pyx_L3_error:;
@@ -3192,7 +3333,7 @@ PyObject *__pyx_args, PyObject *__pyx_kwds
   __Pyx_RefNannyFinishContext();
   return NULL;
   __pyx_L4_argument_unpacking_done:;
-  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_env_id), (&PyUnicode_Type), 0, "env_id", 2))) __PYX_ERR(0, 19, __pyx_L1_error)
+  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_env_id), (&PyUnicode_Type), 0, "env_id", 2))) __PYX_ERR(0, 33, __pyx_L1_error)
   __pyx_r = __pyx_pf_3src_5utils_13session_cache_12SessionCache_2get(__pyx_self, __pyx_v_self, __pyx_v_env_id);
 
   /* function exit code */
@@ -3245,20 +3386,20 @@ static PyObject *__pyx_pf_3src_5utils_13session_cache_12SessionCache_2get(CYTHON
   int __pyx_clineno = 0;
   __Pyx_RefNannySetupContext("get", 0);
 
-  /* "src/utils/session_cache.py":20
+  /* "src/utils/session_cache.py":34
  * 
  *     def get(self, env_id: str) -> dict:
  *         if self._redis:             # <<<<<<<<<<<<<<
  *             try:
  *                 val = self._redis.get(f"session:{env_id}")
 */
-  __pyx_t_1 = __Pyx_PyObject_GetAttrStr(__pyx_v_self, __pyx_mstate_global->__pyx_n_u_redis_2); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 20, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_PyObject_GetAttrStr(__pyx_v_self, __pyx_mstate_global->__pyx_n_u_redis_2); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 34, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
-  __pyx_t_2 = __Pyx_PyObject_IsTrue(__pyx_t_1); if (unlikely((__pyx_t_2 < 0))) __PYX_ERR(0, 20, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_PyObject_IsTrue(__pyx_t_1); if (unlikely((__pyx_t_2 < 0))) __PYX_ERR(0, 34, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
   if (__pyx_t_2) {
 
-    /* "src/utils/session_cache.py":21
+    /* "src/utils/session_cache.py":35
  *     def get(self, env_id: str) -> dict:
  *         if self._redis:
  *             try:             # <<<<<<<<<<<<<<
@@ -3274,18 +3415,18 @@ static PyObject *__pyx_pf_3src_5utils_13session_cache_12SessionCache_2get(CYTHON
       __Pyx_XGOTREF(__pyx_t_5);
       /*try:*/ {
 
-        /* "src/utils/session_cache.py":22
+        /* "src/utils/session_cache.py":36
  *         if self._redis:
  *             try:
  *                 val = self._redis.get(f"session:{env_id}")             # <<<<<<<<<<<<<<
  *                 return json.loads(val) if val else {}
  *             except Exception as e:
 */
-        __pyx_t_7 = __Pyx_PyObject_GetAttrStr(__pyx_v_self, __pyx_mstate_global->__pyx_n_u_redis_2); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 22, __pyx_L4_error)
+        __pyx_t_7 = __Pyx_PyObject_GetAttrStr(__pyx_v_self, __pyx_mstate_global->__pyx_n_u_redis_2); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 36, __pyx_L4_error)
         __Pyx_GOTREF(__pyx_t_7);
         __pyx_t_6 = __pyx_t_7;
         __Pyx_INCREF(__pyx_t_6);
-        __pyx_t_8 = __Pyx_PyUnicode_Concat(__pyx_mstate_global->__pyx_kp_u_session, __pyx_v_env_id); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 22, __pyx_L4_error)
+        __pyx_t_8 = __Pyx_PyUnicode_Concat(__pyx_mstate_global->__pyx_kp_u_session, __pyx_v_env_id); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 36, __pyx_L4_error)
         __Pyx_GOTREF(__pyx_t_8);
         __pyx_t_9 = 0;
         {
@@ -3294,13 +3435,13 @@ static PyObject *__pyx_pf_3src_5utils_13session_cache_12SessionCache_2get(CYTHON
           __Pyx_XDECREF(__pyx_t_6); __pyx_t_6 = 0;
           __Pyx_DECREF(__pyx_t_8); __pyx_t_8 = 0;
           __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
-          if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 22, __pyx_L4_error)
+          if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 36, __pyx_L4_error)
           __Pyx_GOTREF(__pyx_t_1);
         }
         __pyx_v_val = __pyx_t_1;
         __pyx_t_1 = 0;
 
-        /* "src/utils/session_cache.py":23
+        /* "src/utils/session_cache.py":37
  *             try:
  *                 val = self._redis.get(f"session:{env_id}")
  *                 return json.loads(val) if val else {}             # <<<<<<<<<<<<<<
@@ -3308,12 +3449,12 @@ static PyObject *__pyx_pf_3src_5utils_13session_cache_12SessionCache_2get(CYTHON
  *                 print(f"Redis GET error: {e}")
 */
         __Pyx_XDECREF(__pyx_r);
-        __pyx_t_2 = __Pyx_PyObject_IsTrue(__pyx_v_val); if (unlikely((__pyx_t_2 < 0))) __PYX_ERR(0, 23, __pyx_L4_error)
+        __pyx_t_2 = __Pyx_PyObject_IsTrue(__pyx_v_val); if (unlikely((__pyx_t_2 < 0))) __PYX_ERR(0, 37, __pyx_L4_error)
         if (__pyx_t_2) {
           __pyx_t_8 = NULL;
-          __Pyx_GetModuleGlobalName(__pyx_t_6, __pyx_mstate_global->__pyx_n_u_json); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 23, __pyx_L4_error)
+          __Pyx_GetModuleGlobalName(__pyx_t_6, __pyx_mstate_global->__pyx_n_u_json); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 37, __pyx_L4_error)
           __Pyx_GOTREF(__pyx_t_6);
-          __pyx_t_10 = __Pyx_PyObject_GetAttrStr(__pyx_t_6, __pyx_mstate_global->__pyx_n_u_loads); if (unlikely(!__pyx_t_10)) __PYX_ERR(0, 23, __pyx_L4_error)
+          __pyx_t_10 = __Pyx_PyObject_GetAttrStr(__pyx_t_6, __pyx_mstate_global->__pyx_n_u_loads); if (unlikely(!__pyx_t_10)) __PYX_ERR(0, 37, __pyx_L4_error)
           __Pyx_GOTREF(__pyx_t_10);
           __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
           __pyx_t_9 = 1;
@@ -3333,14 +3474,14 @@ static PyObject *__pyx_pf_3src_5utils_13session_cache_12SessionCache_2get(CYTHON
             __pyx_t_7 = __Pyx_PyObject_FastCall(__pyx_t_10, __pyx_callargs+__pyx_t_9, (2-__pyx_t_9) | (__pyx_t_9*__Pyx_PY_VECTORCALL_ARGUMENTS_OFFSET));
             __Pyx_XDECREF(__pyx_t_8); __pyx_t_8 = 0;
             __Pyx_DECREF(__pyx_t_10); __pyx_t_10 = 0;
-            if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 23, __pyx_L4_error)
+            if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 37, __pyx_L4_error)
             __Pyx_GOTREF(__pyx_t_7);
           }
-          if (!(likely(PyDict_CheckExact(__pyx_t_7))||((__pyx_t_7) == Py_None) || __Pyx_RaiseUnexpectedTypeError("dict", __pyx_t_7))) __PYX_ERR(0, 23, __pyx_L4_error)
+          if (!(likely(PyDict_CheckExact(__pyx_t_7))||((__pyx_t_7) == Py_None) || __Pyx_RaiseUnexpectedTypeError("dict", __pyx_t_7))) __PYX_ERR(0, 37, __pyx_L4_error)
           __pyx_t_1 = __pyx_t_7;
           __pyx_t_7 = 0;
         } else {
-          __pyx_t_7 = __Pyx_PyDict_NewPresized(0); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 23, __pyx_L4_error)
+          __pyx_t_7 = __Pyx_PyDict_NewPresized(0); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 37, __pyx_L4_error)
           __Pyx_GOTREF(__pyx_t_7);
           __pyx_t_1 = __pyx_t_7;
           __pyx_t_7 = 0;
@@ -3349,7 +3490,7 @@ static PyObject *__pyx_pf_3src_5utils_13session_cache_12SessionCache_2get(CYTHON
         __pyx_t_1 = 0;
         goto __pyx_L8_try_return;
 
-        /* "src/utils/session_cache.py":21
+        /* "src/utils/session_cache.py":35
  *     def get(self, env_id: str) -> dict:
  *         if self._redis:
  *             try:             # <<<<<<<<<<<<<<
@@ -3364,7 +3505,7 @@ static PyObject *__pyx_pf_3src_5utils_13session_cache_12SessionCache_2get(CYTHON
       __Pyx_XDECREF(__pyx_t_7); __pyx_t_7 = 0;
       __Pyx_XDECREF(__pyx_t_8); __pyx_t_8 = 0;
 
-      /* "src/utils/session_cache.py":24
+      /* "src/utils/session_cache.py":38
  *                 val = self._redis.get(f"session:{env_id}")
  *                 return json.loads(val) if val else {}
  *             except Exception as e:             # <<<<<<<<<<<<<<
@@ -3374,7 +3515,7 @@ static PyObject *__pyx_pf_3src_5utils_13session_cache_12SessionCache_2get(CYTHON
       __pyx_t_11 = __Pyx_PyErr_ExceptionMatches(((PyObject *)(((PyTypeObject*)PyExc_Exception))));
       if (__pyx_t_11) {
         __Pyx_AddTraceback("src.utils.session_cache.SessionCache.get", __pyx_clineno, __pyx_lineno, __pyx_filename);
-        if (__Pyx_GetException(&__pyx_t_1, &__pyx_t_7, &__pyx_t_10) < 0) __PYX_ERR(0, 24, __pyx_L6_except_error)
+        if (__Pyx_GetException(&__pyx_t_1, &__pyx_t_7, &__pyx_t_10) < 0) __PYX_ERR(0, 38, __pyx_L6_except_error)
         __Pyx_XGOTREF(__pyx_t_1);
         __Pyx_XGOTREF(__pyx_t_7);
         __Pyx_XGOTREF(__pyx_t_10);
@@ -3382,7 +3523,7 @@ static PyObject *__pyx_pf_3src_5utils_13session_cache_12SessionCache_2get(CYTHON
         __pyx_v_e = __pyx_t_7;
         /*try:*/ {
 
-          /* "src/utils/session_cache.py":25
+          /* "src/utils/session_cache.py":39
  *                 return json.loads(val) if val else {}
  *             except Exception as e:
  *                 print(f"Redis GET error: {e}")             # <<<<<<<<<<<<<<
@@ -3392,9 +3533,9 @@ static PyObject *__pyx_pf_3src_5utils_13session_cache_12SessionCache_2get(CYTHON
           __pyx_t_6 = NULL;
           __Pyx_INCREF(__pyx_builtin_print);
           __pyx_t_12 = __pyx_builtin_print; 
-          __pyx_t_13 = __Pyx_PyObject_FormatSimple(__pyx_v_e, __pyx_mstate_global->__pyx_empty_unicode); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 25, __pyx_L15_error)
+          __pyx_t_13 = __Pyx_PyObject_FormatSimple(__pyx_v_e, __pyx_mstate_global->__pyx_empty_unicode); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 39, __pyx_L15_error)
           __Pyx_GOTREF(__pyx_t_13);
-          __pyx_t_14 = __Pyx_PyUnicode_Concat(__pyx_mstate_global->__pyx_kp_u_Redis_GET_error, __pyx_t_13); if (unlikely(!__pyx_t_14)) __PYX_ERR(0, 25, __pyx_L15_error)
+          __pyx_t_14 = __Pyx_PyUnicode_Concat(__pyx_mstate_global->__pyx_kp_u_Redis_GET_error, __pyx_t_13); if (unlikely(!__pyx_t_14)) __PYX_ERR(0, 39, __pyx_L15_error)
           __Pyx_GOTREF(__pyx_t_14);
           __Pyx_DECREF(__pyx_t_13); __pyx_t_13 = 0;
           __pyx_t_9 = 1;
@@ -3404,12 +3545,12 @@ static PyObject *__pyx_pf_3src_5utils_13session_cache_12SessionCache_2get(CYTHON
             __Pyx_XDECREF(__pyx_t_6); __pyx_t_6 = 0;
             __Pyx_DECREF(__pyx_t_14); __pyx_t_14 = 0;
             __Pyx_DECREF(__pyx_t_12); __pyx_t_12 = 0;
-            if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 25, __pyx_L15_error)
+            if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 39, __pyx_L15_error)
             __Pyx_GOTREF(__pyx_t_8);
           }
           __Pyx_DECREF(__pyx_t_8); __pyx_t_8 = 0;
 
-          /* "src/utils/session_cache.py":26
+          /* "src/utils/session_cache.py":40
  *             except Exception as e:
  *                 print(f"Redis GET error: {e}")
  *                 return {}             # <<<<<<<<<<<<<<
@@ -3417,7 +3558,7 @@ static PyObject *__pyx_pf_3src_5utils_13session_cache_12SessionCache_2get(CYTHON
  * 
 */
           __Pyx_XDECREF(__pyx_r);
-          __pyx_t_8 = __Pyx_PyDict_NewPresized(0); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 26, __pyx_L15_error)
+          __pyx_t_8 = __Pyx_PyDict_NewPresized(0); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 40, __pyx_L15_error)
           __Pyx_GOTREF(__pyx_t_8);
           __pyx_r = ((PyObject*)__pyx_t_8);
           __pyx_t_8 = 0;
@@ -3427,7 +3568,7 @@ static PyObject *__pyx_pf_3src_5utils_13session_cache_12SessionCache_2get(CYTHON
           goto __pyx_L14_return;
         }
 
-        /* "src/utils/session_cache.py":24
+        /* "src/utils/session_cache.py":38
  *                 val = self._redis.get(f"session:{env_id}")
  *                 return json.loads(val) if val else {}
  *             except Exception as e:             # <<<<<<<<<<<<<<
@@ -3481,7 +3622,7 @@ static PyObject *__pyx_pf_3src_5utils_13session_cache_12SessionCache_2get(CYTHON
       }
       goto __pyx_L6_except_error;
 
-      /* "src/utils/session_cache.py":21
+      /* "src/utils/session_cache.py":35
  *     def get(self, env_id: str) -> dict:
  *         if self._redis:
  *             try:             # <<<<<<<<<<<<<<
@@ -3508,7 +3649,7 @@ static PyObject *__pyx_pf_3src_5utils_13session_cache_12SessionCache_2get(CYTHON
       goto __pyx_L0;
     }
 
-    /* "src/utils/session_cache.py":20
+    /* "src/utils/session_cache.py":34
  * 
  *     def get(self, env_id: str) -> dict:
  *         if self._redis:             # <<<<<<<<<<<<<<
@@ -3517,7 +3658,7 @@ static PyObject *__pyx_pf_3src_5utils_13session_cache_12SessionCache_2get(CYTHON
 */
   }
 
-  /* "src/utils/session_cache.py":27
+  /* "src/utils/session_cache.py":41
  *                 print(f"Redis GET error: {e}")
  *                 return {}
  *         return self._fallback.get(env_id, {})             # <<<<<<<<<<<<<<
@@ -3525,11 +3666,11 @@ static PyObject *__pyx_pf_3src_5utils_13session_cache_12SessionCache_2get(CYTHON
  *     def set(self, env_id: str, data: dict) -> None:
 */
   __Pyx_XDECREF(__pyx_r);
-  __pyx_t_1 = __Pyx_PyObject_GetAttrStr(__pyx_v_self, __pyx_mstate_global->__pyx_n_u_fallback); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 27, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_PyObject_GetAttrStr(__pyx_v_self, __pyx_mstate_global->__pyx_n_u_fallback); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 41, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __pyx_t_7 = __pyx_t_1;
   __Pyx_INCREF(__pyx_t_7);
-  __pyx_t_8 = __Pyx_PyDict_NewPresized(0); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 27, __pyx_L1_error)
+  __pyx_t_8 = __Pyx_PyDict_NewPresized(0); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 41, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_8);
   __pyx_t_9 = 0;
   {
@@ -3538,15 +3679,15 @@ static PyObject *__pyx_pf_3src_5utils_13session_cache_12SessionCache_2get(CYTHON
     __Pyx_XDECREF(__pyx_t_7); __pyx_t_7 = 0;
     __Pyx_DECREF(__pyx_t_8); __pyx_t_8 = 0;
     __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-    if (unlikely(!__pyx_t_10)) __PYX_ERR(0, 27, __pyx_L1_error)
+    if (unlikely(!__pyx_t_10)) __PYX_ERR(0, 41, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_10);
   }
-  if (!(likely(PyDict_CheckExact(__pyx_t_10))||((__pyx_t_10) == Py_None) || __Pyx_RaiseUnexpectedTypeError("dict", __pyx_t_10))) __PYX_ERR(0, 27, __pyx_L1_error)
+  if (!(likely(PyDict_CheckExact(__pyx_t_10))||((__pyx_t_10) == Py_None) || __Pyx_RaiseUnexpectedTypeError("dict", __pyx_t_10))) __PYX_ERR(0, 41, __pyx_L1_error)
   __pyx_r = ((PyObject*)__pyx_t_10);
   __pyx_t_10 = 0;
   goto __pyx_L0;
 
-  /* "src/utils/session_cache.py":19
+  /* "src/utils/session_cache.py":33
  *             self._fallback = {}
  * 
  *     def get(self, env_id: str) -> dict:             # <<<<<<<<<<<<<<
@@ -3574,7 +3715,7 @@ static PyObject *__pyx_pf_3src_5utils_13session_cache_12SessionCache_2get(CYTHON
   return __pyx_r;
 }
 
-/* "src/utils/session_cache.py":29
+/* "src/utils/session_cache.py":43
  *         return self._fallback.get(env_id, {})
  * 
  *     def set(self, env_id: str, data: dict) -> None:             # <<<<<<<<<<<<<<
@@ -3623,38 +3764,38 @@ PyObject *__pyx_args, PyObject *__pyx_kwds
   {
     PyObject ** const __pyx_pyargnames[] = {&__pyx_mstate_global->__pyx_n_u_self,&__pyx_mstate_global->__pyx_n_u_env_id,&__pyx_mstate_global->__pyx_n_u_data,0};
     const Py_ssize_t __pyx_kwds_len = (__pyx_kwds) ? __Pyx_NumKwargs_FASTCALL(__pyx_kwds) : 0;
-    if (unlikely(__pyx_kwds_len) < 0) __PYX_ERR(0, 29, __pyx_L3_error)
+    if (unlikely(__pyx_kwds_len) < 0) __PYX_ERR(0, 43, __pyx_L3_error)
     if (__pyx_kwds_len > 0) {
       switch (__pyx_nargs) {
         case  3:
         values[2] = __Pyx_ArgRef_FASTCALL(__pyx_args, 2);
-        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[2])) __PYX_ERR(0, 29, __pyx_L3_error)
+        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[2])) __PYX_ERR(0, 43, __pyx_L3_error)
         CYTHON_FALLTHROUGH;
         case  2:
         values[1] = __Pyx_ArgRef_FASTCALL(__pyx_args, 1);
-        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[1])) __PYX_ERR(0, 29, __pyx_L3_error)
+        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[1])) __PYX_ERR(0, 43, __pyx_L3_error)
         CYTHON_FALLTHROUGH;
         case  1:
         values[0] = __Pyx_ArgRef_FASTCALL(__pyx_args, 0);
-        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[0])) __PYX_ERR(0, 29, __pyx_L3_error)
+        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[0])) __PYX_ERR(0, 43, __pyx_L3_error)
         CYTHON_FALLTHROUGH;
         case  0: break;
         default: goto __pyx_L5_argtuple_error;
       }
       const Py_ssize_t kwd_pos_args = __pyx_nargs;
-      if (__Pyx_ParseKeywords(__pyx_kwds, __pyx_kwvalues, __pyx_pyargnames, 0, values, kwd_pos_args, __pyx_kwds_len, "set", 0) < 0) __PYX_ERR(0, 29, __pyx_L3_error)
+      if (__Pyx_ParseKeywords(__pyx_kwds, __pyx_kwvalues, __pyx_pyargnames, 0, values, kwd_pos_args, __pyx_kwds_len, "set", 0) < 0) __PYX_ERR(0, 43, __pyx_L3_error)
       for (Py_ssize_t i = __pyx_nargs; i < 3; i++) {
-        if (unlikely(!values[i])) { __Pyx_RaiseArgtupleInvalid("set", 1, 3, 3, i); __PYX_ERR(0, 29, __pyx_L3_error) }
+        if (unlikely(!values[i])) { __Pyx_RaiseArgtupleInvalid("set", 1, 3, 3, i); __PYX_ERR(0, 43, __pyx_L3_error) }
       }
     } else if (unlikely(__pyx_nargs != 3)) {
       goto __pyx_L5_argtuple_error;
     } else {
       values[0] = __Pyx_ArgRef_FASTCALL(__pyx_args, 0);
-      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[0])) __PYX_ERR(0, 29, __pyx_L3_error)
+      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[0])) __PYX_ERR(0, 43, __pyx_L3_error)
       values[1] = __Pyx_ArgRef_FASTCALL(__pyx_args, 1);
-      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[1])) __PYX_ERR(0, 29, __pyx_L3_error)
+      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[1])) __PYX_ERR(0, 43, __pyx_L3_error)
       values[2] = __Pyx_ArgRef_FASTCALL(__pyx_args, 2);
-      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[2])) __PYX_ERR(0, 29, __pyx_L3_error)
+      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[2])) __PYX_ERR(0, 43, __pyx_L3_error)
     }
     __pyx_v_self = values[0];
     __pyx_v_env_id = ((PyObject*)values[1]);
@@ -3662,7 +3803,7 @@ PyObject *__pyx_args, PyObject *__pyx_kwds
   }
   goto __pyx_L6_skip;
   __pyx_L5_argtuple_error:;
-  __Pyx_RaiseArgtupleInvalid("set", 1, 3, 3, __pyx_nargs); __PYX_ERR(0, 29, __pyx_L3_error)
+  __Pyx_RaiseArgtupleInvalid("set", 1, 3, 3, __pyx_nargs); __PYX_ERR(0, 43, __pyx_L3_error)
   __pyx_L6_skip:;
   goto __pyx_L4_argument_unpacking_done;
   __pyx_L3_error:;
@@ -3673,8 +3814,8 @@ PyObject *__pyx_args, PyObject *__pyx_kwds
   __Pyx_RefNannyFinishContext();
   return NULL;
   __pyx_L4_argument_unpacking_done:;
-  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_env_id), (&PyUnicode_Type), 0, "env_id", 2))) __PYX_ERR(0, 29, __pyx_L1_error)
-  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_data), (&PyDict_Type), 0, "data", 2))) __PYX_ERR(0, 29, __pyx_L1_error)
+  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_env_id), (&PyUnicode_Type), 0, "env_id", 2))) __PYX_ERR(0, 43, __pyx_L1_error)
+  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_data), (&PyDict_Type), 0, "data", 2))) __PYX_ERR(0, 43, __pyx_L1_error)
   __pyx_r = __pyx_pf_3src_5utils_13session_cache_12SessionCache_4set(__pyx_self, __pyx_v_self, __pyx_v_env_id, __pyx_v_data);
 
   /* function exit code */
@@ -3726,20 +3867,20 @@ static PyObject *__pyx_pf_3src_5utils_13session_cache_12SessionCache_4set(CYTHON
   int __pyx_clineno = 0;
   __Pyx_RefNannySetupContext("set", 0);
 
-  /* "src/utils/session_cache.py":30
+  /* "src/utils/session_cache.py":44
  * 
  *     def set(self, env_id: str, data: dict) -> None:
  *         if self._redis:             # <<<<<<<<<<<<<<
  *             try:
  *                 self._redis.setex(
 */
-  __pyx_t_1 = __Pyx_PyObject_GetAttrStr(__pyx_v_self, __pyx_mstate_global->__pyx_n_u_redis_2); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 30, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_PyObject_GetAttrStr(__pyx_v_self, __pyx_mstate_global->__pyx_n_u_redis_2); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 44, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
-  __pyx_t_2 = __Pyx_PyObject_IsTrue(__pyx_t_1); if (unlikely((__pyx_t_2 < 0))) __PYX_ERR(0, 30, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_PyObject_IsTrue(__pyx_t_1); if (unlikely((__pyx_t_2 < 0))) __PYX_ERR(0, 44, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
   if (__pyx_t_2) {
 
-    /* "src/utils/session_cache.py":31
+    /* "src/utils/session_cache.py":45
  *     def set(self, env_id: str, data: dict) -> None:
  *         if self._redis:
  *             try:             # <<<<<<<<<<<<<<
@@ -3755,39 +3896,39 @@ static PyObject *__pyx_pf_3src_5utils_13session_cache_12SessionCache_4set(CYTHON
       __Pyx_XGOTREF(__pyx_t_5);
       /*try:*/ {
 
-        /* "src/utils/session_cache.py":32
+        /* "src/utils/session_cache.py":46
  *         if self._redis:
  *             try:
  *                 self._redis.setex(             # <<<<<<<<<<<<<<
  *                     f"session:{env_id}",
  *                     self._ttl,
 */
-        __pyx_t_7 = __Pyx_PyObject_GetAttrStr(__pyx_v_self, __pyx_mstate_global->__pyx_n_u_redis_2); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 32, __pyx_L4_error)
+        __pyx_t_7 = __Pyx_PyObject_GetAttrStr(__pyx_v_self, __pyx_mstate_global->__pyx_n_u_redis_2); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 46, __pyx_L4_error)
         __Pyx_GOTREF(__pyx_t_7);
         __pyx_t_6 = __pyx_t_7;
         __Pyx_INCREF(__pyx_t_6);
 
-        /* "src/utils/session_cache.py":33
+        /* "src/utils/session_cache.py":47
  *             try:
  *                 self._redis.setex(
  *                     f"session:{env_id}",             # <<<<<<<<<<<<<<
  *                     self._ttl,
  *                     json.dumps(data, default=str)
 */
-        __pyx_t_8 = __Pyx_PyUnicode_Concat(__pyx_mstate_global->__pyx_kp_u_session, __pyx_v_env_id); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 33, __pyx_L4_error)
+        __pyx_t_8 = __Pyx_PyUnicode_Concat(__pyx_mstate_global->__pyx_kp_u_session, __pyx_v_env_id); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 47, __pyx_L4_error)
         __Pyx_GOTREF(__pyx_t_8);
 
-        /* "src/utils/session_cache.py":34
+        /* "src/utils/session_cache.py":48
  *                 self._redis.setex(
  *                     f"session:{env_id}",
  *                     self._ttl,             # <<<<<<<<<<<<<<
  *                     json.dumps(data, default=str)
  *                 )
 */
-        __pyx_t_9 = __Pyx_PyObject_GetAttrStr(__pyx_v_self, __pyx_mstate_global->__pyx_n_u_ttl_2); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 34, __pyx_L4_error)
+        __pyx_t_9 = __Pyx_PyObject_GetAttrStr(__pyx_v_self, __pyx_mstate_global->__pyx_n_u_ttl_2); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 48, __pyx_L4_error)
         __Pyx_GOTREF(__pyx_t_9);
 
-        /* "src/utils/session_cache.py":35
+        /* "src/utils/session_cache.py":49
  *                     f"session:{env_id}",
  *                     self._ttl,
  *                     json.dumps(data, default=str)             # <<<<<<<<<<<<<<
@@ -3795,9 +3936,9 @@ static PyObject *__pyx_pf_3src_5utils_13session_cache_12SessionCache_4set(CYTHON
  *             except Exception as e:
 */
         __pyx_t_11 = NULL;
-        __Pyx_GetModuleGlobalName(__pyx_t_12, __pyx_mstate_global->__pyx_n_u_json); if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 35, __pyx_L4_error)
+        __Pyx_GetModuleGlobalName(__pyx_t_12, __pyx_mstate_global->__pyx_n_u_json); if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 49, __pyx_L4_error)
         __Pyx_GOTREF(__pyx_t_12);
-        __pyx_t_13 = __Pyx_PyObject_GetAttrStr(__pyx_t_12, __pyx_mstate_global->__pyx_n_u_dumps); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 35, __pyx_L4_error)
+        __pyx_t_13 = __Pyx_PyObject_GetAttrStr(__pyx_t_12, __pyx_mstate_global->__pyx_n_u_dumps); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 49, __pyx_L4_error)
         __Pyx_GOTREF(__pyx_t_13);
         __Pyx_DECREF(__pyx_t_12); __pyx_t_12 = 0;
         __pyx_t_14 = 1;
@@ -3814,14 +3955,14 @@ static PyObject *__pyx_pf_3src_5utils_13session_cache_12SessionCache_4set(CYTHON
         #endif
         {
           PyObject *__pyx_callargs[2 + ((CYTHON_VECTORCALL) ? 1 : 0)] = {__pyx_t_11, __pyx_v_data};
-          __pyx_t_12 = __Pyx_MakeVectorcallBuilderKwds(1); if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 35, __pyx_L4_error)
+          __pyx_t_12 = __Pyx_MakeVectorcallBuilderKwds(1); if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 49, __pyx_L4_error)
           __Pyx_GOTREF(__pyx_t_12);
-          if (__Pyx_VectorcallBuilder_AddArg(__pyx_mstate_global->__pyx_n_u_default, ((PyObject *)(&PyUnicode_Type)), __pyx_t_12, __pyx_callargs+2, 0) < 0) __PYX_ERR(0, 35, __pyx_L4_error)
+          if (__Pyx_VectorcallBuilder_AddArg(__pyx_mstate_global->__pyx_n_u_default, ((PyObject *)(&PyUnicode_Type)), __pyx_t_12, __pyx_callargs+2, 0) < 0) __PYX_ERR(0, 49, __pyx_L4_error)
           __pyx_t_10 = __Pyx_Object_Vectorcall_CallFromBuilder(__pyx_t_13, __pyx_callargs+__pyx_t_14, (2-__pyx_t_14) | (__pyx_t_14*__Pyx_PY_VECTORCALL_ARGUMENTS_OFFSET), __pyx_t_12);
           __Pyx_XDECREF(__pyx_t_11); __pyx_t_11 = 0;
           __Pyx_DECREF(__pyx_t_12); __pyx_t_12 = 0;
           __Pyx_DECREF(__pyx_t_13); __pyx_t_13 = 0;
-          if (unlikely(!__pyx_t_10)) __PYX_ERR(0, 35, __pyx_L4_error)
+          if (unlikely(!__pyx_t_10)) __PYX_ERR(0, 49, __pyx_L4_error)
           __Pyx_GOTREF(__pyx_t_10);
         }
         __pyx_t_14 = 0;
@@ -3833,12 +3974,12 @@ static PyObject *__pyx_pf_3src_5utils_13session_cache_12SessionCache_4set(CYTHON
           __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
           __Pyx_DECREF(__pyx_t_10); __pyx_t_10 = 0;
           __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
-          if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 32, __pyx_L4_error)
+          if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 46, __pyx_L4_error)
           __Pyx_GOTREF(__pyx_t_1);
         }
         __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-        /* "src/utils/session_cache.py":31
+        /* "src/utils/session_cache.py":45
  *     def set(self, env_id: str, data: dict) -> None:
  *         if self._redis:
  *             try:             # <<<<<<<<<<<<<<
@@ -3861,7 +4002,7 @@ static PyObject *__pyx_pf_3src_5utils_13session_cache_12SessionCache_4set(CYTHON
       __Pyx_XDECREF(__pyx_t_8); __pyx_t_8 = 0;
       __Pyx_XDECREF(__pyx_t_9); __pyx_t_9 = 0;
 
-      /* "src/utils/session_cache.py":37
+      /* "src/utils/session_cache.py":51
  *                     json.dumps(data, default=str)
  *                 )
  *             except Exception as e:             # <<<<<<<<<<<<<<
@@ -3871,7 +4012,7 @@ static PyObject *__pyx_pf_3src_5utils_13session_cache_12SessionCache_4set(CYTHON
       __pyx_t_15 = __Pyx_PyErr_ExceptionMatches(((PyObject *)(((PyTypeObject*)PyExc_Exception))));
       if (__pyx_t_15) {
         __Pyx_AddTraceback("src.utils.session_cache.SessionCache.set", __pyx_clineno, __pyx_lineno, __pyx_filename);
-        if (__Pyx_GetException(&__pyx_t_1, &__pyx_t_7, &__pyx_t_10) < 0) __PYX_ERR(0, 37, __pyx_L6_except_error)
+        if (__Pyx_GetException(&__pyx_t_1, &__pyx_t_7, &__pyx_t_10) < 0) __PYX_ERR(0, 51, __pyx_L6_except_error)
         __Pyx_XGOTREF(__pyx_t_1);
         __Pyx_XGOTREF(__pyx_t_7);
         __Pyx_XGOTREF(__pyx_t_10);
@@ -3879,7 +4020,7 @@ static PyObject *__pyx_pf_3src_5utils_13session_cache_12SessionCache_4set(CYTHON
         __pyx_v_e = __pyx_t_7;
         /*try:*/ {
 
-          /* "src/utils/session_cache.py":38
+          /* "src/utils/session_cache.py":52
  *                 )
  *             except Exception as e:
  *                 print(f"Redis SET error: {e}")             # <<<<<<<<<<<<<<
@@ -3889,9 +4030,9 @@ static PyObject *__pyx_pf_3src_5utils_13session_cache_12SessionCache_4set(CYTHON
           __pyx_t_8 = NULL;
           __Pyx_INCREF(__pyx_builtin_print);
           __pyx_t_6 = __pyx_builtin_print; 
-          __pyx_t_13 = __Pyx_PyObject_FormatSimple(__pyx_v_e, __pyx_mstate_global->__pyx_empty_unicode); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 38, __pyx_L15_error)
+          __pyx_t_13 = __Pyx_PyObject_FormatSimple(__pyx_v_e, __pyx_mstate_global->__pyx_empty_unicode); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 52, __pyx_L15_error)
           __Pyx_GOTREF(__pyx_t_13);
-          __pyx_t_12 = __Pyx_PyUnicode_Concat(__pyx_mstate_global->__pyx_kp_u_Redis_SET_error, __pyx_t_13); if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 38, __pyx_L15_error)
+          __pyx_t_12 = __Pyx_PyUnicode_Concat(__pyx_mstate_global->__pyx_kp_u_Redis_SET_error, __pyx_t_13); if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 52, __pyx_L15_error)
           __Pyx_GOTREF(__pyx_t_12);
           __Pyx_DECREF(__pyx_t_13); __pyx_t_13 = 0;
           __pyx_t_14 = 1;
@@ -3901,13 +4042,13 @@ static PyObject *__pyx_pf_3src_5utils_13session_cache_12SessionCache_4set(CYTHON
             __Pyx_XDECREF(__pyx_t_8); __pyx_t_8 = 0;
             __Pyx_DECREF(__pyx_t_12); __pyx_t_12 = 0;
             __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
-            if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 38, __pyx_L15_error)
+            if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 52, __pyx_L15_error)
             __Pyx_GOTREF(__pyx_t_9);
           }
           __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
         }
 
-        /* "src/utils/session_cache.py":37
+        /* "src/utils/session_cache.py":51
  *                     json.dumps(data, default=str)
  *                 )
  *             except Exception as e:             # <<<<<<<<<<<<<<
@@ -3963,7 +4104,7 @@ static PyObject *__pyx_pf_3src_5utils_13session_cache_12SessionCache_4set(CYTHON
       }
       goto __pyx_L6_except_error;
 
-      /* "src/utils/session_cache.py":31
+      /* "src/utils/session_cache.py":45
  *     def set(self, env_id: str, data: dict) -> None:
  *         if self._redis:
  *             try:             # <<<<<<<<<<<<<<
@@ -3984,7 +4125,7 @@ static PyObject *__pyx_pf_3src_5utils_13session_cache_12SessionCache_4set(CYTHON
       __pyx_L9_try_end:;
     }
 
-    /* "src/utils/session_cache.py":30
+    /* "src/utils/session_cache.py":44
  * 
  *     def set(self, env_id: str, data: dict) -> None:
  *         if self._redis:             # <<<<<<<<<<<<<<
@@ -3994,7 +4135,7 @@ static PyObject *__pyx_pf_3src_5utils_13session_cache_12SessionCache_4set(CYTHON
     goto __pyx_L3;
   }
 
-  /* "src/utils/session_cache.py":40
+  /* "src/utils/session_cache.py":54
  *                 print(f"Redis SET error: {e}")
  *         else:
  *             self._fallback[env_id] = data             # <<<<<<<<<<<<<<
@@ -4002,14 +4143,14 @@ static PyObject *__pyx_pf_3src_5utils_13session_cache_12SessionCache_4set(CYTHON
  *     def delete(self, env_id: str) -> None:
 */
   /*else*/ {
-    __pyx_t_10 = __Pyx_PyObject_GetAttrStr(__pyx_v_self, __pyx_mstate_global->__pyx_n_u_fallback); if (unlikely(!__pyx_t_10)) __PYX_ERR(0, 40, __pyx_L1_error)
+    __pyx_t_10 = __Pyx_PyObject_GetAttrStr(__pyx_v_self, __pyx_mstate_global->__pyx_n_u_fallback); if (unlikely(!__pyx_t_10)) __PYX_ERR(0, 54, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_10);
-    if (unlikely((PyObject_SetItem(__pyx_t_10, __pyx_v_env_id, __pyx_v_data) < 0))) __PYX_ERR(0, 40, __pyx_L1_error)
+    if (unlikely((PyObject_SetItem(__pyx_t_10, __pyx_v_env_id, __pyx_v_data) < 0))) __PYX_ERR(0, 54, __pyx_L1_error)
     __Pyx_DECREF(__pyx_t_10); __pyx_t_10 = 0;
   }
   __pyx_L3:;
 
-  /* "src/utils/session_cache.py":29
+  /* "src/utils/session_cache.py":43
  *         return self._fallback.get(env_id, {})
  * 
  *     def set(self, env_id: str, data: dict) -> None:             # <<<<<<<<<<<<<<
@@ -4039,7 +4180,7 @@ static PyObject *__pyx_pf_3src_5utils_13session_cache_12SessionCache_4set(CYTHON
   return __pyx_r;
 }
 
-/* "src/utils/session_cache.py":42
+/* "src/utils/session_cache.py":56
  *             self._fallback[env_id] = data
  * 
  *     def delete(self, env_id: str) -> None:             # <<<<<<<<<<<<<<
@@ -4087,39 +4228,39 @@ PyObject *__pyx_args, PyObject *__pyx_kwds
   {
     PyObject ** const __pyx_pyargnames[] = {&__pyx_mstate_global->__pyx_n_u_self,&__pyx_mstate_global->__pyx_n_u_env_id,0};
     const Py_ssize_t __pyx_kwds_len = (__pyx_kwds) ? __Pyx_NumKwargs_FASTCALL(__pyx_kwds) : 0;
-    if (unlikely(__pyx_kwds_len) < 0) __PYX_ERR(0, 42, __pyx_L3_error)
+    if (unlikely(__pyx_kwds_len) < 0) __PYX_ERR(0, 56, __pyx_L3_error)
     if (__pyx_kwds_len > 0) {
       switch (__pyx_nargs) {
         case  2:
         values[1] = __Pyx_ArgRef_FASTCALL(__pyx_args, 1);
-        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[1])) __PYX_ERR(0, 42, __pyx_L3_error)
+        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[1])) __PYX_ERR(0, 56, __pyx_L3_error)
         CYTHON_FALLTHROUGH;
         case  1:
         values[0] = __Pyx_ArgRef_FASTCALL(__pyx_args, 0);
-        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[0])) __PYX_ERR(0, 42, __pyx_L3_error)
+        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[0])) __PYX_ERR(0, 56, __pyx_L3_error)
         CYTHON_FALLTHROUGH;
         case  0: break;
         default: goto __pyx_L5_argtuple_error;
       }
       const Py_ssize_t kwd_pos_args = __pyx_nargs;
-      if (__Pyx_ParseKeywords(__pyx_kwds, __pyx_kwvalues, __pyx_pyargnames, 0, values, kwd_pos_args, __pyx_kwds_len, "delete", 0) < 0) __PYX_ERR(0, 42, __pyx_L3_error)
+      if (__Pyx_ParseKeywords(__pyx_kwds, __pyx_kwvalues, __pyx_pyargnames, 0, values, kwd_pos_args, __pyx_kwds_len, "delete", 0) < 0) __PYX_ERR(0, 56, __pyx_L3_error)
       for (Py_ssize_t i = __pyx_nargs; i < 2; i++) {
-        if (unlikely(!values[i])) { __Pyx_RaiseArgtupleInvalid("delete", 1, 2, 2, i); __PYX_ERR(0, 42, __pyx_L3_error) }
+        if (unlikely(!values[i])) { __Pyx_RaiseArgtupleInvalid("delete", 1, 2, 2, i); __PYX_ERR(0, 56, __pyx_L3_error) }
       }
     } else if (unlikely(__pyx_nargs != 2)) {
       goto __pyx_L5_argtuple_error;
     } else {
       values[0] = __Pyx_ArgRef_FASTCALL(__pyx_args, 0);
-      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[0])) __PYX_ERR(0, 42, __pyx_L3_error)
+      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[0])) __PYX_ERR(0, 56, __pyx_L3_error)
       values[1] = __Pyx_ArgRef_FASTCALL(__pyx_args, 1);
-      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[1])) __PYX_ERR(0, 42, __pyx_L3_error)
+      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[1])) __PYX_ERR(0, 56, __pyx_L3_error)
     }
     __pyx_v_self = values[0];
     __pyx_v_env_id = ((PyObject*)values[1]);
   }
   goto __pyx_L6_skip;
   __pyx_L5_argtuple_error:;
-  __Pyx_RaiseArgtupleInvalid("delete", 1, 2, 2, __pyx_nargs); __PYX_ERR(0, 42, __pyx_L3_error)
+  __Pyx_RaiseArgtupleInvalid("delete", 1, 2, 2, __pyx_nargs); __PYX_ERR(0, 56, __pyx_L3_error)
   __pyx_L6_skip:;
   goto __pyx_L4_argument_unpacking_done;
   __pyx_L3_error:;
@@ -4130,7 +4271,7 @@ PyObject *__pyx_args, PyObject *__pyx_kwds
   __Pyx_RefNannyFinishContext();
   return NULL;
   __pyx_L4_argument_unpacking_done:;
-  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_env_id), (&PyUnicode_Type), 0, "env_id", 2))) __PYX_ERR(0, 42, __pyx_L1_error)
+  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_env_id), (&PyUnicode_Type), 0, "env_id", 2))) __PYX_ERR(0, 56, __pyx_L1_error)
   __pyx_r = __pyx_pf_3src_5utils_13session_cache_12SessionCache_6delete(__pyx_self, __pyx_v_self, __pyx_v_env_id);
 
   /* function exit code */
@@ -4181,20 +4322,20 @@ static PyObject *__pyx_pf_3src_5utils_13session_cache_12SessionCache_6delete(CYT
   int __pyx_clineno = 0;
   __Pyx_RefNannySetupContext("delete", 0);
 
-  /* "src/utils/session_cache.py":43
+  /* "src/utils/session_cache.py":57
  * 
  *     def delete(self, env_id: str) -> None:
  *         if self._redis:             # <<<<<<<<<<<<<<
  *             try:
  *                 self._redis.delete(f"session:{env_id}")
 */
-  __pyx_t_1 = __Pyx_PyObject_GetAttrStr(__pyx_v_self, __pyx_mstate_global->__pyx_n_u_redis_2); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 43, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_PyObject_GetAttrStr(__pyx_v_self, __pyx_mstate_global->__pyx_n_u_redis_2); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 57, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
-  __pyx_t_2 = __Pyx_PyObject_IsTrue(__pyx_t_1); if (unlikely((__pyx_t_2 < 0))) __PYX_ERR(0, 43, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_PyObject_IsTrue(__pyx_t_1); if (unlikely((__pyx_t_2 < 0))) __PYX_ERR(0, 57, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
   if (__pyx_t_2) {
 
-    /* "src/utils/session_cache.py":44
+    /* "src/utils/session_cache.py":58
  *     def delete(self, env_id: str) -> None:
  *         if self._redis:
  *             try:             # <<<<<<<<<<<<<<
@@ -4210,18 +4351,18 @@ static PyObject *__pyx_pf_3src_5utils_13session_cache_12SessionCache_6delete(CYT
       __Pyx_XGOTREF(__pyx_t_5);
       /*try:*/ {
 
-        /* "src/utils/session_cache.py":45
+        /* "src/utils/session_cache.py":59
  *         if self._redis:
  *             try:
  *                 self._redis.delete(f"session:{env_id}")             # <<<<<<<<<<<<<<
  *             except Exception as e:
  *                 print(f"Redis DELETE error: {e}")
 */
-        __pyx_t_7 = __Pyx_PyObject_GetAttrStr(__pyx_v_self, __pyx_mstate_global->__pyx_n_u_redis_2); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 45, __pyx_L4_error)
+        __pyx_t_7 = __Pyx_PyObject_GetAttrStr(__pyx_v_self, __pyx_mstate_global->__pyx_n_u_redis_2); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 59, __pyx_L4_error)
         __Pyx_GOTREF(__pyx_t_7);
         __pyx_t_6 = __pyx_t_7;
         __Pyx_INCREF(__pyx_t_6);
-        __pyx_t_8 = __Pyx_PyUnicode_Concat(__pyx_mstate_global->__pyx_kp_u_session, __pyx_v_env_id); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 45, __pyx_L4_error)
+        __pyx_t_8 = __Pyx_PyUnicode_Concat(__pyx_mstate_global->__pyx_kp_u_session, __pyx_v_env_id); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 59, __pyx_L4_error)
         __Pyx_GOTREF(__pyx_t_8);
         __pyx_t_9 = 0;
         {
@@ -4230,12 +4371,12 @@ static PyObject *__pyx_pf_3src_5utils_13session_cache_12SessionCache_6delete(CYT
           __Pyx_XDECREF(__pyx_t_6); __pyx_t_6 = 0;
           __Pyx_DECREF(__pyx_t_8); __pyx_t_8 = 0;
           __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
-          if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 45, __pyx_L4_error)
+          if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 59, __pyx_L4_error)
           __Pyx_GOTREF(__pyx_t_1);
         }
         __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-        /* "src/utils/session_cache.py":44
+        /* "src/utils/session_cache.py":58
  *     def delete(self, env_id: str) -> None:
  *         if self._redis:
  *             try:             # <<<<<<<<<<<<<<
@@ -4253,7 +4394,7 @@ static PyObject *__pyx_pf_3src_5utils_13session_cache_12SessionCache_6delete(CYT
       __Pyx_XDECREF(__pyx_t_7); __pyx_t_7 = 0;
       __Pyx_XDECREF(__pyx_t_8); __pyx_t_8 = 0;
 
-      /* "src/utils/session_cache.py":46
+      /* "src/utils/session_cache.py":60
  *             try:
  *                 self._redis.delete(f"session:{env_id}")
  *             except Exception as e:             # <<<<<<<<<<<<<<
@@ -4263,7 +4404,7 @@ static PyObject *__pyx_pf_3src_5utils_13session_cache_12SessionCache_6delete(CYT
       __pyx_t_10 = __Pyx_PyErr_ExceptionMatches(((PyObject *)(((PyTypeObject*)PyExc_Exception))));
       if (__pyx_t_10) {
         __Pyx_AddTraceback("src.utils.session_cache.SessionCache.delete", __pyx_clineno, __pyx_lineno, __pyx_filename);
-        if (__Pyx_GetException(&__pyx_t_1, &__pyx_t_7, &__pyx_t_8) < 0) __PYX_ERR(0, 46, __pyx_L6_except_error)
+        if (__Pyx_GetException(&__pyx_t_1, &__pyx_t_7, &__pyx_t_8) < 0) __PYX_ERR(0, 60, __pyx_L6_except_error)
         __Pyx_XGOTREF(__pyx_t_1);
         __Pyx_XGOTREF(__pyx_t_7);
         __Pyx_XGOTREF(__pyx_t_8);
@@ -4271,7 +4412,7 @@ static PyObject *__pyx_pf_3src_5utils_13session_cache_12SessionCache_6delete(CYT
         __pyx_v_e = __pyx_t_7;
         /*try:*/ {
 
-          /* "src/utils/session_cache.py":47
+          /* "src/utils/session_cache.py":61
  *                 self._redis.delete(f"session:{env_id}")
  *             except Exception as e:
  *                 print(f"Redis DELETE error: {e}")             # <<<<<<<<<<<<<<
@@ -4281,9 +4422,9 @@ static PyObject *__pyx_pf_3src_5utils_13session_cache_12SessionCache_6delete(CYT
           __pyx_t_11 = NULL;
           __Pyx_INCREF(__pyx_builtin_print);
           __pyx_t_12 = __pyx_builtin_print; 
-          __pyx_t_13 = __Pyx_PyObject_FormatSimple(__pyx_v_e, __pyx_mstate_global->__pyx_empty_unicode); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 47, __pyx_L15_error)
+          __pyx_t_13 = __Pyx_PyObject_FormatSimple(__pyx_v_e, __pyx_mstate_global->__pyx_empty_unicode); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 61, __pyx_L15_error)
           __Pyx_GOTREF(__pyx_t_13);
-          __pyx_t_14 = __Pyx_PyUnicode_Concat(__pyx_mstate_global->__pyx_kp_u_Redis_DELETE_error, __pyx_t_13); if (unlikely(!__pyx_t_14)) __PYX_ERR(0, 47, __pyx_L15_error)
+          __pyx_t_14 = __Pyx_PyUnicode_Concat(__pyx_mstate_global->__pyx_kp_u_Redis_DELETE_error, __pyx_t_13); if (unlikely(!__pyx_t_14)) __PYX_ERR(0, 61, __pyx_L15_error)
           __Pyx_GOTREF(__pyx_t_14);
           __Pyx_DECREF(__pyx_t_13); __pyx_t_13 = 0;
           __pyx_t_9 = 1;
@@ -4293,13 +4434,13 @@ static PyObject *__pyx_pf_3src_5utils_13session_cache_12SessionCache_6delete(CYT
             __Pyx_XDECREF(__pyx_t_11); __pyx_t_11 = 0;
             __Pyx_DECREF(__pyx_t_14); __pyx_t_14 = 0;
             __Pyx_DECREF(__pyx_t_12); __pyx_t_12 = 0;
-            if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 47, __pyx_L15_error)
+            if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 61, __pyx_L15_error)
             __Pyx_GOTREF(__pyx_t_6);
           }
           __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
         }
 
-        /* "src/utils/session_cache.py":46
+        /* "src/utils/session_cache.py":60
  *             try:
  *                 self._redis.delete(f"session:{env_id}")
  *             except Exception as e:             # <<<<<<<<<<<<<<
@@ -4354,7 +4495,7 @@ static PyObject *__pyx_pf_3src_5utils_13session_cache_12SessionCache_6delete(CYT
       }
       goto __pyx_L6_except_error;
 
-      /* "src/utils/session_cache.py":44
+      /* "src/utils/session_cache.py":58
  *     def delete(self, env_id: str) -> None:
  *         if self._redis:
  *             try:             # <<<<<<<<<<<<<<
@@ -4375,7 +4516,7 @@ static PyObject *__pyx_pf_3src_5utils_13session_cache_12SessionCache_6delete(CYT
       __pyx_L9_try_end:;
     }
 
-    /* "src/utils/session_cache.py":43
+    /* "src/utils/session_cache.py":57
  * 
  *     def delete(self, env_id: str) -> None:
  *         if self._redis:             # <<<<<<<<<<<<<<
@@ -4385,7 +4526,7 @@ static PyObject *__pyx_pf_3src_5utils_13session_cache_12SessionCache_6delete(CYT
     goto __pyx_L3;
   }
 
-  /* "src/utils/session_cache.py":49
+  /* "src/utils/session_cache.py":63
  *                 print(f"Redis DELETE error: {e}")
  *         else:
  *             self._fallback.pop(env_id, None)             # <<<<<<<<<<<<<<
@@ -4393,7 +4534,7 @@ static PyObject *__pyx_pf_3src_5utils_13session_cache_12SessionCache_6delete(CYT
  *     def exists(self, env_id: str) -> bool:
 */
   /*else*/ {
-    __pyx_t_1 = __Pyx_PyObject_GetAttrStr(__pyx_v_self, __pyx_mstate_global->__pyx_n_u_fallback); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 49, __pyx_L1_error)
+    __pyx_t_1 = __Pyx_PyObject_GetAttrStr(__pyx_v_self, __pyx_mstate_global->__pyx_n_u_fallback); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 63, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
     __pyx_t_7 = __pyx_t_1;
     __Pyx_INCREF(__pyx_t_7);
@@ -4403,14 +4544,14 @@ static PyObject *__pyx_pf_3src_5utils_13session_cache_12SessionCache_6delete(CYT
       __pyx_t_8 = __Pyx_PyObject_FastCallMethod(__pyx_mstate_global->__pyx_n_u_pop, __pyx_callargs+__pyx_t_9, (3-__pyx_t_9) | (1*__Pyx_PY_VECTORCALL_ARGUMENTS_OFFSET));
       __Pyx_XDECREF(__pyx_t_7); __pyx_t_7 = 0;
       __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-      if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 49, __pyx_L1_error)
+      if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 63, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_8);
     }
     __Pyx_DECREF(__pyx_t_8); __pyx_t_8 = 0;
   }
   __pyx_L3:;
 
-  /* "src/utils/session_cache.py":42
+  /* "src/utils/session_cache.py":56
  *             self._fallback[env_id] = data
  * 
  *     def delete(self, env_id: str) -> None:             # <<<<<<<<<<<<<<
@@ -4439,7 +4580,7 @@ static PyObject *__pyx_pf_3src_5utils_13session_cache_12SessionCache_6delete(CYT
   return __pyx_r;
 }
 
-/* "src/utils/session_cache.py":51
+/* "src/utils/session_cache.py":65
  *             self._fallback.pop(env_id, None)
  * 
  *     def exists(self, env_id: str) -> bool:             # <<<<<<<<<<<<<<
@@ -4487,39 +4628,39 @@ PyObject *__pyx_args, PyObject *__pyx_kwds
   {
     PyObject ** const __pyx_pyargnames[] = {&__pyx_mstate_global->__pyx_n_u_self,&__pyx_mstate_global->__pyx_n_u_env_id,0};
     const Py_ssize_t __pyx_kwds_len = (__pyx_kwds) ? __Pyx_NumKwargs_FASTCALL(__pyx_kwds) : 0;
-    if (unlikely(__pyx_kwds_len) < 0) __PYX_ERR(0, 51, __pyx_L3_error)
+    if (unlikely(__pyx_kwds_len) < 0) __PYX_ERR(0, 65, __pyx_L3_error)
     if (__pyx_kwds_len > 0) {
       switch (__pyx_nargs) {
         case  2:
         values[1] = __Pyx_ArgRef_FASTCALL(__pyx_args, 1);
-        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[1])) __PYX_ERR(0, 51, __pyx_L3_error)
+        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[1])) __PYX_ERR(0, 65, __pyx_L3_error)
         CYTHON_FALLTHROUGH;
         case  1:
         values[0] = __Pyx_ArgRef_FASTCALL(__pyx_args, 0);
-        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[0])) __PYX_ERR(0, 51, __pyx_L3_error)
+        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[0])) __PYX_ERR(0, 65, __pyx_L3_error)
         CYTHON_FALLTHROUGH;
         case  0: break;
         default: goto __pyx_L5_argtuple_error;
       }
       const Py_ssize_t kwd_pos_args = __pyx_nargs;
-      if (__Pyx_ParseKeywords(__pyx_kwds, __pyx_kwvalues, __pyx_pyargnames, 0, values, kwd_pos_args, __pyx_kwds_len, "exists", 0) < 0) __PYX_ERR(0, 51, __pyx_L3_error)
+      if (__Pyx_ParseKeywords(__pyx_kwds, __pyx_kwvalues, __pyx_pyargnames, 0, values, kwd_pos_args, __pyx_kwds_len, "exists", 0) < 0) __PYX_ERR(0, 65, __pyx_L3_error)
       for (Py_ssize_t i = __pyx_nargs; i < 2; i++) {
-        if (unlikely(!values[i])) { __Pyx_RaiseArgtupleInvalid("exists", 1, 2, 2, i); __PYX_ERR(0, 51, __pyx_L3_error) }
+        if (unlikely(!values[i])) { __Pyx_RaiseArgtupleInvalid("exists", 1, 2, 2, i); __PYX_ERR(0, 65, __pyx_L3_error) }
       }
     } else if (unlikely(__pyx_nargs != 2)) {
       goto __pyx_L5_argtuple_error;
     } else {
       values[0] = __Pyx_ArgRef_FASTCALL(__pyx_args, 0);
-      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[0])) __PYX_ERR(0, 51, __pyx_L3_error)
+      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[0])) __PYX_ERR(0, 65, __pyx_L3_error)
       values[1] = __Pyx_ArgRef_FASTCALL(__pyx_args, 1);
-      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[1])) __PYX_ERR(0, 51, __pyx_L3_error)
+      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[1])) __PYX_ERR(0, 65, __pyx_L3_error)
     }
     __pyx_v_self = values[0];
     __pyx_v_env_id = ((PyObject*)values[1]);
   }
   goto __pyx_L6_skip;
   __pyx_L5_argtuple_error:;
-  __Pyx_RaiseArgtupleInvalid("exists", 1, 2, 2, __pyx_nargs); __PYX_ERR(0, 51, __pyx_L3_error)
+  __Pyx_RaiseArgtupleInvalid("exists", 1, 2, 2, __pyx_nargs); __PYX_ERR(0, 65, __pyx_L3_error)
   __pyx_L6_skip:;
   goto __pyx_L4_argument_unpacking_done;
   __pyx_L3_error:;
@@ -4530,7 +4671,7 @@ PyObject *__pyx_args, PyObject *__pyx_kwds
   __Pyx_RefNannyFinishContext();
   return NULL;
   __pyx_L4_argument_unpacking_done:;
-  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_env_id), (&PyUnicode_Type), 0, "env_id", 2))) __PYX_ERR(0, 51, __pyx_L1_error)
+  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_env_id), (&PyUnicode_Type), 0, "env_id", 2))) __PYX_ERR(0, 65, __pyx_L1_error)
   __pyx_r = __pyx_pf_3src_5utils_13session_cache_12SessionCache_8exists(__pyx_self, __pyx_v_self, __pyx_v_env_id);
 
   /* function exit code */
@@ -4581,20 +4722,20 @@ static PyObject *__pyx_pf_3src_5utils_13session_cache_12SessionCache_8exists(CYT
   int __pyx_clineno = 0;
   __Pyx_RefNannySetupContext("exists", 0);
 
-  /* "src/utils/session_cache.py":52
+  /* "src/utils/session_cache.py":66
  * 
  *     def exists(self, env_id: str) -> bool:
  *         if self._redis:             # <<<<<<<<<<<<<<
  *             try:
  *                 return bool(self._redis.exists(f"session:{env_id}"))
 */
-  __pyx_t_1 = __Pyx_PyObject_GetAttrStr(__pyx_v_self, __pyx_mstate_global->__pyx_n_u_redis_2); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 52, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_PyObject_GetAttrStr(__pyx_v_self, __pyx_mstate_global->__pyx_n_u_redis_2); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 66, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
-  __pyx_t_2 = __Pyx_PyObject_IsTrue(__pyx_t_1); if (unlikely((__pyx_t_2 < 0))) __PYX_ERR(0, 52, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_PyObject_IsTrue(__pyx_t_1); if (unlikely((__pyx_t_2 < 0))) __PYX_ERR(0, 66, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
   if (__pyx_t_2) {
 
-    /* "src/utils/session_cache.py":53
+    /* "src/utils/session_cache.py":67
  *     def exists(self, env_id: str) -> bool:
  *         if self._redis:
  *             try:             # <<<<<<<<<<<<<<
@@ -4610,7 +4751,7 @@ static PyObject *__pyx_pf_3src_5utils_13session_cache_12SessionCache_8exists(CYT
       __Pyx_XGOTREF(__pyx_t_5);
       /*try:*/ {
 
-        /* "src/utils/session_cache.py":54
+        /* "src/utils/session_cache.py":68
  *         if self._redis:
  *             try:
  *                 return bool(self._redis.exists(f"session:{env_id}"))             # <<<<<<<<<<<<<<
@@ -4618,11 +4759,11 @@ static PyObject *__pyx_pf_3src_5utils_13session_cache_12SessionCache_8exists(CYT
  *                 print(f"Redis EXISTS error: {e}")
 */
         __Pyx_XDECREF(__pyx_r);
-        __pyx_t_7 = __Pyx_PyObject_GetAttrStr(__pyx_v_self, __pyx_mstate_global->__pyx_n_u_redis_2); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 54, __pyx_L4_error)
+        __pyx_t_7 = __Pyx_PyObject_GetAttrStr(__pyx_v_self, __pyx_mstate_global->__pyx_n_u_redis_2); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 68, __pyx_L4_error)
         __Pyx_GOTREF(__pyx_t_7);
         __pyx_t_6 = __pyx_t_7;
         __Pyx_INCREF(__pyx_t_6);
-        __pyx_t_8 = __Pyx_PyUnicode_Concat(__pyx_mstate_global->__pyx_kp_u_session, __pyx_v_env_id); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 54, __pyx_L4_error)
+        __pyx_t_8 = __Pyx_PyUnicode_Concat(__pyx_mstate_global->__pyx_kp_u_session, __pyx_v_env_id); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 68, __pyx_L4_error)
         __Pyx_GOTREF(__pyx_t_8);
         __pyx_t_9 = 0;
         {
@@ -4631,18 +4772,18 @@ static PyObject *__pyx_pf_3src_5utils_13session_cache_12SessionCache_8exists(CYT
           __Pyx_XDECREF(__pyx_t_6); __pyx_t_6 = 0;
           __Pyx_DECREF(__pyx_t_8); __pyx_t_8 = 0;
           __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
-          if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 54, __pyx_L4_error)
+          if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 68, __pyx_L4_error)
           __Pyx_GOTREF(__pyx_t_1);
         }
-        __pyx_t_2 = __Pyx_PyObject_IsTrue(__pyx_t_1); if (unlikely((__pyx_t_2 < 0))) __PYX_ERR(0, 54, __pyx_L4_error)
+        __pyx_t_2 = __Pyx_PyObject_IsTrue(__pyx_t_1); if (unlikely((__pyx_t_2 < 0))) __PYX_ERR(0, 68, __pyx_L4_error)
         __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-        __pyx_t_1 = __Pyx_PyBool_FromLong((!(!__pyx_t_2))); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 54, __pyx_L4_error)
+        __pyx_t_1 = __Pyx_PyBool_FromLong((!(!__pyx_t_2))); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 68, __pyx_L4_error)
         __Pyx_GOTREF(__pyx_t_1);
         __pyx_r = __pyx_t_1;
         __pyx_t_1 = 0;
         goto __pyx_L8_try_return;
 
-        /* "src/utils/session_cache.py":53
+        /* "src/utils/session_cache.py":67
  *     def exists(self, env_id: str) -> bool:
  *         if self._redis:
  *             try:             # <<<<<<<<<<<<<<
@@ -4656,7 +4797,7 @@ static PyObject *__pyx_pf_3src_5utils_13session_cache_12SessionCache_8exists(CYT
       __Pyx_XDECREF(__pyx_t_7); __pyx_t_7 = 0;
       __Pyx_XDECREF(__pyx_t_8); __pyx_t_8 = 0;
 
-      /* "src/utils/session_cache.py":55
+      /* "src/utils/session_cache.py":69
  *             try:
  *                 return bool(self._redis.exists(f"session:{env_id}"))
  *             except Exception as e:             # <<<<<<<<<<<<<<
@@ -4666,7 +4807,7 @@ static PyObject *__pyx_pf_3src_5utils_13session_cache_12SessionCache_8exists(CYT
       __pyx_t_10 = __Pyx_PyErr_ExceptionMatches(((PyObject *)(((PyTypeObject*)PyExc_Exception))));
       if (__pyx_t_10) {
         __Pyx_AddTraceback("src.utils.session_cache.SessionCache.exists", __pyx_clineno, __pyx_lineno, __pyx_filename);
-        if (__Pyx_GetException(&__pyx_t_1, &__pyx_t_7, &__pyx_t_8) < 0) __PYX_ERR(0, 55, __pyx_L6_except_error)
+        if (__Pyx_GetException(&__pyx_t_1, &__pyx_t_7, &__pyx_t_8) < 0) __PYX_ERR(0, 69, __pyx_L6_except_error)
         __Pyx_XGOTREF(__pyx_t_1);
         __Pyx_XGOTREF(__pyx_t_7);
         __Pyx_XGOTREF(__pyx_t_8);
@@ -4674,7 +4815,7 @@ static PyObject *__pyx_pf_3src_5utils_13session_cache_12SessionCache_8exists(CYT
         __pyx_v_e = __pyx_t_7;
         /*try:*/ {
 
-          /* "src/utils/session_cache.py":56
+          /* "src/utils/session_cache.py":70
  *                 return bool(self._redis.exists(f"session:{env_id}"))
  *             except Exception as e:
  *                 print(f"Redis EXISTS error: {e}")             # <<<<<<<<<<<<<<
@@ -4684,9 +4825,9 @@ static PyObject *__pyx_pf_3src_5utils_13session_cache_12SessionCache_8exists(CYT
           __pyx_t_11 = NULL;
           __Pyx_INCREF(__pyx_builtin_print);
           __pyx_t_12 = __pyx_builtin_print; 
-          __pyx_t_13 = __Pyx_PyObject_FormatSimple(__pyx_v_e, __pyx_mstate_global->__pyx_empty_unicode); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 56, __pyx_L15_error)
+          __pyx_t_13 = __Pyx_PyObject_FormatSimple(__pyx_v_e, __pyx_mstate_global->__pyx_empty_unicode); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 70, __pyx_L15_error)
           __Pyx_GOTREF(__pyx_t_13);
-          __pyx_t_14 = __Pyx_PyUnicode_Concat(__pyx_mstate_global->__pyx_kp_u_Redis_EXISTS_error, __pyx_t_13); if (unlikely(!__pyx_t_14)) __PYX_ERR(0, 56, __pyx_L15_error)
+          __pyx_t_14 = __Pyx_PyUnicode_Concat(__pyx_mstate_global->__pyx_kp_u_Redis_EXISTS_error, __pyx_t_13); if (unlikely(!__pyx_t_14)) __PYX_ERR(0, 70, __pyx_L15_error)
           __Pyx_GOTREF(__pyx_t_14);
           __Pyx_DECREF(__pyx_t_13); __pyx_t_13 = 0;
           __pyx_t_9 = 1;
@@ -4696,12 +4837,12 @@ static PyObject *__pyx_pf_3src_5utils_13session_cache_12SessionCache_8exists(CYT
             __Pyx_XDECREF(__pyx_t_11); __pyx_t_11 = 0;
             __Pyx_DECREF(__pyx_t_14); __pyx_t_14 = 0;
             __Pyx_DECREF(__pyx_t_12); __pyx_t_12 = 0;
-            if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 56, __pyx_L15_error)
+            if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 70, __pyx_L15_error)
             __Pyx_GOTREF(__pyx_t_6);
           }
           __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
 
-          /* "src/utils/session_cache.py":57
+          /* "src/utils/session_cache.py":71
  *             except Exception as e:
  *                 print(f"Redis EXISTS error: {e}")
  *                 return False             # <<<<<<<<<<<<<<
@@ -4716,7 +4857,7 @@ static PyObject *__pyx_pf_3src_5utils_13session_cache_12SessionCache_8exists(CYT
           goto __pyx_L14_return;
         }
 
-        /* "src/utils/session_cache.py":55
+        /* "src/utils/session_cache.py":69
  *             try:
  *                 return bool(self._redis.exists(f"session:{env_id}"))
  *             except Exception as e:             # <<<<<<<<<<<<<<
@@ -4770,7 +4911,7 @@ static PyObject *__pyx_pf_3src_5utils_13session_cache_12SessionCache_8exists(CYT
       }
       goto __pyx_L6_except_error;
 
-      /* "src/utils/session_cache.py":53
+      /* "src/utils/session_cache.py":67
  *     def exists(self, env_id: str) -> bool:
  *         if self._redis:
  *             try:             # <<<<<<<<<<<<<<
@@ -4797,7 +4938,7 @@ static PyObject *__pyx_pf_3src_5utils_13session_cache_12SessionCache_8exists(CYT
       goto __pyx_L0;
     }
 
-    /* "src/utils/session_cache.py":52
+    /* "src/utils/session_cache.py":66
  * 
  *     def exists(self, env_id: str) -> bool:
  *         if self._redis:             # <<<<<<<<<<<<<<
@@ -4806,23 +4947,23 @@ static PyObject *__pyx_pf_3src_5utils_13session_cache_12SessionCache_8exists(CYT
 */
   }
 
-  /* "src/utils/session_cache.py":58
+  /* "src/utils/session_cache.py":72
  *                 print(f"Redis EXISTS error: {e}")
  *                 return False
  *         return env_id in self._fallback             # <<<<<<<<<<<<<<
 */
   __Pyx_XDECREF(__pyx_r);
-  __pyx_t_8 = __Pyx_PyObject_GetAttrStr(__pyx_v_self, __pyx_mstate_global->__pyx_n_u_fallback); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 58, __pyx_L1_error)
+  __pyx_t_8 = __Pyx_PyObject_GetAttrStr(__pyx_v_self, __pyx_mstate_global->__pyx_n_u_fallback); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 72, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_8);
-  __pyx_t_2 = (__Pyx_PySequence_ContainsTF(__pyx_v_env_id, __pyx_t_8, Py_EQ)); if (unlikely((__pyx_t_2 < 0))) __PYX_ERR(0, 58, __pyx_L1_error)
+  __pyx_t_2 = (__Pyx_PySequence_ContainsTF(__pyx_v_env_id, __pyx_t_8, Py_EQ)); if (unlikely((__pyx_t_2 < 0))) __PYX_ERR(0, 72, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_8); __pyx_t_8 = 0;
-  __pyx_t_8 = __Pyx_PyBool_FromLong(__pyx_t_2); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 58, __pyx_L1_error)
+  __pyx_t_8 = __Pyx_PyBool_FromLong(__pyx_t_2); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 72, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_8);
   __pyx_r = __pyx_t_8;
   __pyx_t_8 = 0;
   goto __pyx_L0;
 
-  /* "src/utils/session_cache.py":51
+  /* "src/utils/session_cache.py":65
  *             self._fallback.pop(env_id, None)
  * 
  *     def exists(self, env_id: str) -> bool:             # <<<<<<<<<<<<<<
@@ -4849,6 +4990,131 @@ static PyObject *__pyx_pf_3src_5utils_13session_cache_12SessionCache_8exists(CYT
   return __pyx_r;
 }
 /* #### Code section: module_exttypes ### */
+
+static PyObject *__pyx_tp_new_3src_5utils_13session_cache___pyx_defaults(PyTypeObject *t, CYTHON_UNUSED PyObject *a, CYTHON_UNUSED PyObject *k) {
+  PyObject *o;
+  #if CYTHON_COMPILING_IN_LIMITED_API
+  allocfunc alloc_func = (allocfunc)PyType_GetSlot(t, Py_tp_alloc);
+  o = alloc_func(t, 0);
+  #else
+  o = (*t->tp_alloc)(t, 0);
+  if (unlikely(!o)) return 0;
+  #endif
+  return o;
+}
+
+static void __pyx_tp_dealloc_3src_5utils_13session_cache___pyx_defaults(PyObject *o) {
+  struct __pyx_defaults *p = (struct __pyx_defaults *)o;
+  #if CYTHON_USE_TP_FINALIZE
+  if (unlikely((PY_VERSION_HEX >= 0x03080000 || __Pyx_PyType_HasFeature(Py_TYPE(o), Py_TPFLAGS_HAVE_FINALIZE)) && __Pyx_PyObject_GetSlot(o, tp_finalize, destructor)) && (!PyType_IS_GC(Py_TYPE(o)) || !__Pyx_PyObject_GC_IsFinalized(o))) {
+    if (__Pyx_PyObject_GetSlot(o, tp_dealloc, destructor) == __pyx_tp_dealloc_3src_5utils_13session_cache___pyx_defaults) {
+      if (PyObject_CallFinalizerFromDealloc(o)) return;
+    }
+  }
+  #endif
+  Py_CLEAR(p->arg0);
+  Py_CLEAR(p->arg1);
+  #if CYTHON_USE_TYPE_SLOTS
+  (*Py_TYPE(o)->tp_free)(o);
+  #else
+  {
+    freefunc tp_free = (freefunc)PyType_GetSlot(Py_TYPE(o), Py_tp_free);
+    if (tp_free) tp_free(o);
+  }
+  #endif
+}
+#if CYTHON_USE_TYPE_SPECS
+static PyType_Slot __pyx_type_3src_5utils_13session_cache___pyx_defaults_slots[] = {
+  {Py_tp_dealloc, (void *)__pyx_tp_dealloc_3src_5utils_13session_cache___pyx_defaults},
+  {Py_tp_new, (void *)__pyx_tp_new_3src_5utils_13session_cache___pyx_defaults},
+  {0, 0},
+};
+static PyType_Spec __pyx_type_3src_5utils_13session_cache___pyx_defaults_spec = {
+  "src.utils.session_cache.__pyx_defaults",
+  sizeof(struct __pyx_defaults),
+  0,
+  Py_TPFLAGS_DEFAULT|Py_TPFLAGS_HAVE_VERSION_TAG|Py_TPFLAGS_CHECKTYPES|Py_TPFLAGS_HAVE_NEWBUFFER|Py_TPFLAGS_HAVE_FINALIZE,
+  __pyx_type_3src_5utils_13session_cache___pyx_defaults_slots,
+};
+#else
+
+static PyTypeObject __pyx_type_3src_5utils_13session_cache___pyx_defaults = {
+  PyVarObject_HEAD_INIT(0, 0)
+  "src.utils.session_cache.""__pyx_defaults", /*tp_name*/
+  sizeof(struct __pyx_defaults), /*tp_basicsize*/
+  0, /*tp_itemsize*/
+  __pyx_tp_dealloc_3src_5utils_13session_cache___pyx_defaults, /*tp_dealloc*/
+  #if PY_VERSION_HEX < 0x030800b4
+  0, /*tp_print*/
+  #endif
+  #if PY_VERSION_HEX >= 0x030800b4
+  0, /*tp_vectorcall_offset*/
+  #endif
+  0, /*tp_getattr*/
+  0, /*tp_setattr*/
+  0, /*tp_as_async*/
+  0, /*tp_repr*/
+  0, /*tp_as_number*/
+  0, /*tp_as_sequence*/
+  0, /*tp_as_mapping*/
+  0, /*tp_hash*/
+  0, /*tp_call*/
+  0, /*tp_str*/
+  0, /*tp_getattro*/
+  0, /*tp_setattro*/
+  0, /*tp_as_buffer*/
+  Py_TPFLAGS_DEFAULT|Py_TPFLAGS_HAVE_VERSION_TAG|Py_TPFLAGS_CHECKTYPES|Py_TPFLAGS_HAVE_NEWBUFFER|Py_TPFLAGS_HAVE_FINALIZE, /*tp_flags*/
+  0, /*tp_doc*/
+  0, /*tp_traverse*/
+  0, /*tp_clear*/
+  0, /*tp_richcompare*/
+  0, /*tp_weaklistoffset*/
+  0, /*tp_iter*/
+  0, /*tp_iternext*/
+  0, /*tp_methods*/
+  0, /*tp_members*/
+  0, /*tp_getset*/
+  0, /*tp_base*/
+  0, /*tp_dict*/
+  0, /*tp_descr_get*/
+  0, /*tp_descr_set*/
+  #if !CYTHON_USE_TYPE_SPECS
+  0, /*tp_dictoffset*/
+  #endif
+  0, /*tp_init*/
+  0, /*tp_alloc*/
+  __pyx_tp_new_3src_5utils_13session_cache___pyx_defaults, /*tp_new*/
+  0, /*tp_free*/
+  0, /*tp_is_gc*/
+  0, /*tp_bases*/
+  0, /*tp_mro*/
+  0, /*tp_cache*/
+  0, /*tp_subclasses*/
+  0, /*tp_weaklist*/
+  0, /*tp_del*/
+  0, /*tp_version_tag*/
+  #if CYTHON_USE_TP_FINALIZE
+  0, /*tp_finalize*/
+  #else
+  NULL, /*tp_finalize*/
+  #endif
+  #if PY_VERSION_HEX >= 0x030800b1 && (!CYTHON_COMPILING_IN_PYPY || PYPY_VERSION_NUM >= 0x07030800)
+  0, /*tp_vectorcall*/
+  #endif
+  #if __PYX_NEED_TP_PRINT_SLOT == 1
+  0, /*tp_print*/
+  #endif
+  #if PY_VERSION_HEX >= 0x030C0000
+  0, /*tp_watched*/
+  #endif
+  #if PY_VERSION_HEX >= 0x030d00A4
+  0, /*tp_versions_used*/
+  #endif
+  #if CYTHON_COMPILING_IN_PYPY && PY_VERSION_HEX >= 0x03090000 && PY_VERSION_HEX < 0x030a0000
+  0, /*tp_pypy_flags*/
+  #endif
+};
+#endif
 
 static PyMethodDef __pyx_methods[] = {
   {0, 0, 0, 0}
@@ -4898,10 +5164,32 @@ static int __Pyx_modinit_function_export_code(__pyx_mstatetype *__pyx_mstate) {
 static int __Pyx_modinit_type_init_code(__pyx_mstatetype *__pyx_mstate) {
   __Pyx_RefNannyDeclarations
   CYTHON_UNUSED_VAR(__pyx_mstate);
+  int __pyx_lineno = 0;
+  const char *__pyx_filename = NULL;
+  int __pyx_clineno = 0;
   __Pyx_RefNannySetupContext("__Pyx_modinit_type_init_code", 0);
   /*--- Type init code ---*/
+  #if CYTHON_USE_TYPE_SPECS
+  __pyx_mstate->__pyx_ptype_3src_5utils_13session_cache___pyx_defaults = (PyTypeObject *) __Pyx_PyType_FromModuleAndSpec(__pyx_m, &__pyx_type_3src_5utils_13session_cache___pyx_defaults_spec, NULL); if (unlikely(!__pyx_mstate->__pyx_ptype_3src_5utils_13session_cache___pyx_defaults)) __PYX_ERR(0, 10, __pyx_L1_error)
+  if (__Pyx_fix_up_extension_type_from_spec(&__pyx_type_3src_5utils_13session_cache___pyx_defaults_spec, __pyx_mstate->__pyx_ptype_3src_5utils_13session_cache___pyx_defaults) < 0) __PYX_ERR(0, 10, __pyx_L1_error)
+  #else
+  __pyx_mstate->__pyx_ptype_3src_5utils_13session_cache___pyx_defaults = &__pyx_type_3src_5utils_13session_cache___pyx_defaults;
+  #endif
+  #if !CYTHON_COMPILING_IN_LIMITED_API
+  #endif
+  #if !CYTHON_USE_TYPE_SPECS
+  if (__Pyx_PyType_Ready(__pyx_mstate->__pyx_ptype_3src_5utils_13session_cache___pyx_defaults) < 0) __PYX_ERR(0, 10, __pyx_L1_error)
+  #endif
+  #if !CYTHON_COMPILING_IN_LIMITED_API
+  if ((CYTHON_USE_TYPE_SLOTS && CYTHON_USE_PYTYPE_LOOKUP) && likely(!__pyx_mstate->__pyx_ptype_3src_5utils_13session_cache___pyx_defaults->tp_dictoffset && __pyx_mstate->__pyx_ptype_3src_5utils_13session_cache___pyx_defaults->tp_getattro == PyObject_GenericGetAttr)) {
+    __pyx_mstate->__pyx_ptype_3src_5utils_13session_cache___pyx_defaults->tp_getattro = PyObject_GenericGetAttr;
+  }
+  #endif
   __Pyx_RefNannyFinishContext();
   return 0;
+  __pyx_L1_error:;
+  __Pyx_RefNannyFinishContext();
+  return -1;
 }
 
 static int __Pyx_modinit_type_import_code(__pyx_mstatetype *__pyx_mstate) {
@@ -5109,6 +5397,9 @@ static CYTHON_SMALL_CODE int __pyx_pymod_exec_session_cache(PyObject *__pyx_pyin
   PyObject *__pyx_t_2 = NULL;
   PyObject *__pyx_t_3 = NULL;
   PyObject *__pyx_t_4 = NULL;
+  size_t __pyx_t_5;
+  PyObject *__pyx_t_6 = NULL;
+  PyObject *__pyx_t_7 = NULL;
   int __pyx_lineno = 0;
   const char *__pyx_filename = NULL;
   int __pyx_clineno = 0;
@@ -5209,7 +5500,7 @@ __Pyx_RefNannySetupContext("PyInit_session_cache", 0);
   (void)__Pyx_modinit_global_init_code(__pyx_mstate);
   (void)__Pyx_modinit_variable_export_code(__pyx_mstate);
   (void)__Pyx_modinit_function_export_code(__pyx_mstate);
-  (void)__Pyx_modinit_type_init_code(__pyx_mstate);
+  if (unlikely((__Pyx_modinit_type_init_code(__pyx_mstate) < 0))) __PYX_ERR(0, 1, __pyx_L1_error)
   (void)__Pyx_modinit_type_import_code(__pyx_mstate);
   (void)__Pyx_modinit_variable_import_code(__pyx_mstate);
   (void)__Pyx_modinit_function_import_code(__pyx_mstate);
@@ -5229,7 +5520,7 @@ __Pyx_RefNannySetupContext("PyInit_session_cache", 0);
  * import redis
  * import json             # <<<<<<<<<<<<<<
  * from typing import Optional
- * 
+ * from dotenv import load_dotenv
 */
   __pyx_t_2 = __Pyx_ImportDottedModule(__pyx_mstate_global->__pyx_n_u_json, NULL); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 2, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
@@ -5240,8 +5531,8 @@ __Pyx_RefNannySetupContext("PyInit_session_cache", 0);
  * import redis
  * import json
  * from typing import Optional             # <<<<<<<<<<<<<<
- * 
- * 
+ * from dotenv import load_dotenv
+ * import os
 */
   __pyx_t_2 = __Pyx_PyList_Pack(1, __pyx_mstate_global->__pyx_n_u_Optional); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 3, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
@@ -5254,132 +5545,226 @@ __Pyx_RefNannySetupContext("PyInit_session_cache", 0);
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
   __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
 
-  /* "src/utils/session_cache.py":6
+  /* "src/utils/session_cache.py":4
+ * import json
+ * from typing import Optional
+ * from dotenv import load_dotenv             # <<<<<<<<<<<<<<
+ * import os
  * 
- * 
- * class SessionCache:             # <<<<<<<<<<<<<<
- *     def __init__(self, host: str = 'redis.qcr', port: int = 6379, db: int = 1, ttl: int = 600):
- *         self._ttl = ttl
 */
-  __pyx_t_3 = __Pyx_Py3MetaclassPrepare((PyObject *) NULL, __pyx_mstate_global->__pyx_empty_tuple, __pyx_mstate_global->__pyx_n_u_SessionCache, __pyx_mstate_global->__pyx_n_u_SessionCache, (PyObject *) NULL, __pyx_mstate_global->__pyx_n_u_src_utils_session_cache, (PyObject *) NULL); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 6, __pyx_L1_error)
+  __pyx_t_3 = __Pyx_PyList_Pack(1, __pyx_mstate_global->__pyx_n_u_load_dotenv); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 4, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
+  __pyx_t_2 = __Pyx_Import(__pyx_mstate_global->__pyx_n_u_dotenv, __pyx_t_3, 0); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 4, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_2);
+  __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
+  __pyx_t_3 = __Pyx_ImportFrom(__pyx_t_2, __pyx_mstate_global->__pyx_n_u_load_dotenv); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 4, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_3);
+  if (PyDict_SetItem(__pyx_mstate_global->__pyx_d, __pyx_mstate_global->__pyx_n_u_load_dotenv, __pyx_t_3) < 0) __PYX_ERR(0, 4, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
+  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+
+  /* "src/utils/session_cache.py":5
+ * from typing import Optional
+ * from dotenv import load_dotenv
+ * import os             # <<<<<<<<<<<<<<
+ * 
+ * load_dotenv('src/config/.env')
+*/
+  __pyx_t_2 = __Pyx_ImportDottedModule(__pyx_mstate_global->__pyx_n_u_os, NULL); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 5, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_2);
+  if (PyDict_SetItem(__pyx_mstate_global->__pyx_d, __pyx_mstate_global->__pyx_n_u_os, __pyx_t_2) < 0) __PYX_ERR(0, 5, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
 
   /* "src/utils/session_cache.py":7
+ * import os
+ * 
+ * load_dotenv('src/config/.env')             # <<<<<<<<<<<<<<
  * 
  * class SessionCache:
- *     def __init__(self, host: str = 'redis.qcr', port: int = 6379, db: int = 1, ttl: int = 600):             # <<<<<<<<<<<<<<
- *         self._ttl = ttl
- *         try:
 */
-  __pyx_t_2 = __Pyx_PyDict_NewPresized(4); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 7, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_2);
-  if (PyDict_SetItem(__pyx_t_2, __pyx_mstate_global->__pyx_n_u_host, __pyx_mstate_global->__pyx_n_u_str) < 0) __PYX_ERR(0, 7, __pyx_L1_error)
-  if (PyDict_SetItem(__pyx_t_2, __pyx_mstate_global->__pyx_n_u_port, __pyx_mstate_global->__pyx_n_u_int) < 0) __PYX_ERR(0, 7, __pyx_L1_error)
-  if (PyDict_SetItem(__pyx_t_2, __pyx_mstate_global->__pyx_n_u_db, __pyx_mstate_global->__pyx_n_u_int) < 0) __PYX_ERR(0, 7, __pyx_L1_error)
-  if (PyDict_SetItem(__pyx_t_2, __pyx_mstate_global->__pyx_n_u_ttl, __pyx_mstate_global->__pyx_n_u_int) < 0) __PYX_ERR(0, 7, __pyx_L1_error)
-  __pyx_t_4 = __Pyx_CyFunction_New(&__pyx_mdef_3src_5utils_13session_cache_12SessionCache_1__init__, 0, __pyx_mstate_global->__pyx_n_u_SessionCache___init, NULL, __pyx_mstate_global->__pyx_n_u_src_utils_session_cache, __pyx_mstate_global->__pyx_d, ((PyObject *)__pyx_mstate_global->__pyx_codeobj_tab[0])); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 7, __pyx_L1_error)
+  __pyx_t_3 = NULL;
+  __Pyx_GetModuleGlobalName(__pyx_t_4, __pyx_mstate_global->__pyx_n_u_load_dotenv); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 7, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_4);
-  __Pyx_CyFunction_SetDefaultsTuple(__pyx_t_4, __pyx_mstate_global->__pyx_tuple[0]);
-  __Pyx_CyFunction_SetAnnotationsDict(__pyx_t_4, __pyx_t_2);
+  __pyx_t_5 = 1;
+  {
+    PyObject *__pyx_callargs[2] = {__pyx_t_3, __pyx_mstate_global->__pyx_kp_u_src_config_env};
+    __pyx_t_2 = __Pyx_PyObject_FastCall(__pyx_t_4, __pyx_callargs+__pyx_t_5, (2-__pyx_t_5) | (__pyx_t_5*__Pyx_PY_VECTORCALL_ARGUMENTS_OFFSET));
+    __Pyx_XDECREF(__pyx_t_3); __pyx_t_3 = 0;
+    __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
+    if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 7, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_2);
+  }
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-  if (__Pyx_SetNameInClass(__pyx_t_3, __pyx_mstate_global->__pyx_n_u_init, __pyx_t_4) < 0) __PYX_ERR(0, 7, __pyx_L1_error)
-  __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
 
-  /* "src/utils/session_cache.py":19
+  /* "src/utils/session_cache.py":9
+ * load_dotenv('src/config/.env')
+ * 
+ * class SessionCache:             # <<<<<<<<<<<<<<
+ *     def __init__(
+ *         self,
+*/
+  __pyx_t_2 = __Pyx_Py3MetaclassPrepare((PyObject *) NULL, __pyx_mstate_global->__pyx_empty_tuple, __pyx_mstate_global->__pyx_n_u_SessionCache, __pyx_mstate_global->__pyx_n_u_SessionCache, (PyObject *) NULL, __pyx_mstate_global->__pyx_n_u_src_utils_session_cache, (PyObject *) NULL); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 9, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_2);
+
+  /* "src/utils/session_cache.py":10
+ * 
+ * class SessionCache:
+ *     def __init__(             # <<<<<<<<<<<<<<
+ *         self,
+ *         host: str = os.getenv("REDIS_HOST", "redis-server"),
+*/
+  __pyx_t_4 = __Pyx_PyDict_NewPresized(4); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 10, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_4);
+  if (PyDict_SetItem(__pyx_t_4, __pyx_mstate_global->__pyx_n_u_host, __pyx_mstate_global->__pyx_n_u_str) < 0) __PYX_ERR(0, 10, __pyx_L1_error)
+  if (PyDict_SetItem(__pyx_t_4, __pyx_mstate_global->__pyx_n_u_port, __pyx_mstate_global->__pyx_n_u_int) < 0) __PYX_ERR(0, 10, __pyx_L1_error)
+  if (PyDict_SetItem(__pyx_t_4, __pyx_mstate_global->__pyx_n_u_db, __pyx_mstate_global->__pyx_n_u_int) < 0) __PYX_ERR(0, 10, __pyx_L1_error)
+  if (PyDict_SetItem(__pyx_t_4, __pyx_mstate_global->__pyx_n_u_ttl, __pyx_mstate_global->__pyx_n_u_int) < 0) __PYX_ERR(0, 10, __pyx_L1_error)
+  __pyx_t_3 = __Pyx_CyFunction_New(&__pyx_mdef_3src_5utils_13session_cache_12SessionCache_1__init__, 0, __pyx_mstate_global->__pyx_n_u_SessionCache___init, NULL, __pyx_mstate_global->__pyx_n_u_src_utils_session_cache, __pyx_mstate_global->__pyx_d, ((PyObject *)__pyx_mstate_global->__pyx_codeobj_tab[0])); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 10, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_3);
+  if (!__Pyx_CyFunction_InitDefaults(__pyx_t_3, __pyx_mstate_global->__pyx_ptype_3src_5utils_13session_cache___pyx_defaults)) __PYX_ERR(0, 10, __pyx_L1_error)
+
+  /* "src/utils/session_cache.py":12
+ *     def __init__(
+ *         self,
+ *         host: str = os.getenv("REDIS_HOST", "redis-server"),             # <<<<<<<<<<<<<<
+ *         port: int = int(os.getenv("REDIS_PORT", "6379")),
+ *         db: int = 1,
+*/
+  __Pyx_GetModuleGlobalName(__pyx_t_6, __pyx_mstate_global->__pyx_n_u_os); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 12, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_6);
+  __pyx_t_7 = __Pyx_PyObject_GetAttrStr(__pyx_t_6, __pyx_mstate_global->__pyx_n_u_getenv); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 12, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_7);
+  __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
+  __pyx_t_6 = __Pyx_PyObject_Call(__pyx_t_7, __pyx_mstate_global->__pyx_tuple[0], NULL); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 12, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_6);
+  __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
+  if (!(likely(PyUnicode_CheckExact(__pyx_t_6))||((__pyx_t_6) == Py_None) || __Pyx_RaiseUnexpectedTypeError("str", __pyx_t_6))) __PYX_ERR(0, 12, __pyx_L1_error)
+  __Pyx_CyFunction_Defaults(struct __pyx_defaults, __pyx_t_3)->arg0 = ((PyObject*)__pyx_t_6);
+  __Pyx_GIVEREF(__pyx_t_6);
+  __pyx_t_6 = 0;
+
+  /* "src/utils/session_cache.py":13
+ *         self,
+ *         host: str = os.getenv("REDIS_HOST", "redis-server"),
+ *         port: int = int(os.getenv("REDIS_PORT", "6379")),             # <<<<<<<<<<<<<<
+ *         db: int = 1,
+ *         ttl: int = 600,
+*/
+  __Pyx_GetModuleGlobalName(__pyx_t_6, __pyx_mstate_global->__pyx_n_u_os); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 13, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_6);
+  __pyx_t_7 = __Pyx_PyObject_GetAttrStr(__pyx_t_6, __pyx_mstate_global->__pyx_n_u_getenv); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 13, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_7);
+  __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
+  __pyx_t_6 = __Pyx_PyObject_Call(__pyx_t_7, __pyx_mstate_global->__pyx_tuple[1], NULL); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 13, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_6);
+  __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
+  __pyx_t_7 = __Pyx_PyNumber_Int(__pyx_t_6); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 13, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_7);
+  __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
+  __Pyx_CyFunction_Defaults(struct __pyx_defaults, __pyx_t_3)->arg1 = ((PyObject*)__pyx_t_7);
+  __Pyx_GIVEREF(__pyx_t_7);
+  __pyx_t_7 = 0;
+  __Pyx_CyFunction_SetDefaultsGetter(__pyx_t_3, __pyx_pf_3src_5utils_13session_cache___defaults__);
+  __Pyx_CyFunction_SetAnnotationsDict(__pyx_t_3, __pyx_t_4);
+  __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
+  if (__Pyx_SetNameInClass(__pyx_t_2, __pyx_mstate_global->__pyx_n_u_init, __pyx_t_3) < 0) __PYX_ERR(0, 10, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
+
+  /* "src/utils/session_cache.py":33
  *             self._fallback = {}
  * 
  *     def get(self, env_id: str) -> dict:             # <<<<<<<<<<<<<<
  *         if self._redis:
  *             try:
 */
-  __pyx_t_4 = __Pyx_PyDict_NewPresized(2); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 19, __pyx_L1_error)
+  __pyx_t_3 = __Pyx_PyDict_NewPresized(2); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 33, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_3);
+  if (PyDict_SetItem(__pyx_t_3, __pyx_mstate_global->__pyx_n_u_env_id, __pyx_mstate_global->__pyx_n_u_str) < 0) __PYX_ERR(0, 33, __pyx_L1_error)
+  if (PyDict_SetItem(__pyx_t_3, __pyx_mstate_global->__pyx_n_u_return, __pyx_mstate_global->__pyx_n_u_dict) < 0) __PYX_ERR(0, 33, __pyx_L1_error)
+  __pyx_t_4 = __Pyx_CyFunction_New(&__pyx_mdef_3src_5utils_13session_cache_12SessionCache_3get, 0, __pyx_mstate_global->__pyx_n_u_SessionCache_get, NULL, __pyx_mstate_global->__pyx_n_u_src_utils_session_cache, __pyx_mstate_global->__pyx_d, ((PyObject *)__pyx_mstate_global->__pyx_codeobj_tab[1])); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 33, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_4);
-  if (PyDict_SetItem(__pyx_t_4, __pyx_mstate_global->__pyx_n_u_env_id, __pyx_mstate_global->__pyx_n_u_str) < 0) __PYX_ERR(0, 19, __pyx_L1_error)
-  if (PyDict_SetItem(__pyx_t_4, __pyx_mstate_global->__pyx_n_u_return, __pyx_mstate_global->__pyx_n_u_dict) < 0) __PYX_ERR(0, 19, __pyx_L1_error)
-  __pyx_t_2 = __Pyx_CyFunction_New(&__pyx_mdef_3src_5utils_13session_cache_12SessionCache_3get, 0, __pyx_mstate_global->__pyx_n_u_SessionCache_get, NULL, __pyx_mstate_global->__pyx_n_u_src_utils_session_cache, __pyx_mstate_global->__pyx_d, ((PyObject *)__pyx_mstate_global->__pyx_codeobj_tab[1])); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 19, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_2);
-  __Pyx_CyFunction_SetAnnotationsDict(__pyx_t_2, __pyx_t_4);
+  __Pyx_CyFunction_SetAnnotationsDict(__pyx_t_4, __pyx_t_3);
+  __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
+  if (__Pyx_SetNameInClass(__pyx_t_2, __pyx_mstate_global->__pyx_n_u_get, __pyx_t_4) < 0) __PYX_ERR(0, 33, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-  if (__Pyx_SetNameInClass(__pyx_t_3, __pyx_mstate_global->__pyx_n_u_get, __pyx_t_2) < 0) __PYX_ERR(0, 19, __pyx_L1_error)
-  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
 
-  /* "src/utils/session_cache.py":29
+  /* "src/utils/session_cache.py":43
  *         return self._fallback.get(env_id, {})
  * 
  *     def set(self, env_id: str, data: dict) -> None:             # <<<<<<<<<<<<<<
  *         if self._redis:
  *             try:
 */
-  __pyx_t_2 = __Pyx_PyDict_NewPresized(3); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 29, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_2);
-  if (PyDict_SetItem(__pyx_t_2, __pyx_mstate_global->__pyx_n_u_env_id, __pyx_mstate_global->__pyx_n_u_str) < 0) __PYX_ERR(0, 29, __pyx_L1_error)
-  if (PyDict_SetItem(__pyx_t_2, __pyx_mstate_global->__pyx_n_u_data, __pyx_mstate_global->__pyx_n_u_dict) < 0) __PYX_ERR(0, 29, __pyx_L1_error)
-  if (PyDict_SetItem(__pyx_t_2, __pyx_mstate_global->__pyx_n_u_return, __pyx_mstate_global->__pyx_n_u_None) < 0) __PYX_ERR(0, 29, __pyx_L1_error)
-  __pyx_t_4 = __Pyx_CyFunction_New(&__pyx_mdef_3src_5utils_13session_cache_12SessionCache_5set, 0, __pyx_mstate_global->__pyx_n_u_SessionCache_set, NULL, __pyx_mstate_global->__pyx_n_u_src_utils_session_cache, __pyx_mstate_global->__pyx_d, ((PyObject *)__pyx_mstate_global->__pyx_codeobj_tab[2])); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 29, __pyx_L1_error)
+  __pyx_t_4 = __Pyx_PyDict_NewPresized(3); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 43, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_4);
-  __Pyx_CyFunction_SetAnnotationsDict(__pyx_t_4, __pyx_t_2);
-  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-  if (__Pyx_SetNameInClass(__pyx_t_3, __pyx_mstate_global->__pyx_n_u_set, __pyx_t_4) < 0) __PYX_ERR(0, 29, __pyx_L1_error)
+  if (PyDict_SetItem(__pyx_t_4, __pyx_mstate_global->__pyx_n_u_env_id, __pyx_mstate_global->__pyx_n_u_str) < 0) __PYX_ERR(0, 43, __pyx_L1_error)
+  if (PyDict_SetItem(__pyx_t_4, __pyx_mstate_global->__pyx_n_u_data, __pyx_mstate_global->__pyx_n_u_dict) < 0) __PYX_ERR(0, 43, __pyx_L1_error)
+  if (PyDict_SetItem(__pyx_t_4, __pyx_mstate_global->__pyx_n_u_return, __pyx_mstate_global->__pyx_n_u_None) < 0) __PYX_ERR(0, 43, __pyx_L1_error)
+  __pyx_t_3 = __Pyx_CyFunction_New(&__pyx_mdef_3src_5utils_13session_cache_12SessionCache_5set, 0, __pyx_mstate_global->__pyx_n_u_SessionCache_set, NULL, __pyx_mstate_global->__pyx_n_u_src_utils_session_cache, __pyx_mstate_global->__pyx_d, ((PyObject *)__pyx_mstate_global->__pyx_codeobj_tab[2])); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 43, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_3);
+  __Pyx_CyFunction_SetAnnotationsDict(__pyx_t_3, __pyx_t_4);
   __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
+  if (__Pyx_SetNameInClass(__pyx_t_2, __pyx_mstate_global->__pyx_n_u_set, __pyx_t_3) < 0) __PYX_ERR(0, 43, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
 
-  /* "src/utils/session_cache.py":42
+  /* "src/utils/session_cache.py":56
  *             self._fallback[env_id] = data
  * 
  *     def delete(self, env_id: str) -> None:             # <<<<<<<<<<<<<<
  *         if self._redis:
  *             try:
 */
-  __pyx_t_4 = __Pyx_PyDict_NewPresized(2); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 42, __pyx_L1_error)
+  __pyx_t_3 = __Pyx_PyDict_NewPresized(2); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 56, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_3);
+  if (PyDict_SetItem(__pyx_t_3, __pyx_mstate_global->__pyx_n_u_env_id, __pyx_mstate_global->__pyx_n_u_str) < 0) __PYX_ERR(0, 56, __pyx_L1_error)
+  if (PyDict_SetItem(__pyx_t_3, __pyx_mstate_global->__pyx_n_u_return, __pyx_mstate_global->__pyx_n_u_None) < 0) __PYX_ERR(0, 56, __pyx_L1_error)
+  __pyx_t_4 = __Pyx_CyFunction_New(&__pyx_mdef_3src_5utils_13session_cache_12SessionCache_7delete, 0, __pyx_mstate_global->__pyx_n_u_SessionCache_delete, NULL, __pyx_mstate_global->__pyx_n_u_src_utils_session_cache, __pyx_mstate_global->__pyx_d, ((PyObject *)__pyx_mstate_global->__pyx_codeobj_tab[3])); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 56, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_4);
-  if (PyDict_SetItem(__pyx_t_4, __pyx_mstate_global->__pyx_n_u_env_id, __pyx_mstate_global->__pyx_n_u_str) < 0) __PYX_ERR(0, 42, __pyx_L1_error)
-  if (PyDict_SetItem(__pyx_t_4, __pyx_mstate_global->__pyx_n_u_return, __pyx_mstate_global->__pyx_n_u_None) < 0) __PYX_ERR(0, 42, __pyx_L1_error)
-  __pyx_t_2 = __Pyx_CyFunction_New(&__pyx_mdef_3src_5utils_13session_cache_12SessionCache_7delete, 0, __pyx_mstate_global->__pyx_n_u_SessionCache_delete, NULL, __pyx_mstate_global->__pyx_n_u_src_utils_session_cache, __pyx_mstate_global->__pyx_d, ((PyObject *)__pyx_mstate_global->__pyx_codeobj_tab[3])); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 42, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_2);
-  __Pyx_CyFunction_SetAnnotationsDict(__pyx_t_2, __pyx_t_4);
+  __Pyx_CyFunction_SetAnnotationsDict(__pyx_t_4, __pyx_t_3);
+  __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
+  if (__Pyx_SetNameInClass(__pyx_t_2, __pyx_mstate_global->__pyx_n_u_delete, __pyx_t_4) < 0) __PYX_ERR(0, 56, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-  if (__Pyx_SetNameInClass(__pyx_t_3, __pyx_mstate_global->__pyx_n_u_delete, __pyx_t_2) < 0) __PYX_ERR(0, 42, __pyx_L1_error)
-  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
 
-  /* "src/utils/session_cache.py":51
+  /* "src/utils/session_cache.py":65
  *             self._fallback.pop(env_id, None)
  * 
  *     def exists(self, env_id: str) -> bool:             # <<<<<<<<<<<<<<
  *         if self._redis:
  *             try:
 */
-  __pyx_t_2 = __Pyx_PyDict_NewPresized(2); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 51, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_2);
-  if (PyDict_SetItem(__pyx_t_2, __pyx_mstate_global->__pyx_n_u_env_id, __pyx_mstate_global->__pyx_n_u_str) < 0) __PYX_ERR(0, 51, __pyx_L1_error)
-  if (PyDict_SetItem(__pyx_t_2, __pyx_mstate_global->__pyx_n_u_return, __pyx_mstate_global->__pyx_n_u_bool) < 0) __PYX_ERR(0, 51, __pyx_L1_error)
-  __pyx_t_4 = __Pyx_CyFunction_New(&__pyx_mdef_3src_5utils_13session_cache_12SessionCache_9exists, 0, __pyx_mstate_global->__pyx_n_u_SessionCache_exists, NULL, __pyx_mstate_global->__pyx_n_u_src_utils_session_cache, __pyx_mstate_global->__pyx_d, ((PyObject *)__pyx_mstate_global->__pyx_codeobj_tab[4])); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 51, __pyx_L1_error)
+  __pyx_t_4 = __Pyx_PyDict_NewPresized(2); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 65, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_4);
-  __Pyx_CyFunction_SetAnnotationsDict(__pyx_t_4, __pyx_t_2);
-  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-  if (__Pyx_SetNameInClass(__pyx_t_3, __pyx_mstate_global->__pyx_n_u_exists, __pyx_t_4) < 0) __PYX_ERR(0, 51, __pyx_L1_error)
+  if (PyDict_SetItem(__pyx_t_4, __pyx_mstate_global->__pyx_n_u_env_id, __pyx_mstate_global->__pyx_n_u_str) < 0) __PYX_ERR(0, 65, __pyx_L1_error)
+  if (PyDict_SetItem(__pyx_t_4, __pyx_mstate_global->__pyx_n_u_return, __pyx_mstate_global->__pyx_n_u_bool) < 0) __PYX_ERR(0, 65, __pyx_L1_error)
+  __pyx_t_3 = __Pyx_CyFunction_New(&__pyx_mdef_3src_5utils_13session_cache_12SessionCache_9exists, 0, __pyx_mstate_global->__pyx_n_u_SessionCache_exists, NULL, __pyx_mstate_global->__pyx_n_u_src_utils_session_cache, __pyx_mstate_global->__pyx_d, ((PyObject *)__pyx_mstate_global->__pyx_codeobj_tab[4])); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 65, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_3);
+  __Pyx_CyFunction_SetAnnotationsDict(__pyx_t_3, __pyx_t_4);
   __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
+  if (__Pyx_SetNameInClass(__pyx_t_2, __pyx_mstate_global->__pyx_n_u_exists, __pyx_t_3) < 0) __PYX_ERR(0, 65, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
 
-  /* "src/utils/session_cache.py":6
- * 
+  /* "src/utils/session_cache.py":9
+ * load_dotenv('src/config/.env')
  * 
  * class SessionCache:             # <<<<<<<<<<<<<<
- *     def __init__(self, host: str = 'redis.qcr', port: int = 6379, db: int = 1, ttl: int = 600):
- *         self._ttl = ttl
+ *     def __init__(
+ *         self,
 */
-  __pyx_t_4 = __Pyx_Py3ClassCreate(((PyObject*)&PyType_Type), __pyx_mstate_global->__pyx_n_u_SessionCache, __pyx_mstate_global->__pyx_empty_tuple, __pyx_t_3, NULL, 0, 0); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 6, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_4);
-  if (PyDict_SetItem(__pyx_mstate_global->__pyx_d, __pyx_mstate_global->__pyx_n_u_SessionCache, __pyx_t_4) < 0) __PYX_ERR(0, 6, __pyx_L1_error)
-  __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
+  __pyx_t_3 = __Pyx_Py3ClassCreate(((PyObject*)&PyType_Type), __pyx_mstate_global->__pyx_n_u_SessionCache, __pyx_mstate_global->__pyx_empty_tuple, __pyx_t_2, NULL, 0, 0); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 9, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_3);
+  if (PyDict_SetItem(__pyx_mstate_global->__pyx_d, __pyx_mstate_global->__pyx_n_u_SessionCache, __pyx_t_3) < 0) __PYX_ERR(0, 9, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
+  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
 
   /* "src/utils/session_cache.py":1
  * import redis             # <<<<<<<<<<<<<<
  * import json
  * from typing import Optional
 */
-  __pyx_t_3 = __Pyx_PyDict_NewPresized(0); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 1, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_3);
-  if (PyDict_SetItem(__pyx_mstate_global->__pyx_d, __pyx_mstate_global->__pyx_n_u_test, __pyx_t_3) < 0) __PYX_ERR(0, 1, __pyx_L1_error)
-  __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
+  __pyx_t_2 = __Pyx_PyDict_NewPresized(0); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 1, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_2);
+  if (PyDict_SetItem(__pyx_mstate_global->__pyx_d, __pyx_mstate_global->__pyx_n_u_test, __pyx_t_2) < 0) __PYX_ERR(0, 1, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
 
   /*--- Wrapped vars code ---*/
 
@@ -5388,6 +5773,8 @@ __Pyx_RefNannySetupContext("PyInit_session_cache", 0);
   __Pyx_XDECREF(__pyx_t_2);
   __Pyx_XDECREF(__pyx_t_3);
   __Pyx_XDECREF(__pyx_t_4);
+  __Pyx_XDECREF(__pyx_t_6);
+  __Pyx_XDECREF(__pyx_t_7);
   if (__pyx_m) {
     if (__pyx_mstate->__pyx_d && stringtab_initialized) {
       __Pyx_AddTraceback("init src.utils.session_cache", __pyx_clineno, __pyx_lineno, __pyx_filename);
@@ -5442,15 +5829,18 @@ typedef struct {
 static const char * const __pyx_string_tab_encodings[] = { 0 };
 static const __Pyx_StringTabEntry __pyx_string_tab[] = {
   {__pyx_k_, sizeof(__pyx_k_), 0, 1, 0}, /* PyObject cname: __pyx_kp_u_ */
+  {__pyx_k_6379, sizeof(__pyx_k_6379), 0, 1, 0}, /* PyObject cname: __pyx_kp_u_6379 */
   {__pyx_k_None, sizeof(__pyx_k_None), 0, 1, 1}, /* PyObject cname: __pyx_n_u_None */
   {__pyx_k_Note_that_Cython_is_deliberately, sizeof(__pyx_k_Note_that_Cython_is_deliberately), 0, 1, 0}, /* PyObject cname: __pyx_kp_u_Note_that_Cython_is_deliberately */
   {__pyx_k_Optional, sizeof(__pyx_k_Optional), 0, 1, 1}, /* PyObject cname: __pyx_n_u_Optional */
+  {__pyx_k_REDIS_HOST, sizeof(__pyx_k_REDIS_HOST), 0, 1, 1}, /* PyObject cname: __pyx_n_u_REDIS_HOST */
+  {__pyx_k_REDIS_PORT, sizeof(__pyx_k_REDIS_PORT), 0, 1, 1}, /* PyObject cname: __pyx_n_u_REDIS_PORT */
   {__pyx_k_Redis, sizeof(__pyx_k_Redis), 0, 1, 1}, /* PyObject cname: __pyx_n_u_Redis */
   {__pyx_k_Redis_DELETE_error, sizeof(__pyx_k_Redis_DELETE_error), 0, 1, 0}, /* PyObject cname: __pyx_kp_u_Redis_DELETE_error */
   {__pyx_k_Redis_EXISTS_error, sizeof(__pyx_k_Redis_EXISTS_error), 0, 1, 0}, /* PyObject cname: __pyx_kp_u_Redis_EXISTS_error */
   {__pyx_k_Redis_GET_error, sizeof(__pyx_k_Redis_GET_error), 0, 1, 0}, /* PyObject cname: __pyx_kp_u_Redis_GET_error */
   {__pyx_k_Redis_SET_error, sizeof(__pyx_k_Redis_SET_error), 0, 1, 0}, /* PyObject cname: __pyx_kp_u_Redis_SET_error */
-  {__pyx_k_Redis_session_cache_connected_db, sizeof(__pyx_k_Redis_session_cache_connected_db), 0, 1, 0}, /* PyObject cname: __pyx_kp_u_Redis_session_cache_connected_db */
+  {__pyx_k_Redis_session_cache_connected_to, sizeof(__pyx_k_Redis_session_cache_connected_to), 0, 1, 0}, /* PyObject cname: __pyx_kp_u_Redis_session_cache_connected_to */
   {__pyx_k_Redis_unavailable_falling_back, sizeof(__pyx_k_Redis_unavailable_falling_back), 0, 1, 0}, /* PyObject cname: __pyx_kp_u_Redis_unavailable_falling_back */
   {__pyx_k_SessionCache, sizeof(__pyx_k_SessionCache), 0, 1, 1}, /* PyObject cname: __pyx_n_u_SessionCache */
   {__pyx_k_SessionCache___init, sizeof(__pyx_k_SessionCache___init), 0, 1, 1}, /* PyObject cname: __pyx_n_u_SessionCache___init */
@@ -5460,35 +5850,45 @@ static const __Pyx_StringTabEntry __pyx_string_tab[] = {
   {__pyx_k_SessionCache_set, sizeof(__pyx_k_SessionCache_set), 0, 1, 1}, /* PyObject cname: __pyx_n_u_SessionCache_set */
   {__pyx_k__2, sizeof(__pyx_k__2), 0, 1, 0}, /* PyObject cname: __pyx_kp_u__2 */
   {__pyx_k__3, sizeof(__pyx_k__3), 0, 1, 0}, /* PyObject cname: __pyx_kp_u__3 */
+  {__pyx_k__4, sizeof(__pyx_k__4), 0, 1, 0}, /* PyObject cname: __pyx_kp_u__4 */
   {__pyx_k_add_note, sizeof(__pyx_k_add_note), 0, 1, 0}, /* PyObject cname: __pyx_kp_u_add_note */
   {__pyx_k_asyncio_coroutines, sizeof(__pyx_k_asyncio_coroutines), 0, 1, 1}, /* PyObject cname: __pyx_n_u_asyncio_coroutines */
   {__pyx_k_bool, sizeof(__pyx_k_bool), 0, 1, 1}, /* PyObject cname: __pyx_n_u_bool */
   {__pyx_k_cline_in_traceback, sizeof(__pyx_k_cline_in_traceback), 0, 1, 1}, /* PyObject cname: __pyx_n_u_cline_in_traceback */
   {__pyx_k_data, sizeof(__pyx_k_data), 0, 1, 1}, /* PyObject cname: __pyx_n_u_data */
   {__pyx_k_db, sizeof(__pyx_k_db), 0, 1, 1}, /* PyObject cname: __pyx_n_u_db */
+  {__pyx_k_db_2, sizeof(__pyx_k_db_2), 0, 1, 0}, /* PyObject cname: __pyx_kp_u_db_2 */
   {__pyx_k_decode_responses, sizeof(__pyx_k_decode_responses), 0, 1, 1}, /* PyObject cname: __pyx_n_u_decode_responses */
   {__pyx_k_default, sizeof(__pyx_k_default), 0, 1, 1}, /* PyObject cname: __pyx_n_u_default */
   {__pyx_k_delete, sizeof(__pyx_k_delete), 0, 1, 1}, /* PyObject cname: __pyx_n_u_delete */
   {__pyx_k_dict, sizeof(__pyx_k_dict), 0, 1, 1}, /* PyObject cname: __pyx_n_u_dict */
+  {__pyx_k_disable, sizeof(__pyx_k_disable), 0, 1, 0}, /* PyObject cname: __pyx_kp_u_disable */
   {__pyx_k_doc, sizeof(__pyx_k_doc), 0, 1, 1}, /* PyObject cname: __pyx_n_u_doc */
+  {__pyx_k_dotenv, sizeof(__pyx_k_dotenv), 0, 1, 1}, /* PyObject cname: __pyx_n_u_dotenv */
   {__pyx_k_dumps, sizeof(__pyx_k_dumps), 0, 1, 1}, /* PyObject cname: __pyx_n_u_dumps */
   {__pyx_k_e, sizeof(__pyx_k_e), 0, 1, 1}, /* PyObject cname: __pyx_n_u_e */
+  {__pyx_k_enable, sizeof(__pyx_k_enable), 0, 1, 0}, /* PyObject cname: __pyx_kp_u_enable */
   {__pyx_k_env_id, sizeof(__pyx_k_env_id), 0, 1, 1}, /* PyObject cname: __pyx_n_u_env_id */
   {__pyx_k_exists, sizeof(__pyx_k_exists), 0, 1, 1}, /* PyObject cname: __pyx_n_u_exists */
   {__pyx_k_fallback, sizeof(__pyx_k_fallback), 0, 1, 1}, /* PyObject cname: __pyx_n_u_fallback */
   {__pyx_k_func, sizeof(__pyx_k_func), 0, 1, 1}, /* PyObject cname: __pyx_n_u_func */
+  {__pyx_k_gc, sizeof(__pyx_k_gc), 0, 1, 0}, /* PyObject cname: __pyx_kp_u_gc */
   {__pyx_k_get, sizeof(__pyx_k_get), 0, 1, 1}, /* PyObject cname: __pyx_n_u_get */
+  {__pyx_k_getenv, sizeof(__pyx_k_getenv), 0, 1, 1}, /* PyObject cname: __pyx_n_u_getenv */
   {__pyx_k_host, sizeof(__pyx_k_host), 0, 1, 1}, /* PyObject cname: __pyx_n_u_host */
   {__pyx_k_init, sizeof(__pyx_k_init), 0, 1, 1}, /* PyObject cname: __pyx_n_u_init */
   {__pyx_k_initializing, sizeof(__pyx_k_initializing), 0, 1, 1}, /* PyObject cname: __pyx_n_u_initializing */
   {__pyx_k_int, sizeof(__pyx_k_int), 0, 1, 1}, /* PyObject cname: __pyx_n_u_int */
   {__pyx_k_is_coroutine, sizeof(__pyx_k_is_coroutine), 0, 1, 1}, /* PyObject cname: __pyx_n_u_is_coroutine */
+  {__pyx_k_isenabled, sizeof(__pyx_k_isenabled), 0, 1, 0}, /* PyObject cname: __pyx_kp_u_isenabled */
   {__pyx_k_json, sizeof(__pyx_k_json), 0, 1, 1}, /* PyObject cname: __pyx_n_u_json */
+  {__pyx_k_load_dotenv, sizeof(__pyx_k_load_dotenv), 0, 1, 1}, /* PyObject cname: __pyx_n_u_load_dotenv */
   {__pyx_k_loads, sizeof(__pyx_k_loads), 0, 1, 1}, /* PyObject cname: __pyx_n_u_loads */
   {__pyx_k_main, sizeof(__pyx_k_main), 0, 1, 1}, /* PyObject cname: __pyx_n_u_main */
   {__pyx_k_metaclass, sizeof(__pyx_k_metaclass), 0, 1, 1}, /* PyObject cname: __pyx_n_u_metaclass */
   {__pyx_k_module, sizeof(__pyx_k_module), 0, 1, 1}, /* PyObject cname: __pyx_n_u_module */
   {__pyx_k_name, sizeof(__pyx_k_name), 0, 1, 1}, /* PyObject cname: __pyx_n_u_name */
+  {__pyx_k_os, sizeof(__pyx_k_os), 0, 1, 1}, /* PyObject cname: __pyx_n_u_os */
   {__pyx_k_ping, sizeof(__pyx_k_ping), 0, 1, 1}, /* PyObject cname: __pyx_n_u_ping */
   {__pyx_k_pop, sizeof(__pyx_k_pop), 0, 1, 1}, /* PyObject cname: __pyx_n_u_pop */
   {__pyx_k_port, sizeof(__pyx_k_port), 0, 1, 1}, /* PyObject cname: __pyx_n_u_port */
@@ -5497,7 +5897,7 @@ static const __Pyx_StringTabEntry __pyx_string_tab[] = {
   {__pyx_k_qualname, sizeof(__pyx_k_qualname), 0, 1, 1}, /* PyObject cname: __pyx_n_u_qualname */
   {__pyx_k_redis, sizeof(__pyx_k_redis), 0, 1, 1}, /* PyObject cname: __pyx_n_u_redis */
   {__pyx_k_redis_2, sizeof(__pyx_k_redis_2), 0, 1, 1}, /* PyObject cname: __pyx_n_u_redis_2 */
-  {__pyx_k_redis_qcr, sizeof(__pyx_k_redis_qcr), 0, 1, 0}, /* PyObject cname: __pyx_kp_u_redis_qcr */
+  {__pyx_k_redis_server, sizeof(__pyx_k_redis_server), 0, 1, 0}, /* PyObject cname: __pyx_kp_u_redis_server */
   {__pyx_k_return, sizeof(__pyx_k_return), 0, 1, 1}, /* PyObject cname: __pyx_n_u_return */
   {__pyx_k_self, sizeof(__pyx_k_self), 0, 1, 1}, /* PyObject cname: __pyx_n_u_self */
   {__pyx_k_session, sizeof(__pyx_k_session), 0, 1, 0}, /* PyObject cname: __pyx_kp_u_session */
@@ -5505,6 +5905,7 @@ static const __Pyx_StringTabEntry __pyx_string_tab[] = {
   {__pyx_k_set_name, sizeof(__pyx_k_set_name), 0, 1, 1}, /* PyObject cname: __pyx_n_u_set_name */
   {__pyx_k_setex, sizeof(__pyx_k_setex), 0, 1, 1}, /* PyObject cname: __pyx_n_u_setex */
   {__pyx_k_spec, sizeof(__pyx_k_spec), 0, 1, 1}, /* PyObject cname: __pyx_n_u_spec */
+  {__pyx_k_src_config_env, sizeof(__pyx_k_src_config_env), 0, 1, 0}, /* PyObject cname: __pyx_kp_u_src_config_env */
   {__pyx_k_src_utils_session_cache, sizeof(__pyx_k_src_utils_session_cache), 0, 1, 1}, /* PyObject cname: __pyx_n_u_src_utils_session_cache */
   {__pyx_k_src_utils_session_cache_py, sizeof(__pyx_k_src_utils_session_cache_py), 0, 1, 0}, /* PyObject cname: __pyx_kp_u_src_utils_session_cache_py */
   {__pyx_k_str, sizeof(__pyx_k_str), 0, 1, 1}, /* PyObject cname: __pyx_n_u_str */
@@ -5522,7 +5923,7 @@ static int __Pyx_InitStrings(__Pyx_StringTabEntry const *t, PyObject **target, c
 
 static int __Pyx_InitCachedBuiltins(__pyx_mstatetype *__pyx_mstate) {
   CYTHON_UNUSED_VAR(__pyx_mstate);
-  __pyx_builtin_print = __Pyx_GetBuiltinName(__pyx_mstate->__pyx_n_u_print); if (!__pyx_builtin_print) __PYX_ERR(0, 13, __pyx_L1_error)
+  __pyx_builtin_print = __Pyx_GetBuiltinName(__pyx_mstate->__pyx_n_u_print); if (!__pyx_builtin_print) __PYX_ERR(0, 27, __pyx_L1_error)
   return 0;
   __pyx_L1_error:;
   return -1;
@@ -5534,16 +5935,27 @@ static int __Pyx_InitCachedConstants(__pyx_mstatetype *__pyx_mstate) {
   CYTHON_UNUSED_VAR(__pyx_mstate);
   __Pyx_RefNannySetupContext("__Pyx_InitCachedConstants", 0);
 
-  /* "src/utils/session_cache.py":7
- * 
- * class SessionCache:
- *     def __init__(self, host: str = 'redis.qcr', port: int = 6379, db: int = 1, ttl: int = 600):             # <<<<<<<<<<<<<<
- *         self._ttl = ttl
- *         try:
+  /* "src/utils/session_cache.py":12
+ *     def __init__(
+ *         self,
+ *         host: str = os.getenv("REDIS_HOST", "redis-server"),             # <<<<<<<<<<<<<<
+ *         port: int = int(os.getenv("REDIS_PORT", "6379")),
+ *         db: int = 1,
 */
-  __pyx_mstate_global->__pyx_tuple[0] = PyTuple_Pack(4, ((PyObject*)__pyx_mstate_global->__pyx_kp_u_redis_qcr), ((PyObject*)__pyx_mstate_global->__pyx_int_6379), ((PyObject*)__pyx_mstate_global->__pyx_int_1), ((PyObject*)__pyx_mstate_global->__pyx_int_600)); if (unlikely(!__pyx_mstate_global->__pyx_tuple[0])) __PYX_ERR(0, 7, __pyx_L1_error)
+  __pyx_mstate_global->__pyx_tuple[0] = PyTuple_Pack(2, __pyx_mstate_global->__pyx_n_u_REDIS_HOST, __pyx_mstate_global->__pyx_kp_u_redis_server); if (unlikely(!__pyx_mstate_global->__pyx_tuple[0])) __PYX_ERR(0, 12, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_mstate_global->__pyx_tuple[0]);
   __Pyx_GIVEREF(__pyx_mstate_global->__pyx_tuple[0]);
+
+  /* "src/utils/session_cache.py":13
+ *         self,
+ *         host: str = os.getenv("REDIS_HOST", "redis-server"),
+ *         port: int = int(os.getenv("REDIS_PORT", "6379")),             # <<<<<<<<<<<<<<
+ *         db: int = 1,
+ *         ttl: int = 600,
+*/
+  __pyx_mstate_global->__pyx_tuple[1] = PyTuple_Pack(2, __pyx_mstate_global->__pyx_n_u_REDIS_PORT, __pyx_mstate_global->__pyx_kp_u_6379); if (unlikely(!__pyx_mstate_global->__pyx_tuple[1])) __PYX_ERR(0, 13, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_mstate_global->__pyx_tuple[1]);
+  __Pyx_GIVEREF(__pyx_mstate_global->__pyx_tuple[1]);
   __Pyx_RefNannyFinishContext();
   return 0;
   __pyx_L1_error:;
@@ -5559,7 +5971,6 @@ static int __Pyx_InitConstants(__pyx_mstatetype *__pyx_mstate) {
   if (__Pyx_InitStrings(__pyx_string_tab, __pyx_mstate->__pyx_string_tab, __pyx_string_tab_encodings) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
   __pyx_mstate->__pyx_int_1 = PyLong_FromLong(1); if (unlikely(!__pyx_mstate->__pyx_int_1)) __PYX_ERR(0, 1, __pyx_L1_error)
   __pyx_mstate->__pyx_int_600 = PyLong_FromLong(600); if (unlikely(!__pyx_mstate->__pyx_int_600)) __PYX_ERR(0, 1, __pyx_L1_error)
-  __pyx_mstate->__pyx_int_6379 = PyLong_FromLong(6379); if (unlikely(!__pyx_mstate->__pyx_int_6379)) __PYX_ERR(0, 1, __pyx_L1_error)
   return 0;
   __pyx_L1_error:;
   return -1;
@@ -5572,7 +5983,7 @@ static int __Pyx_InitConstants(__pyx_mstatetype *__pyx_mstate) {
             unsigned int num_kwonly_args : 1;
             unsigned int nlocals : 3;
             unsigned int flags : 10;
-            unsigned int first_line : 6;
+            unsigned int first_line : 7;
             unsigned int line_table_length : 12;
         } __Pyx_PyCode_New_function_description;
 /* NewCodeObj.proto */
@@ -5590,27 +6001,27 @@ static int __Pyx_CreateCodeObjects(__pyx_mstatetype *__pyx_mstate) {
   PyObject* tuple_dedup_map = PyDict_New();
   if (unlikely(!tuple_dedup_map)) return -1;
   {
-    const __Pyx_PyCode_New_function_description descr = {5, 0, 0, 6, (unsigned int)(CO_OPTIMIZED|CO_NEWLOCALS), 7, 121};
+    const __Pyx_PyCode_New_function_description descr = {5, 0, 0, 6, (unsigned int)(CO_OPTIMIZED|CO_NEWLOCALS), 10, 148};
     PyObject* const varnames[] = {__pyx_mstate->__pyx_n_u_self, __pyx_mstate->__pyx_n_u_host, __pyx_mstate->__pyx_n_u_port, __pyx_mstate->__pyx_n_u_db, __pyx_mstate->__pyx_n_u_ttl, __pyx_mstate->__pyx_n_u_e};
-    __pyx_mstate_global->__pyx_codeobj_tab[0] = __Pyx_PyCode_New(descr, varnames, __pyx_mstate->__pyx_kp_u_src_utils_session_cache_py, __pyx_mstate->__pyx_n_u_init, __pyx_k_v_0_l_iuTU_HA_vQe6_fCtCTTU_uA_Q, tuple_dedup_map); if (unlikely(!__pyx_mstate_global->__pyx_codeobj_tab[0])) goto bad;
+    __pyx_mstate_global->__pyx_codeobj_tab[0] = __Pyx_PyCode_New(descr, varnames, __pyx_mstate->__pyx_kp_u_src_utils_session_cache_py, __pyx_mstate->__pyx_n_u_init, __pyx_k_A_BgQnA_Cq_A_Q_HA_vQ_Q_Q_1_uA_Q, tuple_dedup_map); if (unlikely(!__pyx_mstate_global->__pyx_codeobj_tab[0])) goto bad;
   }
   {
-    const __Pyx_PyCode_New_function_description descr = {2, 0, 0, 4, (unsigned int)(CO_OPTIMIZED|CO_NEWLOCALS), 19, 88};
+    const __Pyx_PyCode_New_function_description descr = {2, 0, 0, 4, (unsigned int)(CO_OPTIMIZED|CO_NEWLOCALS), 33, 88};
     PyObject* const varnames[] = {__pyx_mstate->__pyx_n_u_self, __pyx_mstate->__pyx_n_u_env_id, __pyx_mstate->__pyx_n_u_val, __pyx_mstate->__pyx_n_u_e};
     __pyx_mstate_global->__pyx_codeobj_tab[1] = __Pyx_PyCode_New(descr, varnames, __pyx_mstate->__pyx_kp_u_src_utils_session_cache_py, __pyx_mstate->__pyx_n_u_get, __pyx_k_4q_d_Qb_A_t6_1_Qb_Q_q_t_T, tuple_dedup_map); if (unlikely(!__pyx_mstate_global->__pyx_codeobj_tab[1])) goto bad;
   }
   {
-    const __Pyx_PyCode_New_function_description descr = {3, 0, 0, 4, (unsigned int)(CO_OPTIMIZED|CO_NEWLOCALS), 29, 83};
+    const __Pyx_PyCode_New_function_description descr = {3, 0, 0, 4, (unsigned int)(CO_OPTIMIZED|CO_NEWLOCALS), 43, 83};
     PyObject* const varnames[] = {__pyx_mstate->__pyx_n_u_self, __pyx_mstate->__pyx_n_u_env_id, __pyx_mstate->__pyx_n_u_data, __pyx_mstate->__pyx_n_u_e};
     __pyx_mstate_global->__pyx_codeobj_tab[2] = __Pyx_PyCode_New(descr, varnames, __pyx_mstate->__pyx_kp_u_src_utils_session_cache_py, __pyx_mstate->__pyx_n_u_set, __pyx_k_Ya_4q_G6_l_avXQ_Qb_Q_Q, tuple_dedup_map); if (unlikely(!__pyx_mstate_global->__pyx_codeobj_tab[2])) goto bad;
   }
   {
-    const __Pyx_PyCode_New_function_description descr = {2, 0, 0, 3, (unsigned int)(CO_OPTIMIZED|CO_NEWLOCALS), 42, 64};
+    const __Pyx_PyCode_New_function_description descr = {2, 0, 0, 3, (unsigned int)(CO_OPTIMIZED|CO_NEWLOCALS), 56, 64};
     PyObject* const varnames[] = {__pyx_mstate->__pyx_n_u_self, __pyx_mstate->__pyx_n_u_env_id, __pyx_mstate->__pyx_n_u_e};
     __pyx_mstate_global->__pyx_codeobj_tab[3] = __Pyx_PyCode_New(descr, varnames, __pyx_mstate->__pyx_kp_u_src_utils_session_cache_py, __pyx_mstate->__pyx_n_u_delete, __pyx_k_XQ_4q_G7_2_Qb_0_axq, tuple_dedup_map); if (unlikely(!__pyx_mstate_global->__pyx_codeobj_tab[3])) goto bad;
   }
   {
-    const __Pyx_PyCode_New_function_description descr = {2, 0, 0, 3, (unsigned int)(CO_OPTIMIZED|CO_NEWLOCALS), 51, 73};
+    const __Pyx_PyCode_New_function_description descr = {2, 0, 0, 3, (unsigned int)(CO_OPTIMIZED|CO_NEWLOCALS), 65, 73};
     PyObject* const varnames[] = {__pyx_mstate->__pyx_n_u_self, __pyx_mstate->__pyx_n_u_env_id, __pyx_mstate->__pyx_n_u_e};
     __pyx_mstate_global->__pyx_codeobj_tab[4] = __Pyx_PyCode_New(descr, varnames, __pyx_mstate->__pyx_kp_u_src_utils_session_cache_py, __pyx_mstate->__pyx_n_u_exists, __pyx_k_XQ_4q_t1D_war_Q_Qb_0_q_wc_Q, tuple_dedup_map); if (unlikely(!__pyx_mstate_global->__pyx_codeobj_tab[4])) goto bad;
   }
@@ -7354,6 +7765,451 @@ __Pyx_RaiseUnexpectedTypeError(const char *expected, PyObject *obj)
     return 0;
 }
 
+/* LimitedApiGetTypeDict */
+#if CYTHON_COMPILING_IN_LIMITED_API
+static Py_ssize_t __Pyx_GetTypeDictOffset(void) {
+    PyObject *tp_dictoffset_o;
+    Py_ssize_t tp_dictoffset;
+    tp_dictoffset_o = PyObject_GetAttrString((PyObject*)(&PyType_Type), "__dictoffset__");
+    if (unlikely(!tp_dictoffset_o)) return -1;
+    tp_dictoffset = PyLong_AsSsize_t(tp_dictoffset_o);
+    Py_DECREF(tp_dictoffset_o);
+    if (unlikely(tp_dictoffset == 0)) {
+        PyErr_SetString(
+            PyExc_TypeError,
+            "'type' doesn't have a dictoffset");
+        return -1;
+    } else if (unlikely(tp_dictoffset < 0)) {
+        PyErr_SetString(
+            PyExc_TypeError,
+            "'type' has an unexpected negative dictoffset. "
+            "Please report this as Cython bug");
+        return -1;
+    }
+    return tp_dictoffset;
+}
+static PyObject *__Pyx_GetTypeDict(PyTypeObject *tp) {
+    static Py_ssize_t tp_dictoffset = 0;
+    if (unlikely(tp_dictoffset == 0)) {
+        tp_dictoffset = __Pyx_GetTypeDictOffset();
+        if (unlikely(tp_dictoffset == -1 && PyErr_Occurred())) {
+            tp_dictoffset = 0; // try again next time?
+            return NULL;
+        }
+    }
+    return *(PyObject**)((char*)tp + tp_dictoffset);
+}
+#endif
+
+/* SetItemOnTypeDict */
+static int __Pyx__SetItemOnTypeDict(PyTypeObject *tp, PyObject *k, PyObject *v) {
+    int result;
+    PyObject *tp_dict;
+#if CYTHON_COMPILING_IN_LIMITED_API
+    tp_dict = __Pyx_GetTypeDict(tp);
+    if (unlikely(!tp_dict)) return -1;
+#else
+    tp_dict = tp->tp_dict;
+#endif
+    result = PyDict_SetItem(tp_dict, k, v);
+    if (likely(!result)) {
+        PyType_Modified(tp);
+        if (unlikely(PyObject_HasAttr(v, __pyx_mstate_global->__pyx_n_u_set_name))) {
+            PyObject *setNameResult = PyObject_CallMethodObjArgs(v, __pyx_mstate_global->__pyx_n_u_set_name,  (PyObject *) tp, k, NULL);
+            if (!setNameResult) return -1;
+            Py_DECREF(setNameResult);
+        }
+    }
+    return result;
+}
+
+/* FixUpExtensionType */
+static int __Pyx_fix_up_extension_type_from_spec(PyType_Spec *spec, PyTypeObject *type) {
+#if __PYX_LIMITED_VERSION_HEX > 0x030900B1
+    CYTHON_UNUSED_VAR(spec);
+    CYTHON_UNUSED_VAR(type);
+    CYTHON_UNUSED_VAR(__Pyx__SetItemOnTypeDict);
+#else
+    const PyType_Slot *slot = spec->slots;
+    int changed = 0;
+#if !CYTHON_COMPILING_IN_LIMITED_API
+    while (slot && slot->slot && slot->slot != Py_tp_members)
+        slot++;
+    if (slot && slot->slot == Py_tp_members) {
+#if !CYTHON_COMPILING_IN_CPYTHON
+        const
+#endif  // !CYTHON_COMPILING_IN_CPYTHON)
+            PyMemberDef *memb = (PyMemberDef*) slot->pfunc;
+        while (memb && memb->name) {
+            if (memb->name[0] == '_' && memb->name[1] == '_') {
+                if (strcmp(memb->name, "__weaklistoffset__") == 0) {
+                    assert(memb->type == T_PYSSIZET);
+                    assert(memb->flags == READONLY);
+                    type->tp_weaklistoffset = memb->offset;
+                    changed = 1;
+                }
+                else if (strcmp(memb->name, "__dictoffset__") == 0) {
+                    assert(memb->type == T_PYSSIZET);
+                    assert(memb->flags == READONLY);
+                    type->tp_dictoffset = memb->offset;
+                    changed = 1;
+                }
+#if CYTHON_METH_FASTCALL
+                else if (strcmp(memb->name, "__vectorcalloffset__") == 0) {
+                    assert(memb->type == T_PYSSIZET);
+                    assert(memb->flags == READONLY);
+#if PY_VERSION_HEX >= 0x030800b4
+                    type->tp_vectorcall_offset = memb->offset;
+#else
+                    type->tp_print = (printfunc) memb->offset;
+#endif
+                    changed = 1;
+                }
+#endif  // CYTHON_METH_FASTCALL
+                else if (strcmp(memb->name, "__module__") == 0) {
+                    PyObject *descr;
+                    assert(memb->type == T_OBJECT);
+                    assert(memb->flags == 0 || memb->flags == READONLY);
+                    descr = PyDescr_NewMember(type, memb);
+                    if (unlikely(!descr))
+                        return -1;
+                    int set_item_result = PyDict_SetItem(type->tp_dict, PyDescr_NAME(descr), descr);
+                    Py_DECREF(descr);
+                    if (unlikely(set_item_result < 0)) {
+                        return -1;
+                    }
+                    changed = 1;
+                }
+            }
+            memb++;
+        }
+    }
+#endif  // !CYTHON_COMPILING_IN_LIMITED_API
+    slot = spec->slots;
+    while (slot && slot->slot && slot->slot != Py_tp_getset)
+        slot++;
+    if (slot && slot->slot == Py_tp_getset) {
+        PyGetSetDef *getset = (PyGetSetDef*) slot->pfunc;
+        while (getset && getset->name) {
+            if (getset->name[0] == '_' && getset->name[1] == '_' && strcmp(getset->name, "__module__") == 0) {
+                PyObject *descr = PyDescr_NewGetSet(type, getset);
+                if (unlikely(!descr))
+                    return -1;
+                #if CYTHON_COMPILING_IN_LIMITED_API
+                PyObject *pyname = PyUnicode_FromString(getset->name);
+                if (unlikely(!pyname)) {
+                    Py_DECREF(descr);
+                    return -1;
+                }
+                int set_item_result = __Pyx_SetItemOnTypeDict(type, pyname, descr);
+                Py_DECREF(pyname);
+                #else
+                CYTHON_UNUSED_VAR(__Pyx__SetItemOnTypeDict);
+                int set_item_result = PyDict_SetItem(type->tp_dict, PyDescr_NAME(descr), descr);
+                #endif
+                Py_DECREF(descr);
+                if (unlikely(set_item_result < 0)) {
+                    return -1;
+                }
+                changed = 1;
+            }
+            ++getset;
+        }
+    }
+    if (changed)
+        PyType_Modified(type);
+#endif  // PY_VERSION_HEX > 0x030900B1
+    return 0;
+}
+
+/* PyObjectCallNoArg */
+static CYTHON_INLINE PyObject* __Pyx_PyObject_CallNoArg(PyObject *func) {
+    PyObject *arg[2] = {NULL, NULL};
+    return __Pyx_PyObject_FastCall(func, arg + 1, 0 | __Pyx_PY_VECTORCALL_ARGUMENTS_OFFSET);
+}
+
+/* PyObjectCallOneArg */
+static CYTHON_INLINE PyObject* __Pyx_PyObject_CallOneArg(PyObject *func, PyObject *arg) {
+    PyObject *args[2] = {NULL, arg};
+    return __Pyx_PyObject_FastCall(func, args+1, 1 | __Pyx_PY_VECTORCALL_ARGUMENTS_OFFSET);
+}
+
+/* PyObjectGetMethod */
+static int __Pyx_PyObject_GetMethod(PyObject *obj, PyObject *name, PyObject **method) {
+    PyObject *attr;
+#if CYTHON_UNPACK_METHODS && CYTHON_COMPILING_IN_CPYTHON && CYTHON_USE_PYTYPE_LOOKUP
+    __Pyx_TypeName type_name;
+    PyTypeObject *tp = Py_TYPE(obj);
+    PyObject *descr;
+    descrgetfunc f = NULL;
+    PyObject **dictptr, *dict;
+    int meth_found = 0;
+    assert (*method == NULL);
+    if (unlikely(tp->tp_getattro != PyObject_GenericGetAttr)) {
+        attr = __Pyx_PyObject_GetAttrStr(obj, name);
+        goto try_unpack;
+    }
+    if (unlikely(tp->tp_dict == NULL) && unlikely(PyType_Ready(tp) < 0)) {
+        return 0;
+    }
+    descr = _PyType_Lookup(tp, name);
+    if (likely(descr != NULL)) {
+        Py_INCREF(descr);
+#if defined(Py_TPFLAGS_METHOD_DESCRIPTOR) && Py_TPFLAGS_METHOD_DESCRIPTOR
+        if (__Pyx_PyType_HasFeature(Py_TYPE(descr), Py_TPFLAGS_METHOD_DESCRIPTOR))
+#else
+        #ifdef __Pyx_CyFunction_USED
+        if (likely(PyFunction_Check(descr) || __Pyx_IS_TYPE(descr, &PyMethodDescr_Type) || __Pyx_CyFunction_Check(descr)))
+        #else
+        if (likely(PyFunction_Check(descr) || __Pyx_IS_TYPE(descr, &PyMethodDescr_Type)))
+        #endif
+#endif
+        {
+            meth_found = 1;
+        } else {
+            f = Py_TYPE(descr)->tp_descr_get;
+            if (f != NULL && PyDescr_IsData(descr)) {
+                attr = f(descr, obj, (PyObject *)Py_TYPE(obj));
+                Py_DECREF(descr);
+                goto try_unpack;
+            }
+        }
+    }
+    dictptr = _PyObject_GetDictPtr(obj);
+    if (dictptr != NULL && (dict = *dictptr) != NULL) {
+        Py_INCREF(dict);
+        attr = __Pyx_PyDict_GetItemStr(dict, name);
+        if (attr != NULL) {
+            Py_INCREF(attr);
+            Py_DECREF(dict);
+            Py_XDECREF(descr);
+            goto try_unpack;
+        }
+        Py_DECREF(dict);
+    }
+    if (meth_found) {
+        *method = descr;
+        return 1;
+    }
+    if (f != NULL) {
+        attr = f(descr, obj, (PyObject *)Py_TYPE(obj));
+        Py_DECREF(descr);
+        goto try_unpack;
+    }
+    if (likely(descr != NULL)) {
+        *method = descr;
+        return 0;
+    }
+    type_name = __Pyx_PyType_GetFullyQualifiedName(tp);
+    PyErr_Format(PyExc_AttributeError,
+                 "'" __Pyx_FMT_TYPENAME "' object has no attribute '%U'",
+                 type_name, name);
+    __Pyx_DECREF_TypeName(type_name);
+    return 0;
+#else
+    attr = __Pyx_PyObject_GetAttrStr(obj, name);
+    goto try_unpack;
+#endif
+try_unpack:
+#if CYTHON_UNPACK_METHODS
+    if (likely(attr) && PyMethod_Check(attr) && likely(PyMethod_GET_SELF(attr) == obj)) {
+        PyObject *function = PyMethod_GET_FUNCTION(attr);
+        Py_INCREF(function);
+        Py_DECREF(attr);
+        *method = function;
+        return 1;
+    }
+#endif
+    *method = attr;
+    return 0;
+}
+
+/* PyObjectCallMethod0 */
+static PyObject* __Pyx_PyObject_CallMethod0(PyObject* obj, PyObject* method_name) {
+    PyObject *method = NULL, *result = NULL;
+    int is_method = __Pyx_PyObject_GetMethod(obj, method_name, &method);
+    if (likely(is_method)) {
+        result = __Pyx_PyObject_CallOneArg(method, obj);
+        Py_DECREF(method);
+        return result;
+    }
+    if (unlikely(!method)) goto bad;
+    result = __Pyx_PyObject_CallNoArg(method);
+    Py_DECREF(method);
+bad:
+    return result;
+}
+
+/* ValidateBasesTuple */
+#if CYTHON_COMPILING_IN_CPYTHON || CYTHON_COMPILING_IN_LIMITED_API || CYTHON_USE_TYPE_SPECS
+static int __Pyx_validate_bases_tuple(const char *type_name, Py_ssize_t dictoffset, PyObject *bases) {
+    Py_ssize_t i, n;
+#if CYTHON_ASSUME_SAFE_SIZE
+    n = PyTuple_GET_SIZE(bases);
+#else
+    n = PyTuple_Size(bases);
+    if (unlikely(n < 0)) return -1;
+#endif
+    for (i = 1; i < n; i++)
+    {
+        PyTypeObject *b;
+#if CYTHON_AVOID_BORROWED_REFS
+        PyObject *b0 = PySequence_GetItem(bases, i);
+        if (!b0) return -1;
+#elif CYTHON_ASSUME_SAFE_MACROS
+        PyObject *b0 = PyTuple_GET_ITEM(bases, i);
+#else
+        PyObject *b0 = PyTuple_GetItem(bases, i);
+        if (!b0) return -1;
+#endif
+        b = (PyTypeObject*) b0;
+        if (!__Pyx_PyType_HasFeature(b, Py_TPFLAGS_HEAPTYPE))
+        {
+            __Pyx_TypeName b_name = __Pyx_PyType_GetFullyQualifiedName(b);
+            PyErr_Format(PyExc_TypeError,
+                "base class '" __Pyx_FMT_TYPENAME "' is not a heap type", b_name);
+            __Pyx_DECREF_TypeName(b_name);
+#if CYTHON_AVOID_BORROWED_REFS
+            Py_DECREF(b0);
+#endif
+            return -1;
+        }
+        if (dictoffset == 0)
+        {
+            Py_ssize_t b_dictoffset = 0;
+#if CYTHON_USE_TYPE_SLOTS
+            b_dictoffset = b->tp_dictoffset;
+#else
+            PyObject *py_b_dictoffset = PyObject_GetAttrString((PyObject*)b, "__dictoffset__");
+            if (!py_b_dictoffset) goto dictoffset_return;
+            b_dictoffset = PyLong_AsSsize_t(py_b_dictoffset);
+            Py_DECREF(py_b_dictoffset);
+            if (b_dictoffset == -1 && PyErr_Occurred()) goto dictoffset_return;
+#endif
+            if (b_dictoffset) {
+                {
+                    __Pyx_TypeName b_name = __Pyx_PyType_GetFullyQualifiedName(b);
+                    PyErr_Format(PyExc_TypeError,
+                        "extension type '%.200s' has no __dict__ slot, "
+                        "but base type '" __Pyx_FMT_TYPENAME "' has: "
+                        "either add 'cdef dict __dict__' to the extension type "
+                        "or add '__slots__ = [...]' to the base type",
+                        type_name, b_name);
+                    __Pyx_DECREF_TypeName(b_name);
+                }
+#if !CYTHON_USE_TYPE_SLOTS
+              dictoffset_return:
+#endif
+#if CYTHON_AVOID_BORROWED_REFS
+                Py_DECREF(b0);
+#endif
+                return -1;
+            }
+        }
+#if CYTHON_AVOID_BORROWED_REFS
+        Py_DECREF(b0);
+#endif
+    }
+    return 0;
+}
+#endif
+
+/* PyType_Ready */
+CYTHON_UNUSED static int __Pyx_PyType_HasMultipleInheritance(PyTypeObject *t) {
+    while (t) {
+        PyObject *bases = __Pyx_PyType_GetSlot(t, tp_bases, PyObject*);
+        if (bases) {
+            return 1;
+        }
+        t = __Pyx_PyType_GetSlot(t, tp_base, PyTypeObject*);
+    }
+    return 0;
+}
+static int __Pyx_PyType_Ready(PyTypeObject *t) {
+#if CYTHON_USE_TYPE_SPECS || !CYTHON_COMPILING_IN_CPYTHON || defined(PYSTON_MAJOR_VERSION)
+    (void)__Pyx_PyObject_CallMethod0;
+#if CYTHON_USE_TYPE_SPECS
+    (void)__Pyx_validate_bases_tuple;
+#endif
+    return PyType_Ready(t);
+#else
+    int r;
+    if (!__Pyx_PyType_HasMultipleInheritance(t)) {
+        return PyType_Ready(t);
+    }
+    PyObject *bases = __Pyx_PyType_GetSlot(t, tp_bases, PyObject*);
+    if (bases && unlikely(__Pyx_validate_bases_tuple(t->tp_name, t->tp_dictoffset, bases) == -1))
+        return -1;
+#if !defined(PYSTON_MAJOR_VERSION)
+    {
+        int gc_was_enabled;
+    #if PY_VERSION_HEX >= 0x030A00b1
+        gc_was_enabled = PyGC_Disable();
+        (void)__Pyx_PyObject_CallMethod0;
+    #else
+        PyObject *ret, *py_status;
+        PyObject *gc = NULL;
+        #if (!CYTHON_COMPILING_IN_PYPY || PYPY_VERSION_NUM+0 >= 0x07030400) &&\
+                !CYTHON_COMPILING_IN_GRAAL
+        gc = PyImport_GetModule(__pyx_mstate_global->__pyx_kp_u_gc);
+        #endif
+        if (unlikely(!gc)) gc = PyImport_Import(__pyx_mstate_global->__pyx_kp_u_gc);
+        if (unlikely(!gc)) return -1;
+        py_status = __Pyx_PyObject_CallMethod0(gc, __pyx_mstate_global->__pyx_kp_u_isenabled);
+        if (unlikely(!py_status)) {
+            Py_DECREF(gc);
+            return -1;
+        }
+        gc_was_enabled = __Pyx_PyObject_IsTrue(py_status);
+        Py_DECREF(py_status);
+        if (gc_was_enabled > 0) {
+            ret = __Pyx_PyObject_CallMethod0(gc, __pyx_mstate_global->__pyx_kp_u_disable);
+            if (unlikely(!ret)) {
+                Py_DECREF(gc);
+                return -1;
+            }
+            Py_DECREF(ret);
+        } else if (unlikely(gc_was_enabled == -1)) {
+            Py_DECREF(gc);
+            return -1;
+        }
+    #endif
+        t->tp_flags |= Py_TPFLAGS_HEAPTYPE;
+#if PY_VERSION_HEX >= 0x030A0000
+        t->tp_flags |= Py_TPFLAGS_IMMUTABLETYPE;
+#endif
+#else
+        (void)__Pyx_PyObject_CallMethod0;
+#endif
+    r = PyType_Ready(t);
+#if !defined(PYSTON_MAJOR_VERSION)
+        t->tp_flags &= ~Py_TPFLAGS_HEAPTYPE;
+    #if PY_VERSION_HEX >= 0x030A00b1
+        if (gc_was_enabled)
+            PyGC_Enable();
+    #else
+        if (gc_was_enabled) {
+            PyObject *tp, *v, *tb;
+            PyErr_Fetch(&tp, &v, &tb);
+            ret = __Pyx_PyObject_CallMethod0(gc, __pyx_mstate_global->__pyx_kp_u_enable);
+            if (likely(ret || r == -1)) {
+                Py_XDECREF(ret);
+                PyErr_Restore(tp, v, tb);
+            } else {
+                Py_XDECREF(tp);
+                Py_XDECREF(v);
+                Py_XDECREF(tb);
+                r = -1;
+            }
+        }
+        Py_DECREF(gc);
+    #endif
+    }
+#endif
+    return r;
+#endif
+}
+
 /* Import */
 static PyObject *__Pyx_Import(PyObject *name, PyObject *from_list, int level) {
     PyObject *module = 0;
@@ -7531,7 +8387,7 @@ static PyObject* __Pyx_ImportFrom(PyObject* module, PyObject* name) {
         if (unlikely(!module_name_str)) { goto modbad; }
         module_name = PyUnicode_FromString(module_name_str);
         if (unlikely(!module_name)) { goto modbad; }
-        module_dot = PyUnicode_Concat(module_name, __pyx_mstate_global->__pyx_kp_u__2);
+        module_dot = PyUnicode_Concat(module_name, __pyx_mstate_global->__pyx_kp_u__3);
         if (unlikely(!module_dot)) { goto modbad; }
         full_name = PyUnicode_Concat(module_dot, name);
         if (unlikely(!full_name)) { goto modbad; }
@@ -7555,163 +8411,6 @@ static PyObject* __Pyx_ImportFrom(PyObject* module, PyObject* name) {
         PyErr_Format(PyExc_ImportError, "cannot import name %S", name);
     }
     return value;
-}
-
-/* LimitedApiGetTypeDict */
-#if CYTHON_COMPILING_IN_LIMITED_API
-static Py_ssize_t __Pyx_GetTypeDictOffset(void) {
-    PyObject *tp_dictoffset_o;
-    Py_ssize_t tp_dictoffset;
-    tp_dictoffset_o = PyObject_GetAttrString((PyObject*)(&PyType_Type), "__dictoffset__");
-    if (unlikely(!tp_dictoffset_o)) return -1;
-    tp_dictoffset = PyLong_AsSsize_t(tp_dictoffset_o);
-    Py_DECREF(tp_dictoffset_o);
-    if (unlikely(tp_dictoffset == 0)) {
-        PyErr_SetString(
-            PyExc_TypeError,
-            "'type' doesn't have a dictoffset");
-        return -1;
-    } else if (unlikely(tp_dictoffset < 0)) {
-        PyErr_SetString(
-            PyExc_TypeError,
-            "'type' has an unexpected negative dictoffset. "
-            "Please report this as Cython bug");
-        return -1;
-    }
-    return tp_dictoffset;
-}
-static PyObject *__Pyx_GetTypeDict(PyTypeObject *tp) {
-    static Py_ssize_t tp_dictoffset = 0;
-    if (unlikely(tp_dictoffset == 0)) {
-        tp_dictoffset = __Pyx_GetTypeDictOffset();
-        if (unlikely(tp_dictoffset == -1 && PyErr_Occurred())) {
-            tp_dictoffset = 0; // try again next time?
-            return NULL;
-        }
-    }
-    return *(PyObject**)((char*)tp + tp_dictoffset);
-}
-#endif
-
-/* SetItemOnTypeDict */
-static int __Pyx__SetItemOnTypeDict(PyTypeObject *tp, PyObject *k, PyObject *v) {
-    int result;
-    PyObject *tp_dict;
-#if CYTHON_COMPILING_IN_LIMITED_API
-    tp_dict = __Pyx_GetTypeDict(tp);
-    if (unlikely(!tp_dict)) return -1;
-#else
-    tp_dict = tp->tp_dict;
-#endif
-    result = PyDict_SetItem(tp_dict, k, v);
-    if (likely(!result)) {
-        PyType_Modified(tp);
-        if (unlikely(PyObject_HasAttr(v, __pyx_mstate_global->__pyx_n_u_set_name))) {
-            PyObject *setNameResult = PyObject_CallMethodObjArgs(v, __pyx_mstate_global->__pyx_n_u_set_name,  (PyObject *) tp, k, NULL);
-            if (!setNameResult) return -1;
-            Py_DECREF(setNameResult);
-        }
-    }
-    return result;
-}
-
-/* FixUpExtensionType */
-static int __Pyx_fix_up_extension_type_from_spec(PyType_Spec *spec, PyTypeObject *type) {
-#if __PYX_LIMITED_VERSION_HEX > 0x030900B1
-    CYTHON_UNUSED_VAR(spec);
-    CYTHON_UNUSED_VAR(type);
-    CYTHON_UNUSED_VAR(__Pyx__SetItemOnTypeDict);
-#else
-    const PyType_Slot *slot = spec->slots;
-    int changed = 0;
-#if !CYTHON_COMPILING_IN_LIMITED_API
-    while (slot && slot->slot && slot->slot != Py_tp_members)
-        slot++;
-    if (slot && slot->slot == Py_tp_members) {
-#if !CYTHON_COMPILING_IN_CPYTHON
-        const
-#endif  // !CYTHON_COMPILING_IN_CPYTHON)
-            PyMemberDef *memb = (PyMemberDef*) slot->pfunc;
-        while (memb && memb->name) {
-            if (memb->name[0] == '_' && memb->name[1] == '_') {
-                if (strcmp(memb->name, "__weaklistoffset__") == 0) {
-                    assert(memb->type == T_PYSSIZET);
-                    assert(memb->flags == READONLY);
-                    type->tp_weaklistoffset = memb->offset;
-                    changed = 1;
-                }
-                else if (strcmp(memb->name, "__dictoffset__") == 0) {
-                    assert(memb->type == T_PYSSIZET);
-                    assert(memb->flags == READONLY);
-                    type->tp_dictoffset = memb->offset;
-                    changed = 1;
-                }
-#if CYTHON_METH_FASTCALL
-                else if (strcmp(memb->name, "__vectorcalloffset__") == 0) {
-                    assert(memb->type == T_PYSSIZET);
-                    assert(memb->flags == READONLY);
-#if PY_VERSION_HEX >= 0x030800b4
-                    type->tp_vectorcall_offset = memb->offset;
-#else
-                    type->tp_print = (printfunc) memb->offset;
-#endif
-                    changed = 1;
-                }
-#endif  // CYTHON_METH_FASTCALL
-                else if (strcmp(memb->name, "__module__") == 0) {
-                    PyObject *descr;
-                    assert(memb->type == T_OBJECT);
-                    assert(memb->flags == 0 || memb->flags == READONLY);
-                    descr = PyDescr_NewMember(type, memb);
-                    if (unlikely(!descr))
-                        return -1;
-                    int set_item_result = PyDict_SetItem(type->tp_dict, PyDescr_NAME(descr), descr);
-                    Py_DECREF(descr);
-                    if (unlikely(set_item_result < 0)) {
-                        return -1;
-                    }
-                    changed = 1;
-                }
-            }
-            memb++;
-        }
-    }
-#endif  // !CYTHON_COMPILING_IN_LIMITED_API
-    slot = spec->slots;
-    while (slot && slot->slot && slot->slot != Py_tp_getset)
-        slot++;
-    if (slot && slot->slot == Py_tp_getset) {
-        PyGetSetDef *getset = (PyGetSetDef*) slot->pfunc;
-        while (getset && getset->name) {
-            if (getset->name[0] == '_' && getset->name[1] == '_' && strcmp(getset->name, "__module__") == 0) {
-                PyObject *descr = PyDescr_NewGetSet(type, getset);
-                if (unlikely(!descr))
-                    return -1;
-                #if CYTHON_COMPILING_IN_LIMITED_API
-                PyObject *pyname = PyUnicode_FromString(getset->name);
-                if (unlikely(!pyname)) {
-                    Py_DECREF(descr);
-                    return -1;
-                }
-                int set_item_result = __Pyx_SetItemOnTypeDict(type, pyname, descr);
-                Py_DECREF(pyname);
-                #else
-                CYTHON_UNUSED_VAR(__Pyx__SetItemOnTypeDict);
-                int set_item_result = PyDict_SetItem(type->tp_dict, PyDescr_NAME(descr), descr);
-                #endif
-                Py_DECREF(descr);
-                if (unlikely(set_item_result < 0)) {
-                    return -1;
-                }
-                changed = 1;
-            }
-            ++getset;
-        }
-    }
-    if (changed)
-        PyType_Modified(type);
-#endif  // PY_VERSION_HEX > 0x030900B1
-    return 0;
 }
 
 /* FetchSharedCythonModule */
@@ -9493,7 +10192,7 @@ __Pyx_PyType_GetFullyQualifiedName(PyTypeObject* tp)
         result = name;
         name = NULL;
     } else {
-        result = __Pyx_NewRef(__pyx_mstate_global->__pyx_kp_u__3);
+        result = __Pyx_NewRef(__pyx_mstate_global->__pyx_kp_u__4);
     }
     goto done;
 }

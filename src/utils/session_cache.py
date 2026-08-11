@@ -1,16 +1,30 @@
 import redis
 import json
 from typing import Optional
+from dotenv import load_dotenv
+import os 
 
+load_dotenv('src/config/.env')
 
 class SessionCache:
-    def __init__(self, host: str = 'redis.qcr', port: int = 6379, db: int = 1, ttl: int = 600):
+    def __init__(
+        self,
+        host: str = os.getenv("REDIS_HOST", "redis-server"),
+        port: int = int(os.getenv("REDIS_PORT", "6379")),
+        db: int = 1,
+        ttl: int = 600,
+    ):
         self._ttl = ttl
         try:
-            self._redis = redis.Redis(host=host, port=port, db=db, decode_responses=True)
+            self._redis = redis.Redis(
+                host=host,
+                port=port,
+                db=db,
+                decode_responses=True
+            )
             self._redis.ping()
             self._fallback = None
-            print(f"Redis session cache connected ✅ (db={db})")
+            print(f"Redis session cache connected to {host}:{port} ✅ (db={db})")
         except Exception as e:
             print(f"⚠️ Redis unavailable, falling back to in-memory: {e}")
             self._redis = None

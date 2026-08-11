@@ -3127,6 +3127,7 @@ static const char __pyx_k_Error_processing_image[] = "Error processing image ";
 static const char __pyx_k_TIMER_Regex_extraction[] = "[TIMER] Regex extraction: ";
 static const char __pyx_k_src_data_handler_mongo[] = "src.data_handler.mongo";
 static const char __pyx_k_Failed_to_save_metadata[] = "Failed to save metadata: ";
+static const char __pyx_k_http_neo_qcr_model_8093[] = "http://neo-qcr-model:8093";
 static const char __pyx_k_src_utils_session_cache[] = "src.utils.session_cache";
 static const char __pyx_k_ModelInitializationError[] = "ModelInitializationError";
 static const char __pyx_k_No_valid_images_provided[] = "No valid images provided";
@@ -3172,7 +3173,6 @@ static const char __pyx_k_Orchestrator_process_image_save[] = "Orchestrator.proc
 static const char __pyx_k_Singleton_service_object_Only_t[] = "\n    Singleton service object.  Only truly shared, immutable state lives on\n    self (models, db connection, utils).  Every request carries its own data\n    through local variables and explicit return values \342\200\224 nothing request-\n    specific is ever written to self.\n    ";
 static const char __pyx_k_Stream_Metadata_extraction_erro[] = "[Stream] Metadata extraction error for raw='";
 static const char __pyx_k_a_D_Q_nAXQ_a_E_Ba_81_j_A_2_NcQR[] = "\320\004\036\230a\330\010\t\330\014\021\220\021\220!\330\014\031\230\021\330\014\024\220D\230\005\230Q\360\006\000\r\021\220\016\230n\250A\250X\260Q\330\014\020\220\013\230;\240a\330\014\021\220\021\220\"\320\024(\250\004\250E\260\023\260B\260a\340\014\021\220\021\220!\330\014\020\220\n\230'\240\021\330\014\020\220\013\2308\2401\330\014\020\220\016\230j\250\001\330\010\017\210}\230A\330\014\022\320\022*\250!\2502\320-N\310c\320QR\320RS";
-static const char __pyx_k_https_sentinel_compute_neophyte[] = "https://sentinel-compute.neophyte.live/neo_qcr_3_5";
 static const char __pyx_k_save_metadata_Waiting_for_paral[] = "[save_metadata] Waiting for parallel upload URL...";
 static const char __pyx_k_saved_with_capture_type_multica[] = " saved with capture_type=multicapture";
 static const char __pyx_k_src_core_think_machine_learning[] = "src.core.think.machine_learning.computer_vision.text_analytics.qwen_api_client";
@@ -3536,7 +3536,7 @@ static __pyx_mstatetype * const __pyx_mstate_global = &__pyx_mstate_global_stati
 #define __pyx_n_u_getbatchno __pyx_string_tab[183]
 #define __pyx_n_u_getdate __pyx_string_tab[184]
 #define __pyx_n_u_getmrp __pyx_string_tab[185]
-#define __pyx_kp_u_https_sentinel_compute_neophyte __pyx_string_tab[186]
+#define __pyx_kp_u_http_neo_qcr_model_8093 __pyx_string_tab[186]
 #define __pyx_n_u_i __pyx_string_tab[187]
 #define __pyx_n_u_image __pyx_string_tab[188]
 #define __pyx_n_u_image_copy __pyx_string_tab[189]
@@ -4836,7 +4836,7 @@ static PyObject *__pyx_pf_3src_12orchestrator_19orchestrator_neoqcr_12Orchestrat
       /* "src/orchestrator/orchestrator_neoqcr.py":99
  *             # print(f"model path :: {model_path}")
  *             # self.qwen_model = Vllm_inference(model_path, image_dir=None, output_csv=None)
- *             self.qwen_model = Vllm_inference(api_url="https://sentinel-compute.neophyte.live/neo_qcr_3_5")             # <<<<<<<<<<<<<<
+ *             self.qwen_model = Vllm_inference(api_url="http://neo-qcr-model:8093")             # <<<<<<<<<<<<<<
  *             self.qwen_model.initialize()
  *             print(f"model loaded in {time.time() - start:.2f}s")
 */
@@ -4859,7 +4859,7 @@ static PyObject *__pyx_pf_3src_12orchestrator_19orchestrator_neoqcr_12Orchestrat
         PyObject *__pyx_callargs[2 + ((CYTHON_VECTORCALL) ? 1 : 0)] = {__pyx_t_8, NULL};
         __pyx_t_5 = __Pyx_MakeVectorcallBuilderKwds(1); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 99, __pyx_L3_error)
         __Pyx_GOTREF(__pyx_t_5);
-        if (__Pyx_VectorcallBuilder_AddArg(__pyx_mstate_global->__pyx_n_u_api_url, __pyx_mstate_global->__pyx_kp_u_https_sentinel_compute_neophyte, __pyx_t_5, __pyx_callargs+1, 0) < 0) __PYX_ERR(0, 99, __pyx_L3_error)
+        if (__Pyx_VectorcallBuilder_AddArg(__pyx_mstate_global->__pyx_n_u_api_url, __pyx_mstate_global->__pyx_kp_u_http_neo_qcr_model_8093, __pyx_t_5, __pyx_callargs+1, 0) < 0) __PYX_ERR(0, 99, __pyx_L3_error)
         __pyx_t_4 = __Pyx_Object_Vectorcall_CallFromBuilder(__pyx_t_6, __pyx_callargs+__pyx_t_7, (1-__pyx_t_7) | (__pyx_t_7*__Pyx_PY_VECTORCALL_ARGUMENTS_OFFSET), __pyx_t_5);
         __Pyx_XDECREF(__pyx_t_8); __pyx_t_8 = 0;
         __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
@@ -4872,7 +4872,7 @@ static PyObject *__pyx_pf_3src_12orchestrator_19orchestrator_neoqcr_12Orchestrat
 
       /* "src/orchestrator/orchestrator_neoqcr.py":100
  *             # self.qwen_model = Vllm_inference(model_path, image_dir=None, output_csv=None)
- *             self.qwen_model = Vllm_inference(api_url="https://sentinel-compute.neophyte.live/neo_qcr_3_5")
+ *             self.qwen_model = Vllm_inference(api_url="http://neo-qcr-model:8093")
  *             self.qwen_model.initialize()             # <<<<<<<<<<<<<<
  *             print(f"model loaded in {time.time() - start:.2f}s")
  * 
@@ -4893,7 +4893,7 @@ static PyObject *__pyx_pf_3src_12orchestrator_19orchestrator_neoqcr_12Orchestrat
       __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
 
       /* "src/orchestrator/orchestrator_neoqcr.py":101
- *             self.qwen_model = Vllm_inference(api_url="https://sentinel-compute.neophyte.live/neo_qcr_3_5")
+ *             self.qwen_model = Vllm_inference(api_url="http://neo-qcr-model:8093")
  *             self.qwen_model.initialize()
  *             print(f"model loaded in {time.time() - start:.2f}s")             # <<<<<<<<<<<<<<
  * 
@@ -18228,7 +18228,7 @@ static const __Pyx_StringTabEntry __pyx_string_tab[] = {
   {__pyx_k_getbatchno, sizeof(__pyx_k_getbatchno), 0, 1, 1}, /* PyObject cname: __pyx_n_u_getbatchno */
   {__pyx_k_getdate, sizeof(__pyx_k_getdate), 0, 1, 1}, /* PyObject cname: __pyx_n_u_getdate */
   {__pyx_k_getmrp, sizeof(__pyx_k_getmrp), 0, 1, 1}, /* PyObject cname: __pyx_n_u_getmrp */
-  {__pyx_k_https_sentinel_compute_neophyte, sizeof(__pyx_k_https_sentinel_compute_neophyte), 0, 1, 0}, /* PyObject cname: __pyx_kp_u_https_sentinel_compute_neophyte */
+  {__pyx_k_http_neo_qcr_model_8093, sizeof(__pyx_k_http_neo_qcr_model_8093), 0, 1, 0}, /* PyObject cname: __pyx_kp_u_http_neo_qcr_model_8093 */
   {__pyx_k_i, sizeof(__pyx_k_i), 0, 1, 1}, /* PyObject cname: __pyx_n_u_i */
   {__pyx_k_image, sizeof(__pyx_k_image), 0, 1, 1}, /* PyObject cname: __pyx_n_u_image */
   {__pyx_k_image_copy, sizeof(__pyx_k_image_copy), 0, 1, 1}, /* PyObject cname: __pyx_n_u_image_copy */

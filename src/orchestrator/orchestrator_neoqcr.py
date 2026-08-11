@@ -96,7 +96,7 @@ class Orchestrator:
             start = time.time()
             # print(f"model path :: {model_path}")
             # self.qwen_model = Vllm_inference(model_path, image_dir=None, output_csv=None)
-            self.qwen_model = Vllm_inference(api_url="https://sentinel-compute.neophyte.live/neo_qcr_3_5")
+            self.qwen_model = Vllm_inference(api_url="http://neo-qcr-model:8093")
             self.qwen_model.initialize()
             print(f"model loaded in {time.time() - start:.2f}s")
 
