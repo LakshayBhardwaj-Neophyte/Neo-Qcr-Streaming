@@ -407,9 +407,49 @@ async def stream_endpoint(
     print(f"[WS] Using last clean frame: seq={last_clean_seq} — cropping patch")
     
     try:
+        # ── Step 0: Upload original frame in background ───────────────────
+        try:
+            parts = image_name.split("_")
+            if len(parts) >= 4:
+                user_id = parts[1]
+                img_token = parts[3].split(".jpg")[0]
+                final_metadata_id = metadata_id if metadata_id else f"{env_id}{img_token}"
+                
+                def upload_original_worker():
+                    try:
+                        from src.utils.storage_router import StorageRouter
+                        from src.orchestrator.orchestrator_neoqcr import build_blob_name
+                        print(f"[WS] Uploading original frame for {final_metadata_id} in background...")
+                        storage = StorageRouter()
+                        blob_name = build_blob_name(f"{final_metadata_id}_original", client_name=client_name, user_id=user_id)
+                        storage.upload_image(last_clean_img, blob_name, client_name, user_id)
+                        print(f"[WS] Original frame uploaded successfully to {blob_name}")
+                    except Exception as e:
+                        print(f"[WS] Background upload of original frame failed: {e}")
+                        
+                threading.Thread(target=upload_original_worker, daemon=True).start()
+        except Exception as e:
+            print(f"[WS] Could not start original frame upload thread: {e}")
+
         # ── Step 1: Crop the label patch using bbox from classifier ───────
         if last_clean_bbox:
             x1, y1, x2, y2 = last_clean_bbox
+            
+            # Add percentage padding
+            padding_percent = float(os.getenv("BBOX_PADDING_PERCENT", "0.1"))
+            if padding_percent > 0:
+                width = x2 - x1
+                height = y2 - y1
+                pad_w = width * padding_percent
+                pad_h = height * padding_percent
+                
+                # Expand bbox and ensure it stays within image boundaries
+                img_w, img_h = last_clean_img.size
+                x1 = max(0, x1 - pad_w)
+                y1 = max(0, y1 - pad_h)
+                x2 = min(img_w, x2 + pad_w)
+                y2 = min(img_h, y2 + pad_h)
+                
             cropped_patch = last_clean_img.crop((int(x1), int(y1), int(x2), int(y2)))
         else:
             cropped_patch = last_clean_img
