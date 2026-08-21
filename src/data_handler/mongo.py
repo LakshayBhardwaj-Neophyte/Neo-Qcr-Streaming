@@ -397,6 +397,11 @@ class Mongo:
             metadata_doc['client_name'] = data.get('client_name')
         if data.get('storage') is not None:
             metadata_doc['storage'] = data.get('storage')
+        if data.get('rotation') is not None:
+            metadata_doc['rotation'] = data.get('rotation')
+        if data.get('upright') is not None:
+            metadata_doc['upright'] = data.get('upright')
+            
         return self.save_document(metadata_doc)
 
     # Root-level fields that are candidates for multicapture merging.

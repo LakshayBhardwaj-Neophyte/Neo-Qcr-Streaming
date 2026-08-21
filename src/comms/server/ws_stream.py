@@ -21,7 +21,7 @@ load_dotenv("src/configs/.env")
 # Constants
 # ---------------------------------------------------------------------------
 
-STREAM_MAX_DURATION_S: int = int(os.getenv("STREAM_MAX_DURATION_S", "30"))
+STREAM_MAX_DURATION_S: int = int(os.getenv("STREAM_MAX_DURATION_S", "15"))
 CLEAN_FRAMES_TARGET:   int = 3   # how many clean frames before stop_stream
 
 # YOLO class that counts as "clean"
@@ -36,6 +36,10 @@ PROCESS_SERVER_URL: str = os.getenv(
 RECAPTURE_SERVER_URL: str = os.getenv(
     "RECAPTURE_SERVER_URL",
     "http://localhost:4097/recapture",
+)
+ROTATION_API_URL: str = os.getenv(
+    "ROTATION_API_URL",
+    "http://neo-orientation:8181",
 )
 
 # ---------------------------------------------------------------------------
@@ -461,6 +465,37 @@ async def stream_endpoint(
         jpeg_bytes = jpeg_buf.read()
         print(f"[WS] Image encoded to JPEG: {len(jpeg_bytes)} bytes")
 
+        # ── Step 2.5: Rotation API ────────────────────────────────────────
+        rotation_needed = 0
+        already_upright = False
+
+        print(f"[WS] POSTing to Rotation API {ROTATION_API_URL} ...")
+        try:
+            async with httpx.AsyncClient(timeout=30.0) as client_http:
+                rot_resp = await client_http.post(
+                    ROTATION_API_URL,
+                    files={"file": (f"{image_name}_crop.jpg", jpeg_bytes, "image/jpeg")}
+                )
+            if rot_resp.status_code == 200:
+                jpeg_bytes = rot_resp.content
+                print(f"[WS] Rotation API responded successfully, new image size: {len(jpeg_bytes)} bytes")
+                
+                # Extract headers
+                rot_needed_str = rot_resp.headers.get("x-rotation-needed", "0")
+                try:
+                    rotation_needed = int(rot_needed_str)
+                except ValueError:
+                    rotation_needed = 0
+                
+                upright_str = rot_resp.headers.get("x-already-upright", "false").lower()
+                already_upright = upright_str in ("true", "1", "yes")
+                
+                print(f"[WS] Rotation attributes: rotation_needed={rotation_needed}, already_upright={already_upright}")
+            else:
+                print(f"[WS] Rotation API returned {rot_resp.status_code}, proceeding with original cropped image.")
+        except Exception as e:
+            print(f"[WS] Rotation API failed: {e}, proceeding with original cropped image.")
+
         is_recapture_bool = str(is_recapture).strip().lower() in ("true", "1", "yes")
 
         target_url = RECAPTURE_SERVER_URL if is_recapture_bool else PROCESS_SERVER_URL
@@ -480,6 +515,8 @@ async def stream_endpoint(
             "capture_type":       (None, capture_type),
             "skip_quality_check": (None, "true"),
             "session_start":      (None, str(session_start)),
+            "rotation_needed":    (None, str(rotation_needed)),
+            "already_upright":    (None, str(already_upright).lower()),
             "image":              (image_name, jpeg_bytes, "image/jpeg"),
         }
 

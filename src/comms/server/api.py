@@ -5,6 +5,7 @@ import copy
 import jwt
 from datetime import datetime, timezone
 import io
+import httpx
 import traceback
 import threading
 import time
@@ -261,6 +262,8 @@ class SdkAPI:
                 "request_id":   form.get("request_id"),
                 "skip_quality_check": str(form.get("skip_quality_check")).lower() == "true",
                 "session_start": form.get("session_start"),
+                "rotation_needed": form.get("rotation_needed"),
+                "already_upright": form.get("already_upright"),
             }
 
         if "application/json" in content_type:
@@ -280,6 +283,8 @@ class SdkAPI:
                 "request_id":   payload.request_id,
                 "skip_quality_check": False, # JSON doesn't typically come from internal stream
                 "session_start": None,
+                "rotation_needed": None,
+                "already_upright": None,
             }
 
         raise ValueError("Unsupported content-type — use application/json or multipart/form-data")
@@ -488,6 +493,42 @@ class SdkAPI:
                 print(f"[/process] image={image_name}  ean={ean_code}  env={env_id}  "
                       f"capture_type={capture_type}  client={client_name}")
 
+                # ── ROTATION API FOR MULTICAPTURE ────────────────────────────
+                if capture_type:
+                    ROTATION_API_URL = os.getenv("ROTATION_API_URL", "http://neo-orientation:8181")
+                    print(f"[/process] Multicapture detected (capture_type=True), calling Rotation API {ROTATION_API_URL}...")
+                    try:
+                        jpeg_buf = io.BytesIO()
+                        pil_image.save(jpeg_buf, format="JPEG", quality=95)
+                        jpeg_bytes = jpeg_buf.getvalue()
+                        
+                        async with httpx.AsyncClient(timeout=30.0) as client_http:
+                            rot_resp = await client_http.post(
+                                ROTATION_API_URL,
+                                files={"file": (f"{image_name}_crop.jpg", jpeg_bytes, "image/jpeg")}
+                            )
+                        if rot_resp.status_code == 200:
+                            rot_bytes = rot_resp.content
+                            pil_image = self._to_pil(rot_bytes)
+                            req["pil_image"] = pil_image
+                            
+                            rot_needed_str = rot_resp.headers.get("x-rotation-needed", "0")
+                            try:
+                                req["rotation_needed"] = int(rot_needed_str)
+                            except ValueError:
+                                req["rotation_needed"] = 0
+                                
+                            upright_str = rot_resp.headers.get("x-already-upright", "false").lower()
+                            req["already_upright"] = "true" if upright_str in ("true", "1", "yes") else "false"
+                            
+                            print(f"[/process] Multicapture rotated image, rotation_needed={req['rotation_needed']}, already_upright={req['already_upright']}")
+                        else:
+                            print(f"[/process] Rotation API returned {rot_resp.status_code}, proceeding with original image")
+                    except Exception as e:
+                        print(f"[/process] Rotation API failed: {e}, proceeding with original image")
+                        traceback.print_exc()
+                # ── END ROTATION API FOR MULTICAPTURE ────────────────────────
+
                 # ── YOLO QUALITY GATE ────────────────────────────────────────
                 # Runs BEFORE OCR. Rejects blurry / dark / glare / etc. images
                 # so the SDK can immediately ask for a retake.
@@ -542,8 +583,24 @@ class SdkAPI:
                 metadata["qty"]         = 1
                 metadata["metadata_id"] = metadata_id
 
+                # Rotation metadata injection
+                rotation_needed_raw = req.get("rotation_needed")
+                if rotation_needed_raw is not None:
+                    try:
+                        metadata["rotation"] = int(rotation_needed_raw)
+                    except ValueError:
+                        metadata["rotation"] = 0
+                
+                already_upright_raw = req.get("already_upright")
+                if already_upright_raw is not None:
+                    metadata["upright"] = (str(already_upright_raw).lower() == "true")
+
                 if isinstance(snapshot.get("data"), dict):
                     snapshot["data"]["qty"] = 1
+                    if "rotation" in metadata:
+                        snapshot["data"]["rotation"] = metadata["rotation"]
+                    if "upright" in metadata:
+                        snapshot["data"]["upright"] = metadata["upright"]
 
                 print(f"[/process] metadata={metadata}")
 
