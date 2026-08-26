@@ -1,13 +1,9 @@
-/home/lakshya/Projects/NeoQcr/neoqcr-prod-instance2/src/data_handler/mongo.py:26: UserWarning: You appear to be connected to a CosmosDB cluster. For more information regarding feature compatibility and support please visit https://www.mongodb.com/supportability/cosmosdb
-  self.cosmos_client = MongoClient(self.cosmos_uri)
-/home/lakshya/.local/lib/python3.10/site-packages/pymongo/synchronous/mongo_client.py:1758: UserWarning: You appear to be connected to a CosmosDB cluster. For more information regarding feature compatibility and support please visit https://www.mongodb.com/supportability/cosmosdb
-  self._resolve_srv()
 ...
 Initializing FastAPI application...
 code updated on 11th apr.....
 Initializing Orchestrator...
 Loading model...
-Using hosted model API: https://sentinel-compute.neophyte.live/neo_qcr_3_5
+Using hosted model API: https://sentinel-compute.neophyte.live/neo-vlm
 model loaded in 0.00s
 Initializing regex modules...
 Connecting to database...
@@ -16,15 +12,8 @@ Connected to MongoDB database: neo-icr
 Initializing utils...
 ⚠️ Redis unavailable, falling back to in-memory: Error -2 connecting to redis:6379. Name or service not known.
 Orchestrator initialization completed successfully
-[PatchCropper] CROP_MODEL_PATH not set — heuristic mode
-[SdkAPI] Loading YOLO classifier for WS stream quality gate...
-Traceback (most recent call last):
-  File "/home/lakshya/Projects/NeoQcr/neoqcr-prod-instance2/Neo-Qcr-Streaming/src/main.py", line 8, in <module>
-    app_instance = SdkAPI()
-  File "/home/lakshya/Projects/NeoQcr/neoqcr-prod-instance2/src/comms/server/api.py", line 195, in __init__
-    self.classifier = ImageClassifier()
-  File "/home/lakshya/Projects/NeoQcr/neoqcr-prod-instance2/src/utils/classifier.py", line 40, in __init__
-    self._load()
-  File "/home/lakshya/Projects/NeoQcr/neoqcr-prod-instance2/src/utils/classifier.py", line 50, in _load
-    raise FileNotFoundError(f"[Classifier] YOLOX ckpt file not found: {YOLOX_CKPT_PATH}")
-FileNotFoundError: [Classifier] YOLOX ckpt file not found: /home/lakshya/Projects/NeoQcr/neoqcr-prod-instance2/Neo-Qcr-Streaming/src/YOLOX/best_ckpt.pth
+[Classifier] Model loaded from src/models/NeoPatchCropper.pth
+Instrumenting FastAPI app for Prometheus...
+Instrumentation complete. /metrics endpoint is active.
+INFO:     127.0.0.1:55538 - "GET / HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:55538 - "GET /favicon.ico HTTP/1.1" 404 Not Found

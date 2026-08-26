@@ -39,7 +39,7 @@ RECAPTURE_SERVER_URL: str = os.getenv(
 )
 ROTATION_API_URL: str = os.getenv(
     "ROTATION_API_URL",
-    "http://neo-orientation:8181",
+    "https://sentinel-compute.neophyte.live/neo-orient/orient",
 )
 
 # ---------------------------------------------------------------------------
@@ -49,6 +49,7 @@ ROTATION_API_URL: str = os.getenv(
 # incoming raw JPEG to disk for debugging / review.
 # When false (default) nothing is written to disk.
 SAVE_FRAMES: bool = os.getenv("SAVE_FRAMES", "false").lower() == "true"
+SAVE_FRAMES_BLOB: bool = os.getenv("SAVE_FRAMES_BLOB", "false").lower() == "true"
 
 # Directory under which per-session frame folders are created:
 #   <FRAMES_SAVE_DIR>/<ean_code>_<timestamp>/frame_<seq>.jpg
@@ -165,6 +166,19 @@ def _save_frame(jpeg_bytes: bytes, save_path: str) -> None:
     except Exception as exc:
         print(f"[WS][Save] Failed to save {save_path}: {exc}")
 
+def _save_frame_blob(img: Image.Image, blob_name: str, client_name: str, user_id: str) -> None:
+    """
+    Upload the PIL Image to Blob Storage.
+    Only called when SAVE_FRAMES_BLOB=true.
+    """
+    try:
+        from src.utils.storage_router import StorageRouter
+        storage = StorageRouter()
+        storage.upload_image(img, blob_name, client_name, user_id)
+        print(f"[WS][Save Blob] Uploaded frame to {blob_name}")
+    except Exception as exc:
+        print(f"[WS][Save Blob] Failed to upload {blob_name}: {exc}")
+
 
 # ---------------------------------------------------------------------------
 # WebSocket endpoint
@@ -220,6 +234,9 @@ async def stream_endpoint(
     ean_folder  = ean_code.strip() if ean_code.strip() else "unknown_ean"
     timestamp   = time.strftime("%Y%m%d_%H%M%S", time.gmtime())
     session_dir = str(Path(FRAMES_SAVE_DIR) / f"{ean_folder}_{timestamp}")
+
+    parts = image_name.split("_")
+    user_id = parts[1] if len(parts) >= 4 else "unknown_user"
 
     is_recapture_bool = str(is_recapture).strip().lower() in ("true", "1", "yes")
 
@@ -307,6 +324,17 @@ async def stream_endpoint(
                 )
                 t.start()
                 save_threads.append(t)
+                
+            # ── Optional: save to Blob in background thread ──────
+            if SAVE_FRAMES_BLOB:
+                blob_name = f"{client_name}/{user_id}/{ean_folder}_{timestamp}/frame_{seq:06d}.jpg"
+                t_blob = threading.Thread(
+                    target=_save_frame_blob,
+                    args=(img, blob_name, client_name, user_id),
+                    daemon=True,
+                )
+                t_blob.start()
+                save_threads.append(t_blob)
 
             # ── YOLO classify (executor — does not block event loop) ───────
             loop = asyncio.get_event_loop()
@@ -409,6 +437,7 @@ async def stream_endpoint(
 
     # ── Select and crop the LAST clean frame ──────────────────────────────
     print(f"[WS] Using last clean frame: seq={last_clean_seq} — cropping patch")
+    _crop_t0 = time.perf_counter()
     
     try:
         # ── Step 0: Upload original frame in background ───────────────────
@@ -463,7 +492,8 @@ async def stream_endpoint(
         cropped_patch.save(jpeg_buf, format="JPEG", quality=95)
         jpeg_buf.seek(0)
         jpeg_bytes = jpeg_buf.read()
-        print(f"[WS] Image encoded to JPEG: {len(jpeg_bytes)} bytes")
+        _crop_elapsed_ms = (time.perf_counter() - _crop_t0) * 1000
+        print(f"[WS] Image encoded to JPEG: {len(jpeg_bytes)} bytes in {_crop_elapsed_ms:.1f}ms")
 
         # ── Step 2.5: Rotation API ────────────────────────────────────────
         rotation_needed = 0
@@ -471,11 +501,15 @@ async def stream_endpoint(
 
         print(f"[WS] POSTing to Rotation API {ROTATION_API_URL} ...")
         try:
+            _rot_elapsed_ms = 0.0
+            _rot_t0 = time.perf_counter()
             async with httpx.AsyncClient(timeout=30.0) as client_http:
                 rot_resp = await client_http.post(
                     ROTATION_API_URL,
                     files={"file": (f"{image_name}_crop.jpg", jpeg_bytes, "image/jpeg")}
                 )
+            _rot_elapsed_ms = (time.perf_counter() - _rot_t0) * 1000
+            print(f"[WS] Rotation API response received in {_rot_elapsed_ms:.1f} ms (status={rot_resp.status_code})")
             if rot_resp.status_code == 200:
                 jpeg_bytes = rot_resp.content
                 print(f"[WS] Rotation API responded successfully, new image size: {len(jpeg_bytes)} bytes")
@@ -526,12 +560,14 @@ async def stream_endpoint(
         )
 
         async with httpx.AsyncClient(timeout=60.0) as client_http:
+            _proc_t0 = time.perf_counter()
             resp = await client_http.post(
                 target_url,
                 files=multipart_data,
             )
+            _proc_elapsed_ms = (time.perf_counter() - _proc_t0) * 1000
 
-        print(f"[WS] {endpoint_label} responded HTTP {resp.status_code}")
+        print(f"[WS] {endpoint_label} responded HTTP {resp.status_code} in {_proc_elapsed_ms:.1f}ms")
         process_result = resp.json()
 
         # ── Step 3: forward the /process response back over the WebSocket ─
@@ -540,6 +576,11 @@ async def stream_endpoint(
             "status":     resp.status_code,
             "result":     process_result,
             "request_id": request_id,
+            "timings": {
+                "crop_ms": _crop_elapsed_ms,
+                "rotation_ms": _rot_elapsed_ms,
+                "process_ms": _proc_elapsed_ms
+            }
         }
         try:
             await websocket.send_json(response)
