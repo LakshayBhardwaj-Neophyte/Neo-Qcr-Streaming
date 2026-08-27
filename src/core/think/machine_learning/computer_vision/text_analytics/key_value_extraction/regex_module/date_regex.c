@@ -2082,15 +2082,15 @@ static CYTHON_INLINE int __Pyx_PyErr_GivenExceptionMatches2(PyObject *err, PyObj
 /* Import.proto */
 static PyObject *__Pyx_Import(PyObject *name, PyObject *from_list, int level);
 
+/* ImportFrom.proto */
+static PyObject* __Pyx_ImportFrom(PyObject* module, PyObject* name);
+
 /* ImportDottedModule.proto */
 static PyObject *__Pyx_ImportDottedModule(PyObject *name, PyObject *parts_tuple);
 static PyObject *__Pyx_ImportDottedModule_WalkParts(PyObject *module, PyObject *name, PyObject *parts_tuple);
 
 /* ListPack.proto */
 static PyObject *__Pyx_PyList_Pack(Py_ssize_t n, ...);
-
-/* ImportFrom.proto */
-static PyObject* __Pyx_ImportFrom(PyObject* module, PyObject* name);
 
 /* LimitedApiGetTypeDict.proto */
 #if CYTHON_COMPILING_IN_LIMITED_API
@@ -2542,6 +2542,7 @@ static const char __pyx_k_metaclass[] = "__metaclass__";
 static const char __pyx_k_mfg_parts[] = "mfg_parts";
 static const char __pyx_k_month_map[] = "month_map";
 static const char __pyx_k_september[] = "september";
+static const char __pyx_k_timedelta[] = "timedelta";
 static const char __pyx_k_IGNORECASE[] = "IGNORECASE";
 static const char __pyx_k_ValueError[] = "ValueError";
 static const char __pyx_k_exp_parsed[] = "exp_parsed";
@@ -2580,6 +2581,7 @@ static const char __pyx_k_date_extractor[] = "date_extractor";
 static const char __pyx_k_exp_date_parts[] = "exp_date_parts";
 static const char __pyx_k_exp_period_val[] = "exp_period_val";
 static const char __pyx_k_importlib_util[] = "importlib.util";
+static const char __pyx_k_seven_days_ago[] = "seven_days_ago";
 static const char __pyx_k_GetDates___init[] = "GetDates.__init__";
 static const char __pyx_k_exp_date_phrase[] = "exp_date_phrase";
 static const char __pyx_k_exp_period_parts[] = "exp_period_parts";
@@ -2606,7 +2608,7 @@ static const char __pyx_k_band_b_bthe_b_bexp_b_bexpiry_b[] = "\\band\\b|\\bthe\\
 static const char __pyx_k_the_s_manufacturing_s_date_mfg[] = "(?:the\\s+)?(?:manufacturing\\s+date|mfg\\s*[\\.\\-]?\\s*date|date\\s+of\\s+mfg|mfd|mfg|pkd)(?:\\s+of\\s+the\\s+product)?\\s*(?:is|:|=)?";
 static const char __pyx_k_4q_1_BgQ_1_9F_2XQe4xq_Q_s_A_q_B[] = "\320\004*\250(\260!\340\010\013\2104\210q\330\014\023\2201\360\006\000\t\025\220B\220g\230Q\320\036@\300\001\330\010\013\2101\330\014\033\2309\240F\250!\2502\250X\260Q\260e\2704\270x\300q\310\005\310Q\330\014\017\210s\220!\220>\240\023\240A\330\020\027\220q\360\006\000\t\025\220B\220g\230Q\320\036@\300\001\330\010\013\2101\330\014\027\220y\240\006\240a\240r\250\030\260\021\260%\260t\2708\3001\300E\310\021\330\014\017\210s\220!\220:\230S\240\001\330\020\030\230\010\240\006\240a\240q\330\020\027\220r\230\024\230U\240!\2405\250\005\250Q\250e\2605\270\001\270\021\340\010\017\210q";
 static const char __pyx_k_The_maximum_retail_price_of_the[] = "The maximum retail price of the product is 45, the manufacturing date of the product is 07-10-2025, the expiry date is 24 months, and the batch number is M2L273B1.";
-static const char __pyx_k_a_4_T_1L_1F_s_Qa_oT_q_q_xt2XQe3[] = "\320\004(\250\016\260a\330\010\013\2104\210{\230#\230T\240\032\2501\250L\270\001\330\014\023\2201\220F\230&\240\001\340\010\017\210s\220!\220:\230Q\230a\330\010\026\220o\240T\250\036\260q\270\001\340\010\027\220q\330\010\031\230\021\330\010\027\220x\230t\2402\240X\250Q\250e\2603\260g\270S\300\007\300s\310,\320VW\360\010\000\t\014\210=\230\004\230C\230q\240\016\250c\260\021\330\014\033\2301\360\006\000\t\014\2101\340\014\017\210r\220\027\230\001\320\031?\270~\310R\310q\330\020!\240\021\340\020\033\2301\330\020\021\330\024\037\320\0374\260A\260^\3001\330\027\030\330\024\037\230q\360\006\000\021\024\220:\230Q\230j\250\005\250T\260\022\2606\270\021\320:R\320RS\330\024#\2401\330\024%\240Q\360\006\000\025\030\220y\240\003\2401\330\030)\250\021\360\006\000\021\024\220=\240\004\240C\240q\250\016\260c\270\021\330\024#\2401\360\010\000\t\014\210=\230\004\230D\240\001\330\014\017\210s\220!\220>\240\023\240A\330\020\021\330\024\"\240(\250)\2601\260N\300!\330\024\027\220|\2403\240a\340\030'\240q\330\030'\240q\360\006\000\031(\240q\340\030$\240A\330\024#\2401\360\006\000\t\014\210=\230\004\230D\240\r\250T\260\024\260Q\330\014\r\330\020\036\230h\240i\250q\260\016\270a\330\020\023\220<\230r\240\021\330\024#\2401\330\024#\2401\330\024 \240\001\360\010\000\t\014\210=\230\004\230A\330\014\r\330\020\035\230X\240Y\250a\250~\270Q\330\020\035\230X\240Y\250a\250~\270Q\340\020\023\220;\230b\240\001\340\024\"\240/\260\036\270q\330\024 \240\001\340\020\037\230q\330\020\037\230q\340\010\017\210q\220\016\230n\250A";
+static const char __pyx_k_a_4_T_1L_1F_s_Qa_oT_q_q_xt2XQe3[] = "\320\004(\250\016\260a\330\010\013\2104\210{\230#\230T\240\032\2501\250L\270\001\330\014\023\2201\220F\230&\240\001\340\010\017\210s\220!\220:\230Q\230a\330\010\026\220o\240T\250\036\260q\270\001\340\010\027\220q\330\010\031\230\021\330\010\027\220x\230t\2402\240X\250Q\250e\2603\260g\270S\300\007\300s\310,\320VW\360\010\000\t\014\210=\230\004\230C\230q\240\016\250c\260\021\330\014\033\2301\360\006\000\t\014\2101\340\014\017\210r\220\027\230\001\320\031?\270~\310R\310q\330\020!\240\021\340\020\033\2301\330\020\021\330\024\037\320\0374\260A\260^\3001\330\027\030\330\024\037\230q\360\006\000\021\024\220:\230Q\230j\250\005\250T\260\022\2606\270\021\320:R\320RS\330\024#\2401\330\024%\240Q\360\006\000\025\030\220y\240\003\2401\330\030)\250\021\360\006\000\021\024\220=\240\004\240C\240q\250\016\260c\270\021\330\024#\2401\360\010\000\t\014\210=\230\004\230D\240\001\330\014\017\210s\220!\220>\240\023\240A\330\020\021\330\024\"\240(\250)\2601\260N\300!\330\024\027\220|\2403\240a\340\030'\240q\330\030'\240q\360\006\000\031(\240q\340\030$\240A\330\024#\2401\360\010\000\t\014\210=\230\004\230D\240\r\250T\260\024\260Q\330\014\r\330\020\025\320\025%\240Q\330\020\036\230h\240i\250q\260\016\270a\330\020!\240\035\250b\260\t\270\021\270%\270q\330\020\023\220<\230r\240\021\340\024#\2401\330\024#\2401\340\024 \240\001\360\010\000\t\014\210=\230\004\230A\330\014\r\330\020\035\230X\240Y\250a\250~\270Q\330\020\035\230X\240Y\250a\250~\270Q\340\020\023\220;\230b\240\001\340\024\"\240/\260\036\270q\330\024 \240\001\340\020\037\230q\330\020\037\230q\340\010\017\210q\220\016\230n\250A";
 static const char __pyx_k_iq_t_Qj_q_b_b_c_q_c_1_c_A_c_c_a[] = "\320\000!\240\035\250i\260q\360\016\000\005\010\200t\210:\220Q\220j\240\001\330\010\017\210q\340\004\010\210\010\220\006\220b\230\006\230b\240\010\250\001\250\025\250c\260\030\270\021\270%\270q\360\006\000\005\006\330\010\016\210c\220\032\2301\330\010\016\210c\220\033\230A\330\010\016\210c\220\030\230\021\330\010\016\210c\220\030\230\021\330\010\016\210a\330\010\016\210c\220\027\230\001\330\010\016\210c\220\027\230\001\330\010\016\210c\220\031\230!\330\010\016\210c\220\027\230\003\230<\240q\330\010\016\210d\220*\230A\330\010\016\210d\220+\230Q\330\010\016\210d\220+\230Q\360\010\000\005\r\210A\210V\2201\220A\330\004\007\200s\210!\2107\220#\220Q\330\010\013\2104\210u\220A\220T\230\025\230a\230q\340\010\013\2102\210S\220\n\230$\230a\230x\240q\330\014\024\220I\230Q\230a\330\014\023\2203\220a\220q\330\r\017\210s\220*\230D\240\001\240\030\250\021\330\014\024\220I\230Q\230a\330\014\023\2203\220a\220q\340\r\016\210h\220c\230\024\230Q\230h\240a\330\014\023\2208\2303\230a\230t\2403\240a\240q\330\014\017\210s\220!\2203\220c\230\022\2304\230r\240\023\240I\250Q\330\020\027\220q\330\020\030\230\001\330\021\024\220A\220S\230\003\2302\230T\240\022\2403\240i\250q\330\020\030\230\001\330\020\027\220q\330\021\024\220A\220S\230\003\2302\230T\240\023\240A\240S\250\003\2501\330\020\030\230\001\330\020\027\220u\230B\230a\340\020\027\220q\340\014\023\2201\360\006\000\t\022\220\021\220&\230\001\330\010\013\2103\210a\210x\220s\230\"\230D\240\006\240a\240s\250#\250Z\260t\2706\300\021\300\"\300H\310A\330\014\024\220I\230Q\230f\240A\240Q\330\014\023\2203\220a\220v\230Q\230a\330\r\020\220\001\220\030\230\023\230B\230d\240&\250\001\250\023\250C\250z\270\024\270V\3001\300B\300h\310a\330\014\024\220I\230Q\230f\240A\240Q\330\014\023\2203\220a\220v\230Q\230a\340\014\023\2201\360\006\000\005\010\200q\330\010\017\210r\220\027\230\014\240A\360\006\000\005\020\210z\230\021\230&\240\006\240a\240q\330\004\016\210i\220r\230\021\340\004\013\2102\210T\220\036\230|\2501";
 static const char __pyx_k_src_core_think_machine_learning[] = "src.core.think.machine_learning.computer_vision.text_analytics.key_value_extraction.regex_module.date_regex";
 static const char __pyx_k_the_s_expiry_s_date_exp_s_s_dat[] = "(?:the\\s+)?(?:expiry\\s+date|exp\\s*[\\.\\-]?\\s*date|use\\s+before|best\\s+before|use\\s+by|exp|expiry)(?:\\s+of\\s+the\\s+product)?\\s*(?:is|:|=)?";
@@ -2663,7 +2665,7 @@ typedef struct {
   __Pyx_CachedCFunction __pyx_umethod_PyUnicode_Type__strip;
   PyObject *__pyx_tuple[5];
   PyObject *__pyx_codeobj_tab[5];
-  PyObject *__pyx_string_tab[207];
+  PyObject *__pyx_string_tab[209];
   PyObject *__pyx_int_0;
   PyObject *__pyx_int_1;
   PyObject *__pyx_int_2;
@@ -2892,36 +2894,38 @@ static __pyx_mstatetype * const __pyx_mstate_global = &__pyx_mstate_global_stati
 #define __pyx_n_u_sept __pyx_string_tab[174]
 #define __pyx_n_u_september __pyx_string_tab[175]
 #define __pyx_n_u_set_name __pyx_string_tab[176]
-#define __pyx_n_u_spec __pyx_string_tab[177]
-#define __pyx_n_u_spec_2 __pyx_string_tab[178]
-#define __pyx_n_u_spec_from_file_location __pyx_string_tab[179]
-#define __pyx_n_u_split __pyx_string_tab[180]
-#define __pyx_n_u_src_core_think_machine_learning __pyx_string_tab[181]
-#define __pyx_n_u_src_core_think_machine_learning_2 __pyx_string_tab[182]
-#define __pyx_kp_u_src_core_think_machine_learning_3 __pyx_string_tab[183]
-#define __pyx_n_u_startswith __pyx_string_tab[184]
-#define __pyx_n_u_str __pyx_string_tab[185]
-#define __pyx_kp_u_str_None __pyx_string_tab[186]
-#define __pyx_n_u_strip __pyx_string_tab[187]
-#define __pyx_n_u_strptime __pyx_string_tab[188]
-#define __pyx_n_u_test __pyx_string_tab[189]
-#define __pyx_n_u_test_cases __pyx_string_tab[190]
-#define __pyx_n_u_text __pyx_string_tab[191]
-#define __pyx_kp_u_the_s_expiry_s_date_exp_s_s_dat __pyx_string_tab[192]
-#define __pyx_kp_u_the_s_expiry_s_period_exp_s_s_p __pyx_string_tab[193]
-#define __pyx_kp_u_the_s_manufacturing_s_date_mfg __pyx_string_tab[194]
-#define __pyx_n_u_tokens __pyx_string_tab[195]
-#define __pyx_n_u_typing __pyx_string_tab[196]
-#define __pyx_n_u_unit __pyx_string_tab[197]
-#define __pyx_n_u_unit_raw __pyx_string_tab[198]
-#define __pyx_n_u_util __pyx_string_tab[199]
-#define __pyx_n_u_val_a __pyx_string_tab[200]
-#define __pyx_n_u_val_b __pyx_string_tab[201]
-#define __pyx_n_u_week __pyx_string_tab[202]
-#define __pyx_n_u_weeks __pyx_string_tab[203]
-#define __pyx_n_u_words __pyx_string_tab[204]
-#define __pyx_n_u_year __pyx_string_tab[205]
-#define __pyx_n_u_years __pyx_string_tab[206]
+#define __pyx_n_u_seven_days_ago __pyx_string_tab[177]
+#define __pyx_n_u_spec __pyx_string_tab[178]
+#define __pyx_n_u_spec_2 __pyx_string_tab[179]
+#define __pyx_n_u_spec_from_file_location __pyx_string_tab[180]
+#define __pyx_n_u_split __pyx_string_tab[181]
+#define __pyx_n_u_src_core_think_machine_learning __pyx_string_tab[182]
+#define __pyx_n_u_src_core_think_machine_learning_2 __pyx_string_tab[183]
+#define __pyx_kp_u_src_core_think_machine_learning_3 __pyx_string_tab[184]
+#define __pyx_n_u_startswith __pyx_string_tab[185]
+#define __pyx_n_u_str __pyx_string_tab[186]
+#define __pyx_kp_u_str_None __pyx_string_tab[187]
+#define __pyx_n_u_strip __pyx_string_tab[188]
+#define __pyx_n_u_strptime __pyx_string_tab[189]
+#define __pyx_n_u_test __pyx_string_tab[190]
+#define __pyx_n_u_test_cases __pyx_string_tab[191]
+#define __pyx_n_u_text __pyx_string_tab[192]
+#define __pyx_kp_u_the_s_expiry_s_date_exp_s_s_dat __pyx_string_tab[193]
+#define __pyx_kp_u_the_s_expiry_s_period_exp_s_s_p __pyx_string_tab[194]
+#define __pyx_kp_u_the_s_manufacturing_s_date_mfg __pyx_string_tab[195]
+#define __pyx_n_u_timedelta __pyx_string_tab[196]
+#define __pyx_n_u_tokens __pyx_string_tab[197]
+#define __pyx_n_u_typing __pyx_string_tab[198]
+#define __pyx_n_u_unit __pyx_string_tab[199]
+#define __pyx_n_u_unit_raw __pyx_string_tab[200]
+#define __pyx_n_u_util __pyx_string_tab[201]
+#define __pyx_n_u_val_a __pyx_string_tab[202]
+#define __pyx_n_u_val_b __pyx_string_tab[203]
+#define __pyx_n_u_week __pyx_string_tab[204]
+#define __pyx_n_u_weeks __pyx_string_tab[205]
+#define __pyx_n_u_words __pyx_string_tab[206]
+#define __pyx_n_u_year __pyx_string_tab[207]
+#define __pyx_n_u_years __pyx_string_tab[208]
 /* #### Code section: module_state_clear ### */
 #if CYTHON_USE_MODULE_STATE
 static CYTHON_SMALL_CODE int __pyx_m_clear(PyObject *m) {
@@ -2944,7 +2948,7 @@ static CYTHON_SMALL_CODE int __pyx_m_clear(PyObject *m) {
   #endif
   for (int i=0; i<5; ++i) { Py_CLEAR(clear_module_state->__pyx_tuple[i]); }
   for (int i=0; i<5; ++i) { Py_CLEAR(clear_module_state->__pyx_codeobj_tab[i]); }
-  for (int i=0; i<207; ++i) { Py_CLEAR(clear_module_state->__pyx_string_tab[i]); }
+  for (int i=0; i<209; ++i) { Py_CLEAR(clear_module_state->__pyx_string_tab[i]); }
   Py_CLEAR(clear_module_state->__pyx_int_0);
   Py_CLEAR(clear_module_state->__pyx_int_1);
   Py_CLEAR(clear_module_state->__pyx_int_2);
@@ -2981,7 +2985,7 @@ static CYTHON_SMALL_CODE int __pyx_m_traverse(PyObject *m, visitproc visit, void
   #endif
   for (int i=0; i<5; ++i) { __Pyx_VISIT_CONST(traverse_module_state->__pyx_tuple[i]); }
   for (int i=0; i<5; ++i) { __Pyx_VISIT_CONST(traverse_module_state->__pyx_codeobj_tab[i]); }
-  for (int i=0; i<207; ++i) { __Pyx_VISIT_CONST(traverse_module_state->__pyx_string_tab[i]); }
+  for (int i=0; i<209; ++i) { __Pyx_VISIT_CONST(traverse_module_state->__pyx_string_tab[i]); }
   __Pyx_VISIT_CONST(traverse_module_state->__pyx_int_0);
   __Pyx_VISIT_CONST(traverse_module_state->__pyx_int_1);
   __Pyx_VISIT_CONST(traverse_module_state->__pyx_int_2);
@@ -6851,6 +6855,8 @@ static PyObject *__pyx_pf_3src_4core_5think_16machine_learning_15computer_vision
   PyObject *__pyx_v_current_date = NULL;
   PyObject *__pyx_v_computed = NULL;
   PyObject *__pyx_v_parsed_date = NULL;
+  PyObject *__pyx_v_timedelta = NULL;
+  PyObject *__pyx_v_seven_days_ago = NULL;
   PyObject *__pyx_v_mfg_parsed = NULL;
   PyObject *__pyx_v_exp_parsed = NULL;
   PyObject *__pyx_r = NULL;
@@ -7668,7 +7674,7 @@ static PyObject *__pyx_pf_3src_4core_5think_16machine_learning_15computer_vision
  *                 except (ValueError, AttributeError):
  *                     mfg_date_str = None             # <<<<<<<<<<<<<<
  * 
- *         # If only expiry date is present and it's less than current date, treat it as MFG
+ *         # If only expiry date is present and it's more than 7 days in the past, treat it as MFG.
 */
           __Pyx_INCREF(Py_None);
           __Pyx_DECREF_SET(__pyx_v_mfg_date_str, Py_None);
@@ -7718,38 +7724,38 @@ static PyObject *__pyx_pf_3src_4core_5think_16machine_learning_15computer_vision
 */
   }
 
-  /* "src/core/think/machine_learning/computer_vision/text_analytics/key_value_extraction/regex_module/date_regex.py":552
- * 
- *         # If only expiry date is present and it's less than current date, treat it as MFG
+  /* "src/core/think/machine_learning/computer_vision/text_analytics/key_value_extraction/regex_module/date_regex.py":553
+ *         # If only expiry date is present and it's more than 7 days in the past, treat it as MFG.
+ *         # If it's within the last 7 days (grace period), keep it as expiry.
  *         if exp_date_val and not mfg_date_str and not exp_period_val:             # <<<<<<<<<<<<<<
  *             try:
- *                 parsed_date = datetime.strptime(exp_date_val, '%d-%m-%Y')
+ *                 from datetime import timedelta
 */
-  __pyx_t_3 = __Pyx_PyObject_IsTrue(__pyx_v_exp_date_val); if (unlikely((__pyx_t_3 < 0))) __PYX_ERR(0, 552, __pyx_L1_error)
+  __pyx_t_3 = __Pyx_PyObject_IsTrue(__pyx_v_exp_date_val); if (unlikely((__pyx_t_3 < 0))) __PYX_ERR(0, 553, __pyx_L1_error)
   if (__pyx_t_3) {
   } else {
     __pyx_t_1 = __pyx_t_3;
     goto __pyx_L42_bool_binop_done;
   }
-  __pyx_t_3 = __Pyx_PyObject_IsTrue(__pyx_v_mfg_date_str); if (unlikely((__pyx_t_3 < 0))) __PYX_ERR(0, 552, __pyx_L1_error)
+  __pyx_t_3 = __Pyx_PyObject_IsTrue(__pyx_v_mfg_date_str); if (unlikely((__pyx_t_3 < 0))) __PYX_ERR(0, 553, __pyx_L1_error)
   __pyx_t_2 = (!__pyx_t_3);
   if (__pyx_t_2) {
   } else {
     __pyx_t_1 = __pyx_t_2;
     goto __pyx_L42_bool_binop_done;
   }
-  __pyx_t_2 = __Pyx_PyObject_IsTrue(__pyx_v_exp_period_val); if (unlikely((__pyx_t_2 < 0))) __PYX_ERR(0, 552, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_PyObject_IsTrue(__pyx_v_exp_period_val); if (unlikely((__pyx_t_2 < 0))) __PYX_ERR(0, 553, __pyx_L1_error)
   __pyx_t_3 = (!__pyx_t_2);
   __pyx_t_1 = __pyx_t_3;
   __pyx_L42_bool_binop_done:;
   if (__pyx_t_1) {
 
-    /* "src/core/think/machine_learning/computer_vision/text_analytics/key_value_extraction/regex_module/date_regex.py":553
- *         # If only expiry date is present and it's less than current date, treat it as MFG
+    /* "src/core/think/machine_learning/computer_vision/text_analytics/key_value_extraction/regex_module/date_regex.py":554
+ *         # If it's within the last 7 days (grace period), keep it as expiry.
  *         if exp_date_val and not mfg_date_str and not exp_period_val:
  *             try:             # <<<<<<<<<<<<<<
+ *                 from datetime import timedelta
  *                 parsed_date = datetime.strptime(exp_date_val, '%d-%m-%Y')
- *                 if parsed_date < current_date:
 */
     {
       __Pyx_PyThreadState_declare
@@ -7760,89 +7766,151 @@ static PyObject *__pyx_pf_3src_4core_5think_16machine_learning_15computer_vision
       __Pyx_XGOTREF(__pyx_t_15);
       /*try:*/ {
 
-        /* "src/core/think/machine_learning/computer_vision/text_analytics/key_value_extraction/regex_module/date_regex.py":554
+        /* "src/core/think/machine_learning/computer_vision/text_analytics/key_value_extraction/regex_module/date_regex.py":555
  *         if exp_date_val and not mfg_date_str and not exp_period_val:
  *             try:
- *                 parsed_date = datetime.strptime(exp_date_val, '%d-%m-%Y')             # <<<<<<<<<<<<<<
- *                 if parsed_date < current_date:
- *                     mfg_date_str = exp_date_val
+ *                 from datetime import timedelta             # <<<<<<<<<<<<<<
+ *                 parsed_date = datetime.strptime(exp_date_val, '%d-%m-%Y')
+ *                 seven_days_ago = current_date - timedelta(days=7)
 */
-        __pyx_t_5 = NULL;
-        __Pyx_GetModuleGlobalName(__pyx_t_7, __pyx_mstate_global->__pyx_n_u_datetime); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 554, __pyx_L45_error)
+        __pyx_t_4 = PyList_New(1); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 555, __pyx_L45_error)
+        __Pyx_GOTREF(__pyx_t_4);
+        __Pyx_INCREF(__pyx_mstate_global->__pyx_n_u_timedelta);
+        __Pyx_GIVEREF(__pyx_mstate_global->__pyx_n_u_timedelta);
+        if (__Pyx_PyList_SET_ITEM(__pyx_t_4, 0, __pyx_mstate_global->__pyx_n_u_timedelta) != (0)) __PYX_ERR(0, 555, __pyx_L45_error);
+        __pyx_t_5 = __Pyx_Import(__pyx_mstate_global->__pyx_n_u_datetime, __pyx_t_4, 0); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 555, __pyx_L45_error)
+        __Pyx_GOTREF(__pyx_t_5);
+        __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
+        __pyx_t_4 = __Pyx_ImportFrom(__pyx_t_5, __pyx_mstate_global->__pyx_n_u_timedelta); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 555, __pyx_L45_error)
+        __Pyx_GOTREF(__pyx_t_4);
+        __Pyx_INCREF(__pyx_t_4);
+        __pyx_v_timedelta = __pyx_t_4;
+        __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
+        __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
+
+        /* "src/core/think/machine_learning/computer_vision/text_analytics/key_value_extraction/regex_module/date_regex.py":556
+ *             try:
+ *                 from datetime import timedelta
+ *                 parsed_date = datetime.strptime(exp_date_val, '%d-%m-%Y')             # <<<<<<<<<<<<<<
+ *                 seven_days_ago = current_date - timedelta(days=7)
+ *                 if parsed_date < seven_days_ago:
+*/
+        __pyx_t_4 = NULL;
+        __Pyx_GetModuleGlobalName(__pyx_t_7, __pyx_mstate_global->__pyx_n_u_datetime); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 556, __pyx_L45_error)
         __Pyx_GOTREF(__pyx_t_7);
-        __pyx_t_8 = __Pyx_PyObject_GetAttrStr(__pyx_t_7, __pyx_mstate_global->__pyx_n_u_strptime); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 554, __pyx_L45_error)
+        __pyx_t_8 = __Pyx_PyObject_GetAttrStr(__pyx_t_7, __pyx_mstate_global->__pyx_n_u_strptime); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 556, __pyx_L45_error)
         __Pyx_GOTREF(__pyx_t_8);
         __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
         __pyx_t_6 = 1;
         #if CYTHON_UNPACK_METHODS
         if (unlikely(PyMethod_Check(__pyx_t_8))) {
-          __pyx_t_5 = PyMethod_GET_SELF(__pyx_t_8);
-          assert(__pyx_t_5);
+          __pyx_t_4 = PyMethod_GET_SELF(__pyx_t_8);
+          assert(__pyx_t_4);
           PyObject* __pyx__function = PyMethod_GET_FUNCTION(__pyx_t_8);
-          __Pyx_INCREF(__pyx_t_5);
+          __Pyx_INCREF(__pyx_t_4);
           __Pyx_INCREF(__pyx__function);
           __Pyx_DECREF_SET(__pyx_t_8, __pyx__function);
           __pyx_t_6 = 0;
         }
         #endif
         {
-          PyObject *__pyx_callargs[3] = {__pyx_t_5, __pyx_v_exp_date_val, __pyx_mstate_global->__pyx_kp_u_d_m_Y};
-          __pyx_t_4 = __Pyx_PyObject_FastCall(__pyx_t_8, __pyx_callargs+__pyx_t_6, (3-__pyx_t_6) | (__pyx_t_6*__Pyx_PY_VECTORCALL_ARGUMENTS_OFFSET));
-          __Pyx_XDECREF(__pyx_t_5); __pyx_t_5 = 0;
+          PyObject *__pyx_callargs[3] = {__pyx_t_4, __pyx_v_exp_date_val, __pyx_mstate_global->__pyx_kp_u_d_m_Y};
+          __pyx_t_5 = __Pyx_PyObject_FastCall(__pyx_t_8, __pyx_callargs+__pyx_t_6, (3-__pyx_t_6) | (__pyx_t_6*__Pyx_PY_VECTORCALL_ARGUMENTS_OFFSET));
+          __Pyx_XDECREF(__pyx_t_4); __pyx_t_4 = 0;
           __Pyx_DECREF(__pyx_t_8); __pyx_t_8 = 0;
-          if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 554, __pyx_L45_error)
-          __Pyx_GOTREF(__pyx_t_4);
+          if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 556, __pyx_L45_error)
+          __Pyx_GOTREF(__pyx_t_5);
         }
-        __Pyx_XDECREF_SET(__pyx_v_parsed_date, __pyx_t_4);
+        __Pyx_XDECREF_SET(__pyx_v_parsed_date, __pyx_t_5);
+        __pyx_t_5 = 0;
+
+        /* "src/core/think/machine_learning/computer_vision/text_analytics/key_value_extraction/regex_module/date_regex.py":557
+ *                 from datetime import timedelta
+ *                 parsed_date = datetime.strptime(exp_date_val, '%d-%m-%Y')
+ *                 seven_days_ago = current_date - timedelta(days=7)             # <<<<<<<<<<<<<<
+ *                 if parsed_date < seven_days_ago:
+ *                     # Older than 7 days in the past  likely a manufacturing date
+*/
+        __pyx_t_8 = NULL;
+        __Pyx_INCREF(__pyx_v_timedelta);
+        __pyx_t_4 = __pyx_v_timedelta; 
+        __pyx_t_6 = 1;
+        #if CYTHON_UNPACK_METHODS
+        if (unlikely(PyMethod_Check(__pyx_t_4))) {
+          __pyx_t_8 = PyMethod_GET_SELF(__pyx_t_4);
+          assert(__pyx_t_8);
+          PyObject* __pyx__function = PyMethod_GET_FUNCTION(__pyx_t_4);
+          __Pyx_INCREF(__pyx_t_8);
+          __Pyx_INCREF(__pyx__function);
+          __Pyx_DECREF_SET(__pyx_t_4, __pyx__function);
+          __pyx_t_6 = 0;
+        }
+        #endif
+        {
+          PyObject *__pyx_callargs[2 + ((CYTHON_VECTORCALL) ? 1 : 0)] = {__pyx_t_8, NULL};
+          __pyx_t_7 = __Pyx_MakeVectorcallBuilderKwds(1); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 557, __pyx_L45_error)
+          __Pyx_GOTREF(__pyx_t_7);
+          if (__Pyx_VectorcallBuilder_AddArg(__pyx_mstate_global->__pyx_n_u_days, __pyx_mstate_global->__pyx_int_7, __pyx_t_7, __pyx_callargs+1, 0) < 0) __PYX_ERR(0, 557, __pyx_L45_error)
+          __pyx_t_5 = __Pyx_Object_Vectorcall_CallFromBuilder(__pyx_t_4, __pyx_callargs+__pyx_t_6, (1-__pyx_t_6) | (__pyx_t_6*__Pyx_PY_VECTORCALL_ARGUMENTS_OFFSET), __pyx_t_7);
+          __Pyx_XDECREF(__pyx_t_8); __pyx_t_8 = 0;
+          __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
+          __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
+          if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 557, __pyx_L45_error)
+          __Pyx_GOTREF(__pyx_t_5);
+        }
+        __pyx_t_4 = PyNumber_Subtract(__pyx_v_current_date, __pyx_t_5); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 557, __pyx_L45_error)
+        __Pyx_GOTREF(__pyx_t_4);
+        __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
+        __pyx_v_seven_days_ago = __pyx_t_4;
         __pyx_t_4 = 0;
 
-        /* "src/core/think/machine_learning/computer_vision/text_analytics/key_value_extraction/regex_module/date_regex.py":555
- *             try:
+        /* "src/core/think/machine_learning/computer_vision/text_analytics/key_value_extraction/regex_module/date_regex.py":558
  *                 parsed_date = datetime.strptime(exp_date_val, '%d-%m-%Y')
- *                 if parsed_date < current_date:             # <<<<<<<<<<<<<<
+ *                 seven_days_ago = current_date - timedelta(days=7)
+ *                 if parsed_date < seven_days_ago:             # <<<<<<<<<<<<<<
+ *                     # Older than 7 days in the past  likely a manufacturing date
  *                     mfg_date_str = exp_date_val
- *                     exp_date_val = None
 */
-        __pyx_t_4 = PyObject_RichCompare(__pyx_v_parsed_date, __pyx_v_current_date, Py_LT); __Pyx_XGOTREF(__pyx_t_4); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 555, __pyx_L45_error)
-        __pyx_t_1 = __Pyx_PyObject_IsTrue(__pyx_t_4); if (unlikely((__pyx_t_1 < 0))) __PYX_ERR(0, 555, __pyx_L45_error)
+        __pyx_t_4 = PyObject_RichCompare(__pyx_v_parsed_date, __pyx_v_seven_days_ago, Py_LT); __Pyx_XGOTREF(__pyx_t_4); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 558, __pyx_L45_error)
+        __pyx_t_1 = __Pyx_PyObject_IsTrue(__pyx_t_4); if (unlikely((__pyx_t_1 < 0))) __PYX_ERR(0, 558, __pyx_L45_error)
         __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
         if (__pyx_t_1) {
 
-          /* "src/core/think/machine_learning/computer_vision/text_analytics/key_value_extraction/regex_module/date_regex.py":556
- *                 parsed_date = datetime.strptime(exp_date_val, '%d-%m-%Y')
- *                 if parsed_date < current_date:
+          /* "src/core/think/machine_learning/computer_vision/text_analytics/key_value_extraction/regex_module/date_regex.py":560
+ *                 if parsed_date < seven_days_ago:
+ *                     # Older than 7 days in the past  likely a manufacturing date
  *                     mfg_date_str = exp_date_val             # <<<<<<<<<<<<<<
  *                     exp_date_val = None
- *             except (ValueError, AttributeError):
+ *                 # else: within last 7 days or future  keep as expiry
 */
           __Pyx_INCREF(__pyx_v_exp_date_val);
           __Pyx_DECREF_SET(__pyx_v_mfg_date_str, __pyx_v_exp_date_val);
 
-          /* "src/core/think/machine_learning/computer_vision/text_analytics/key_value_extraction/regex_module/date_regex.py":557
- *                 if parsed_date < current_date:
+          /* "src/core/think/machine_learning/computer_vision/text_analytics/key_value_extraction/regex_module/date_regex.py":561
+ *                     # Older than 7 days in the past  likely a manufacturing date
  *                     mfg_date_str = exp_date_val
  *                     exp_date_val = None             # <<<<<<<<<<<<<<
+ *                 # else: within last 7 days or future  keep as expiry
  *             except (ValueError, AttributeError):
- *                 pass
 */
           __Pyx_INCREF(Py_None);
           __Pyx_DECREF_SET(__pyx_v_exp_date_val, Py_None);
 
-          /* "src/core/think/machine_learning/computer_vision/text_analytics/key_value_extraction/regex_module/date_regex.py":555
- *             try:
+          /* "src/core/think/machine_learning/computer_vision/text_analytics/key_value_extraction/regex_module/date_regex.py":558
  *                 parsed_date = datetime.strptime(exp_date_val, '%d-%m-%Y')
- *                 if parsed_date < current_date:             # <<<<<<<<<<<<<<
+ *                 seven_days_ago = current_date - timedelta(days=7)
+ *                 if parsed_date < seven_days_ago:             # <<<<<<<<<<<<<<
+ *                     # Older than 7 days in the past  likely a manufacturing date
  *                     mfg_date_str = exp_date_val
- *                     exp_date_val = None
 */
         }
 
-        /* "src/core/think/machine_learning/computer_vision/text_analytics/key_value_extraction/regex_module/date_regex.py":553
- *         # If only expiry date is present and it's less than current date, treat it as MFG
+        /* "src/core/think/machine_learning/computer_vision/text_analytics/key_value_extraction/regex_module/date_regex.py":554
+ *         # If it's within the last 7 days (grace period), keep it as expiry.
  *         if exp_date_val and not mfg_date_str and not exp_period_val:
  *             try:             # <<<<<<<<<<<<<<
+ *                 from datetime import timedelta
  *                 parsed_date = datetime.strptime(exp_date_val, '%d-%m-%Y')
- *                 if parsed_date < current_date:
 */
       }
       __Pyx_XDECREF(__pyx_t_13); __pyx_t_13 = 0;
@@ -7857,9 +7925,9 @@ static PyObject *__pyx_pf_3src_4core_5think_16machine_learning_15computer_vision
       __Pyx_XDECREF(__pyx_t_7); __pyx_t_7 = 0;
       __Pyx_XDECREF(__pyx_t_8); __pyx_t_8 = 0;
 
-      /* "src/core/think/machine_learning/computer_vision/text_analytics/key_value_extraction/regex_module/date_regex.py":558
- *                     mfg_date_str = exp_date_val
+      /* "src/core/think/machine_learning/computer_vision/text_analytics/key_value_extraction/regex_module/date_regex.py":563
  *                     exp_date_val = None
+ *                 # else: within last 7 days or future  keep as expiry
  *             except (ValueError, AttributeError):             # <<<<<<<<<<<<<<
  *                 pass
  * 
@@ -7871,12 +7939,12 @@ static PyObject *__pyx_pf_3src_4core_5think_16machine_learning_15computer_vision
       }
       goto __pyx_L47_except_error;
 
-      /* "src/core/think/machine_learning/computer_vision/text_analytics/key_value_extraction/regex_module/date_regex.py":553
- *         # If only expiry date is present and it's less than current date, treat it as MFG
+      /* "src/core/think/machine_learning/computer_vision/text_analytics/key_value_extraction/regex_module/date_regex.py":554
+ *         # If it's within the last 7 days (grace period), keep it as expiry.
  *         if exp_date_val and not mfg_date_str and not exp_period_val:
  *             try:             # <<<<<<<<<<<<<<
+ *                 from datetime import timedelta
  *                 parsed_date = datetime.strptime(exp_date_val, '%d-%m-%Y')
- *                 if parsed_date < current_date:
 */
       __pyx_L47_except_error:;
       __Pyx_XGIVEREF(__pyx_t_13);
@@ -7892,34 +7960,34 @@ static PyObject *__pyx_pf_3src_4core_5think_16machine_learning_15computer_vision
       __pyx_L50_try_end:;
     }
 
-    /* "src/core/think/machine_learning/computer_vision/text_analytics/key_value_extraction/regex_module/date_regex.py":552
- * 
- *         # If only expiry date is present and it's less than current date, treat it as MFG
+    /* "src/core/think/machine_learning/computer_vision/text_analytics/key_value_extraction/regex_module/date_regex.py":553
+ *         # If only expiry date is present and it's more than 7 days in the past, treat it as MFG.
+ *         # If it's within the last 7 days (grace period), keep it as expiry.
  *         if exp_date_val and not mfg_date_str and not exp_period_val:             # <<<<<<<<<<<<<<
  *             try:
- *                 parsed_date = datetime.strptime(exp_date_val, '%d-%m-%Y')
+ *                 from datetime import timedelta
 */
   }
 
-  /* "src/core/think/machine_learning/computer_vision/text_analytics/key_value_extraction/regex_module/date_regex.py":562
+  /* "src/core/think/machine_learning/computer_vision/text_analytics/key_value_extraction/regex_module/date_regex.py":567
  * 
  *         # Final validation: If both dates are present, ensure MFG < EXP
  *         if mfg_date_str and exp_date_val:             # <<<<<<<<<<<<<<
  *             try:
  *                 mfg_parsed = datetime.strptime(mfg_date_str, '%d-%m-%Y')
 */
-  __pyx_t_3 = __Pyx_PyObject_IsTrue(__pyx_v_mfg_date_str); if (unlikely((__pyx_t_3 < 0))) __PYX_ERR(0, 562, __pyx_L1_error)
+  __pyx_t_3 = __Pyx_PyObject_IsTrue(__pyx_v_mfg_date_str); if (unlikely((__pyx_t_3 < 0))) __PYX_ERR(0, 567, __pyx_L1_error)
   if (__pyx_t_3) {
   } else {
     __pyx_t_1 = __pyx_t_3;
     goto __pyx_L55_bool_binop_done;
   }
-  __pyx_t_3 = __Pyx_PyObject_IsTrue(__pyx_v_exp_date_val); if (unlikely((__pyx_t_3 < 0))) __PYX_ERR(0, 562, __pyx_L1_error)
+  __pyx_t_3 = __Pyx_PyObject_IsTrue(__pyx_v_exp_date_val); if (unlikely((__pyx_t_3 < 0))) __PYX_ERR(0, 567, __pyx_L1_error)
   __pyx_t_1 = __pyx_t_3;
   __pyx_L55_bool_binop_done:;
   if (__pyx_t_1) {
 
-    /* "src/core/think/machine_learning/computer_vision/text_analytics/key_value_extraction/regex_module/date_regex.py":563
+    /* "src/core/think/machine_learning/computer_vision/text_analytics/key_value_extraction/regex_module/date_regex.py":568
  *         # Final validation: If both dates are present, ensure MFG < EXP
  *         if mfg_date_str and exp_date_val:
  *             try:             # <<<<<<<<<<<<<<
@@ -7935,17 +8003,53 @@ static PyObject *__pyx_pf_3src_4core_5think_16machine_learning_15computer_vision
       __Pyx_XGOTREF(__pyx_t_13);
       /*try:*/ {
 
-        /* "src/core/think/machine_learning/computer_vision/text_analytics/key_value_extraction/regex_module/date_regex.py":564
+        /* "src/core/think/machine_learning/computer_vision/text_analytics/key_value_extraction/regex_module/date_regex.py":569
  *         if mfg_date_str and exp_date_val:
  *             try:
  *                 mfg_parsed = datetime.strptime(mfg_date_str, '%d-%m-%Y')             # <<<<<<<<<<<<<<
  *                 exp_parsed = datetime.strptime(exp_date_val, '%d-%m-%Y')
  * 
 */
+        __pyx_t_5 = NULL;
+        __Pyx_GetModuleGlobalName(__pyx_t_7, __pyx_mstate_global->__pyx_n_u_datetime); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 569, __pyx_L57_error)
+        __Pyx_GOTREF(__pyx_t_7);
+        __pyx_t_8 = __Pyx_PyObject_GetAttrStr(__pyx_t_7, __pyx_mstate_global->__pyx_n_u_strptime); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 569, __pyx_L57_error)
+        __Pyx_GOTREF(__pyx_t_8);
+        __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
+        __pyx_t_6 = 1;
+        #if CYTHON_UNPACK_METHODS
+        if (unlikely(PyMethod_Check(__pyx_t_8))) {
+          __pyx_t_5 = PyMethod_GET_SELF(__pyx_t_8);
+          assert(__pyx_t_5);
+          PyObject* __pyx__function = PyMethod_GET_FUNCTION(__pyx_t_8);
+          __Pyx_INCREF(__pyx_t_5);
+          __Pyx_INCREF(__pyx__function);
+          __Pyx_DECREF_SET(__pyx_t_8, __pyx__function);
+          __pyx_t_6 = 0;
+        }
+        #endif
+        {
+          PyObject *__pyx_callargs[3] = {__pyx_t_5, __pyx_v_mfg_date_str, __pyx_mstate_global->__pyx_kp_u_d_m_Y};
+          __pyx_t_4 = __Pyx_PyObject_FastCall(__pyx_t_8, __pyx_callargs+__pyx_t_6, (3-__pyx_t_6) | (__pyx_t_6*__Pyx_PY_VECTORCALL_ARGUMENTS_OFFSET));
+          __Pyx_XDECREF(__pyx_t_5); __pyx_t_5 = 0;
+          __Pyx_DECREF(__pyx_t_8); __pyx_t_8 = 0;
+          if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 569, __pyx_L57_error)
+          __Pyx_GOTREF(__pyx_t_4);
+        }
+        __pyx_v_mfg_parsed = __pyx_t_4;
+        __pyx_t_4 = 0;
+
+        /* "src/core/think/machine_learning/computer_vision/text_analytics/key_value_extraction/regex_module/date_regex.py":570
+ *             try:
+ *                 mfg_parsed = datetime.strptime(mfg_date_str, '%d-%m-%Y')
+ *                 exp_parsed = datetime.strptime(exp_date_val, '%d-%m-%Y')             # <<<<<<<<<<<<<<
+ * 
+ *                 if mfg_parsed > exp_parsed:
+*/
         __pyx_t_8 = NULL;
-        __Pyx_GetModuleGlobalName(__pyx_t_5, __pyx_mstate_global->__pyx_n_u_datetime); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 564, __pyx_L57_error)
+        __Pyx_GetModuleGlobalName(__pyx_t_5, __pyx_mstate_global->__pyx_n_u_datetime); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 570, __pyx_L57_error)
         __Pyx_GOTREF(__pyx_t_5);
-        __pyx_t_7 = __Pyx_PyObject_GetAttrStr(__pyx_t_5, __pyx_mstate_global->__pyx_n_u_strptime); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 564, __pyx_L57_error)
+        __pyx_t_7 = __Pyx_PyObject_GetAttrStr(__pyx_t_5, __pyx_mstate_global->__pyx_n_u_strptime); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 570, __pyx_L57_error)
         __Pyx_GOTREF(__pyx_t_7);
         __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
         __pyx_t_6 = 1;
@@ -7961,65 +8065,29 @@ static PyObject *__pyx_pf_3src_4core_5think_16machine_learning_15computer_vision
         }
         #endif
         {
-          PyObject *__pyx_callargs[3] = {__pyx_t_8, __pyx_v_mfg_date_str, __pyx_mstate_global->__pyx_kp_u_d_m_Y};
+          PyObject *__pyx_callargs[3] = {__pyx_t_8, __pyx_v_exp_date_val, __pyx_mstate_global->__pyx_kp_u_d_m_Y};
           __pyx_t_4 = __Pyx_PyObject_FastCall(__pyx_t_7, __pyx_callargs+__pyx_t_6, (3-__pyx_t_6) | (__pyx_t_6*__Pyx_PY_VECTORCALL_ARGUMENTS_OFFSET));
           __Pyx_XDECREF(__pyx_t_8); __pyx_t_8 = 0;
           __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
-          if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 564, __pyx_L57_error)
-          __Pyx_GOTREF(__pyx_t_4);
-        }
-        __pyx_v_mfg_parsed = __pyx_t_4;
-        __pyx_t_4 = 0;
-
-        /* "src/core/think/machine_learning/computer_vision/text_analytics/key_value_extraction/regex_module/date_regex.py":565
- *             try:
- *                 mfg_parsed = datetime.strptime(mfg_date_str, '%d-%m-%Y')
- *                 exp_parsed = datetime.strptime(exp_date_val, '%d-%m-%Y')             # <<<<<<<<<<<<<<
- * 
- *                 if mfg_parsed > exp_parsed:
-*/
-        __pyx_t_7 = NULL;
-        __Pyx_GetModuleGlobalName(__pyx_t_8, __pyx_mstate_global->__pyx_n_u_datetime); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 565, __pyx_L57_error)
-        __Pyx_GOTREF(__pyx_t_8);
-        __pyx_t_5 = __Pyx_PyObject_GetAttrStr(__pyx_t_8, __pyx_mstate_global->__pyx_n_u_strptime); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 565, __pyx_L57_error)
-        __Pyx_GOTREF(__pyx_t_5);
-        __Pyx_DECREF(__pyx_t_8); __pyx_t_8 = 0;
-        __pyx_t_6 = 1;
-        #if CYTHON_UNPACK_METHODS
-        if (unlikely(PyMethod_Check(__pyx_t_5))) {
-          __pyx_t_7 = PyMethod_GET_SELF(__pyx_t_5);
-          assert(__pyx_t_7);
-          PyObject* __pyx__function = PyMethod_GET_FUNCTION(__pyx_t_5);
-          __Pyx_INCREF(__pyx_t_7);
-          __Pyx_INCREF(__pyx__function);
-          __Pyx_DECREF_SET(__pyx_t_5, __pyx__function);
-          __pyx_t_6 = 0;
-        }
-        #endif
-        {
-          PyObject *__pyx_callargs[3] = {__pyx_t_7, __pyx_v_exp_date_val, __pyx_mstate_global->__pyx_kp_u_d_m_Y};
-          __pyx_t_4 = __Pyx_PyObject_FastCall(__pyx_t_5, __pyx_callargs+__pyx_t_6, (3-__pyx_t_6) | (__pyx_t_6*__Pyx_PY_VECTORCALL_ARGUMENTS_OFFSET));
-          __Pyx_XDECREF(__pyx_t_7); __pyx_t_7 = 0;
-          __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
-          if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 565, __pyx_L57_error)
+          if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 570, __pyx_L57_error)
           __Pyx_GOTREF(__pyx_t_4);
         }
         __pyx_v_exp_parsed = __pyx_t_4;
         __pyx_t_4 = 0;
 
-        /* "src/core/think/machine_learning/computer_vision/text_analytics/key_value_extraction/regex_module/date_regex.py":567
+        /* "src/core/think/machine_learning/computer_vision/text_analytics/key_value_extraction/regex_module/date_regex.py":572
  *                 exp_parsed = datetime.strptime(exp_date_val, '%d-%m-%Y')
  * 
  *                 if mfg_parsed > exp_parsed:             # <<<<<<<<<<<<<<
  *                     # Manufacturing date is greater than expiry date - swap them
  *                     mfg_date_str, exp_date_val = exp_date_val, mfg_date_str
 */
-        __pyx_t_4 = PyObject_RichCompare(__pyx_v_mfg_parsed, __pyx_v_exp_parsed, Py_GT); __Pyx_XGOTREF(__pyx_t_4); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 567, __pyx_L57_error)
-        __pyx_t_1 = __Pyx_PyObject_IsTrue(__pyx_t_4); if (unlikely((__pyx_t_1 < 0))) __PYX_ERR(0, 567, __pyx_L57_error)
+        __pyx_t_4 = PyObject_RichCompare(__pyx_v_mfg_parsed, __pyx_v_exp_parsed, Py_GT); __Pyx_XGOTREF(__pyx_t_4); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 572, __pyx_L57_error)
+        __pyx_t_1 = __Pyx_PyObject_IsTrue(__pyx_t_4); if (unlikely((__pyx_t_1 < 0))) __PYX_ERR(0, 572, __pyx_L57_error)
         __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
         if (__pyx_t_1) {
 
-          /* "src/core/think/machine_learning/computer_vision/text_analytics/key_value_extraction/regex_module/date_regex.py":569
+          /* "src/core/think/machine_learning/computer_vision/text_analytics/key_value_extraction/regex_module/date_regex.py":574
  *                 if mfg_parsed > exp_parsed:
  *                     # Manufacturing date is greater than expiry date - swap them
  *                     mfg_date_str, exp_date_val = exp_date_val, mfg_date_str             # <<<<<<<<<<<<<<
@@ -8033,7 +8101,7 @@ static PyObject *__pyx_pf_3src_4core_5think_16machine_learning_15computer_vision
           __pyx_v_exp_date_val = __pyx_t_18;
           __pyx_t_18 = 0;
 
-          /* "src/core/think/machine_learning/computer_vision/text_analytics/key_value_extraction/regex_module/date_regex.py":567
+          /* "src/core/think/machine_learning/computer_vision/text_analytics/key_value_extraction/regex_module/date_regex.py":572
  *                 exp_parsed = datetime.strptime(exp_date_val, '%d-%m-%Y')
  * 
  *                 if mfg_parsed > exp_parsed:             # <<<<<<<<<<<<<<
@@ -8042,7 +8110,7 @@ static PyObject *__pyx_pf_3src_4core_5think_16machine_learning_15computer_vision
 */
         }
 
-        /* "src/core/think/machine_learning/computer_vision/text_analytics/key_value_extraction/regex_module/date_regex.py":563
+        /* "src/core/think/machine_learning/computer_vision/text_analytics/key_value_extraction/regex_module/date_regex.py":568
  *         # Final validation: If both dates are present, ensure MFG < EXP
  *         if mfg_date_str and exp_date_val:
  *             try:             # <<<<<<<<<<<<<<
@@ -8062,7 +8130,7 @@ static PyObject *__pyx_pf_3src_4core_5think_16machine_learning_15computer_vision
       __Pyx_XDECREF(__pyx_t_7); __pyx_t_7 = 0;
       __Pyx_XDECREF(__pyx_t_8); __pyx_t_8 = 0;
 
-      /* "src/core/think/machine_learning/computer_vision/text_analytics/key_value_extraction/regex_module/date_regex.py":570
+      /* "src/core/think/machine_learning/computer_vision/text_analytics/key_value_extraction/regex_module/date_regex.py":575
  *                     # Manufacturing date is greater than expiry date - swap them
  *                     mfg_date_str, exp_date_val = exp_date_val, mfg_date_str
  *             except (ValueError, AttributeError):             # <<<<<<<<<<<<<<
@@ -8072,12 +8140,12 @@ static PyObject *__pyx_pf_3src_4core_5think_16machine_learning_15computer_vision
       __pyx_t_16 = __Pyx_PyErr_ExceptionMatches2(__pyx_builtin_ValueError, __pyx_builtin_AttributeError);
       if (__pyx_t_16) {
         __Pyx_AddTraceback("src.core.think.machine_learning.computer_vision.text_analytics.key_value_extraction.regex_module.date_regex.GetDates.process_dates", __pyx_clineno, __pyx_lineno, __pyx_filename);
-        if (__Pyx_GetException(&__pyx_t_4, &__pyx_t_5, &__pyx_t_7) < 0) __PYX_ERR(0, 570, __pyx_L59_except_error)
+        if (__Pyx_GetException(&__pyx_t_4, &__pyx_t_7, &__pyx_t_8) < 0) __PYX_ERR(0, 575, __pyx_L59_except_error)
         __Pyx_XGOTREF(__pyx_t_4);
-        __Pyx_XGOTREF(__pyx_t_5);
         __Pyx_XGOTREF(__pyx_t_7);
+        __Pyx_XGOTREF(__pyx_t_8);
 
-        /* "src/core/think/machine_learning/computer_vision/text_analytics/key_value_extraction/regex_module/date_regex.py":572
+        /* "src/core/think/machine_learning/computer_vision/text_analytics/key_value_extraction/regex_module/date_regex.py":577
  *             except (ValueError, AttributeError):
  *                 # If parsing fails, set both to None
  *                 mfg_date_str = None             # <<<<<<<<<<<<<<
@@ -8087,7 +8155,7 @@ static PyObject *__pyx_pf_3src_4core_5think_16machine_learning_15computer_vision
         __Pyx_INCREF(Py_None);
         __Pyx_DECREF_SET(__pyx_v_mfg_date_str, Py_None);
 
-        /* "src/core/think/machine_learning/computer_vision/text_analytics/key_value_extraction/regex_module/date_regex.py":573
+        /* "src/core/think/machine_learning/computer_vision/text_analytics/key_value_extraction/regex_module/date_regex.py":578
  *                 # If parsing fails, set both to None
  *                 mfg_date_str = None
  *                 exp_date_val = None             # <<<<<<<<<<<<<<
@@ -8097,13 +8165,13 @@ static PyObject *__pyx_pf_3src_4core_5think_16machine_learning_15computer_vision
         __Pyx_INCREF(Py_None);
         __Pyx_DECREF_SET(__pyx_v_exp_date_val, Py_None);
         __Pyx_XDECREF(__pyx_t_4); __pyx_t_4 = 0;
-        __Pyx_XDECREF(__pyx_t_5); __pyx_t_5 = 0;
         __Pyx_XDECREF(__pyx_t_7); __pyx_t_7 = 0;
+        __Pyx_XDECREF(__pyx_t_8); __pyx_t_8 = 0;
         goto __pyx_L58_exception_handled;
       }
       goto __pyx_L59_except_error;
 
-      /* "src/core/think/machine_learning/computer_vision/text_analytics/key_value_extraction/regex_module/date_regex.py":563
+      /* "src/core/think/machine_learning/computer_vision/text_analytics/key_value_extraction/regex_module/date_regex.py":568
  *         # Final validation: If both dates are present, ensure MFG < EXP
  *         if mfg_date_str and exp_date_val:
  *             try:             # <<<<<<<<<<<<<<
@@ -8124,7 +8192,7 @@ static PyObject *__pyx_pf_3src_4core_5think_16machine_learning_15computer_vision
       __pyx_L62_try_end:;
     }
 
-    /* "src/core/think/machine_learning/computer_vision/text_analytics/key_value_extraction/regex_module/date_regex.py":562
+    /* "src/core/think/machine_learning/computer_vision/text_analytics/key_value_extraction/regex_module/date_regex.py":567
  * 
  *         # Final validation: If both dates are present, ensure MFG < EXP
  *         if mfg_date_str and exp_date_val:             # <<<<<<<<<<<<<<
@@ -8133,7 +8201,7 @@ static PyObject *__pyx_pf_3src_4core_5think_16machine_learning_15computer_vision
 */
   }
 
-  /* "src/core/think/machine_learning/computer_vision/text_analytics/key_value_extraction/regex_module/date_regex.py":575
+  /* "src/core/think/machine_learning/computer_vision/text_analytics/key_value_extraction/regex_module/date_regex.py":580
  *                 exp_date_val = None
  * 
  *         return [mfg_date_str, exp_date_val, exp_period_val]             # <<<<<<<<<<<<<<
@@ -8141,19 +8209,19 @@ static PyObject *__pyx_pf_3src_4core_5think_16machine_learning_15computer_vision
  * 
 */
   __Pyx_XDECREF(__pyx_r);
-  __pyx_t_7 = PyList_New(3); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 575, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_7);
+  __pyx_t_8 = PyList_New(3); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 580, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_8);
   __Pyx_INCREF(__pyx_v_mfg_date_str);
   __Pyx_GIVEREF(__pyx_v_mfg_date_str);
-  if (__Pyx_PyList_SET_ITEM(__pyx_t_7, 0, __pyx_v_mfg_date_str) != (0)) __PYX_ERR(0, 575, __pyx_L1_error);
+  if (__Pyx_PyList_SET_ITEM(__pyx_t_8, 0, __pyx_v_mfg_date_str) != (0)) __PYX_ERR(0, 580, __pyx_L1_error);
   __Pyx_INCREF(__pyx_v_exp_date_val);
   __Pyx_GIVEREF(__pyx_v_exp_date_val);
-  if (__Pyx_PyList_SET_ITEM(__pyx_t_7, 1, __pyx_v_exp_date_val) != (0)) __PYX_ERR(0, 575, __pyx_L1_error);
+  if (__Pyx_PyList_SET_ITEM(__pyx_t_8, 1, __pyx_v_exp_date_val) != (0)) __PYX_ERR(0, 580, __pyx_L1_error);
   __Pyx_INCREF(__pyx_v_exp_period_val);
   __Pyx_GIVEREF(__pyx_v_exp_period_val);
-  if (__Pyx_PyList_SET_ITEM(__pyx_t_7, 2, __pyx_v_exp_period_val) != (0)) __PYX_ERR(0, 575, __pyx_L1_error);
-  __pyx_r = ((PyObject*)__pyx_t_7);
-  __pyx_t_7 = 0;
+  if (__Pyx_PyList_SET_ITEM(__pyx_t_8, 2, __pyx_v_exp_period_val) != (0)) __PYX_ERR(0, 580, __pyx_L1_error);
+  __pyx_r = ((PyObject*)__pyx_t_8);
+  __pyx_t_8 = 0;
   goto __pyx_L0;
 
   /* "src/core/think/machine_learning/computer_vision/text_analytics/key_value_extraction/regex_module/date_regex.py":493
@@ -8183,6 +8251,8 @@ static PyObject *__pyx_pf_3src_4core_5think_16machine_learning_15computer_vision
   __Pyx_XDECREF(__pyx_v_current_date);
   __Pyx_XDECREF(__pyx_v_computed);
   __Pyx_XDECREF(__pyx_v_parsed_date);
+  __Pyx_XDECREF(__pyx_v_timedelta);
+  __Pyx_XDECREF(__pyx_v_seven_days_ago);
   __Pyx_XDECREF(__pyx_v_mfg_parsed);
   __Pyx_XDECREF(__pyx_v_exp_parsed);
   __Pyx_XGIVEREF(__pyx_r);
@@ -9115,20 +9185,20 @@ __Pyx_RefNannySetupContext("PyInit_date_regex", 0);
   __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
   __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
 
-  /* "src/core/think/machine_learning/computer_vision/text_analytics/key_value_extraction/regex_module/date_regex.py":580
+  /* "src/core/think/machine_learning/computer_vision/text_analytics/key_value_extraction/regex_module/date_regex.py":585
  * # --- Testing ---
  * 
  * if __name__ == "__main__":             # <<<<<<<<<<<<<<
  *     date_extractor = GetDates()
  * 
 */
-  __Pyx_GetModuleGlobalName(__pyx_t_7, __pyx_mstate_global->__pyx_n_u_name); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 580, __pyx_L1_error)
+  __Pyx_GetModuleGlobalName(__pyx_t_7, __pyx_mstate_global->__pyx_n_u_name); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 585, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_7);
-  __pyx_t_25 = (__Pyx_PyUnicode_Equals(__pyx_t_7, __pyx_mstate_global->__pyx_n_u_main, Py_EQ)); if (unlikely((__pyx_t_25 < 0))) __PYX_ERR(0, 580, __pyx_L1_error)
+  __pyx_t_25 = (__Pyx_PyUnicode_Equals(__pyx_t_7, __pyx_mstate_global->__pyx_n_u_main, Py_EQ)); if (unlikely((__pyx_t_25 < 0))) __PYX_ERR(0, 585, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
   if (__pyx_t_25) {
 
-    /* "src/core/think/machine_learning/computer_vision/text_analytics/key_value_extraction/regex_module/date_regex.py":581
+    /* "src/core/think/machine_learning/computer_vision/text_analytics/key_value_extraction/regex_module/date_regex.py":586
  * 
  * if __name__ == "__main__":
  *     date_extractor = GetDates()             # <<<<<<<<<<<<<<
@@ -9136,7 +9206,7 @@ __Pyx_RefNannySetupContext("PyInit_date_regex", 0);
  *     test_cases = [
 */
     __pyx_t_3 = NULL;
-    __Pyx_GetModuleGlobalName(__pyx_t_2, __pyx_mstate_global->__pyx_n_u_GetDates); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 581, __pyx_L1_error)
+    __Pyx_GetModuleGlobalName(__pyx_t_2, __pyx_mstate_global->__pyx_n_u_GetDates); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 586, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_2);
     __pyx_t_24 = 1;
     {
@@ -9144,25 +9214,25 @@ __Pyx_RefNannySetupContext("PyInit_date_regex", 0);
       __pyx_t_7 = __Pyx_PyObject_FastCall(__pyx_t_2, __pyx_callargs+__pyx_t_24, (1-__pyx_t_24) | (__pyx_t_24*__Pyx_PY_VECTORCALL_ARGUMENTS_OFFSET));
       __Pyx_XDECREF(__pyx_t_3); __pyx_t_3 = 0;
       __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-      if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 581, __pyx_L1_error)
+      if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 586, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_7);
     }
-    if (PyDict_SetItem(__pyx_mstate_global->__pyx_d, __pyx_mstate_global->__pyx_n_u_date_extractor, __pyx_t_7) < 0) __PYX_ERR(0, 581, __pyx_L1_error)
+    if (PyDict_SetItem(__pyx_mstate_global->__pyx_d, __pyx_mstate_global->__pyx_n_u_date_extractor, __pyx_t_7) < 0) __PYX_ERR(0, 586, __pyx_L1_error)
     __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
 
-    /* "src/core/think/machine_learning/computer_vision/text_analytics/key_value_extraction/regex_module/date_regex.py":583
+    /* "src/core/think/machine_learning/computer_vision/text_analytics/key_value_extraction/regex_module/date_regex.py":588
  *     date_extractor = GetDates()
  * 
  *     test_cases = [             # <<<<<<<<<<<<<<
  *         # 1. MFG + period (months, plural)
  *         ("The maximum retail price of the product is 45, the manufacturing date of the product is 07-10-2025, the expiry date is 24 months, and the batch number is M2L273B1.", "exp date with period")
 */
-    __pyx_t_7 = __Pyx_PyList_Pack(1, __pyx_mstate_global->__pyx_tuple[4]); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 583, __pyx_L1_error)
+    __pyx_t_7 = __Pyx_PyList_Pack(1, __pyx_mstate_global->__pyx_tuple[4]); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 588, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_7);
-    if (PyDict_SetItem(__pyx_mstate_global->__pyx_d, __pyx_mstate_global->__pyx_n_u_test_cases, __pyx_t_7) < 0) __PYX_ERR(0, 583, __pyx_L1_error)
+    if (PyDict_SetItem(__pyx_mstate_global->__pyx_d, __pyx_mstate_global->__pyx_n_u_test_cases, __pyx_t_7) < 0) __PYX_ERR(0, 588, __pyx_L1_error)
     __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
 
-    /* "src/core/think/machine_learning/computer_vision/text_analytics/key_value_extraction/regex_module/date_regex.py":617
+    /* "src/core/think/machine_learning/computer_vision/text_analytics/key_value_extraction/regex_module/date_regex.py":622
  *     # ]
  * 
  *     for idx, (ocr_text, label) in enumerate(test_cases, 1):             # <<<<<<<<<<<<<<
@@ -9171,16 +9241,16 @@ __Pyx_RefNannySetupContext("PyInit_date_regex", 0);
 */
     __Pyx_INCREF(__pyx_mstate_global->__pyx_int_1);
     __pyx_t_26 = __pyx_mstate_global->__pyx_int_1;
-    __Pyx_GetModuleGlobalName(__pyx_t_7, __pyx_mstate_global->__pyx_n_u_test_cases); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 617, __pyx_L1_error)
+    __Pyx_GetModuleGlobalName(__pyx_t_7, __pyx_mstate_global->__pyx_n_u_test_cases); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 622, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_7);
     if (likely(PyList_CheckExact(__pyx_t_7)) || PyTuple_CheckExact(__pyx_t_7)) {
       __pyx_t_2 = __pyx_t_7; __Pyx_INCREF(__pyx_t_2);
       __pyx_t_27 = 0;
       __pyx_t_28 = NULL;
     } else {
-      __pyx_t_27 = -1; __pyx_t_2 = PyObject_GetIter(__pyx_t_7); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 617, __pyx_L1_error)
+      __pyx_t_27 = -1; __pyx_t_2 = PyObject_GetIter(__pyx_t_7); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 622, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_2);
-      __pyx_t_28 = (CYTHON_COMPILING_IN_LIMITED_API) ? PyIter_Next : __Pyx_PyObject_GetIterNextFunc(__pyx_t_2); if (unlikely(!__pyx_t_28)) __PYX_ERR(0, 617, __pyx_L1_error)
+      __pyx_t_28 = (CYTHON_COMPILING_IN_LIMITED_API) ? PyIter_Next : __Pyx_PyObject_GetIterNextFunc(__pyx_t_2); if (unlikely(!__pyx_t_28)) __PYX_ERR(0, 622, __pyx_L1_error)
     }
     __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
     for (;;) {
@@ -9189,7 +9259,7 @@ __Pyx_RefNannySetupContext("PyInit_date_regex", 0);
           {
             Py_ssize_t __pyx_temp = __Pyx_PyList_GET_SIZE(__pyx_t_2);
             #if !CYTHON_ASSUME_SAFE_SIZE
-            if (unlikely((__pyx_temp < 0))) __PYX_ERR(0, 617, __pyx_L1_error)
+            if (unlikely((__pyx_temp < 0))) __PYX_ERR(0, 622, __pyx_L1_error)
             #endif
             if (__pyx_t_27 >= __pyx_temp) break;
           }
@@ -9199,7 +9269,7 @@ __Pyx_RefNannySetupContext("PyInit_date_regex", 0);
           {
             Py_ssize_t __pyx_temp = __Pyx_PyTuple_GET_SIZE(__pyx_t_2);
             #if !CYTHON_ASSUME_SAFE_SIZE
-            if (unlikely((__pyx_temp < 0))) __PYX_ERR(0, 617, __pyx_L1_error)
+            if (unlikely((__pyx_temp < 0))) __PYX_ERR(0, 622, __pyx_L1_error)
             #endif
             if (__pyx_t_27 >= __pyx_temp) break;
           }
@@ -9210,13 +9280,13 @@ __Pyx_RefNannySetupContext("PyInit_date_regex", 0);
           #endif
           ++__pyx_t_27;
         }
-        if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 617, __pyx_L1_error)
+        if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 622, __pyx_L1_error)
       } else {
         __pyx_t_7 = __pyx_t_28(__pyx_t_2);
         if (unlikely(!__pyx_t_7)) {
           PyObject* exc_type = PyErr_Occurred();
           if (exc_type) {
-            if (unlikely(!__Pyx_PyErr_GivenExceptionMatches(exc_type, PyExc_StopIteration))) __PYX_ERR(0, 617, __pyx_L1_error)
+            if (unlikely(!__Pyx_PyErr_GivenExceptionMatches(exc_type, PyExc_StopIteration))) __PYX_ERR(0, 622, __pyx_L1_error)
             PyErr_Clear();
           }
           break;
@@ -9229,7 +9299,7 @@ __Pyx_RefNannySetupContext("PyInit_date_regex", 0);
         if (unlikely(size != 2)) {
           if (size > 2) __Pyx_RaiseTooManyValuesError(2);
           else if (size >= 0) __Pyx_RaiseNeedMoreValuesError(size);
-          __PYX_ERR(0, 617, __pyx_L1_error)
+          __PYX_ERR(0, 622, __pyx_L1_error)
         }
         #if CYTHON_ASSUME_SAFE_MACROS && !CYTHON_AVOID_BORROWED_REFS
         if (likely(PyTuple_CheckExact(sequence))) {
@@ -9239,22 +9309,22 @@ __Pyx_RefNannySetupContext("PyInit_date_regex", 0);
           __Pyx_INCREF(__pyx_t_13);
         } else {
           __pyx_t_3 = __Pyx_PyList_GetItemRef(sequence, 0);
-          if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 617, __pyx_L1_error)
+          if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 622, __pyx_L1_error)
           __Pyx_XGOTREF(__pyx_t_3);
           __pyx_t_13 = __Pyx_PyList_GetItemRef(sequence, 1);
-          if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 617, __pyx_L1_error)
+          if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 622, __pyx_L1_error)
           __Pyx_XGOTREF(__pyx_t_13);
         }
         #else
-        __pyx_t_3 = __Pyx_PySequence_ITEM(sequence, 0); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 617, __pyx_L1_error)
+        __pyx_t_3 = __Pyx_PySequence_ITEM(sequence, 0); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 622, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_3);
-        __pyx_t_13 = __Pyx_PySequence_ITEM(sequence, 1); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 617, __pyx_L1_error)
+        __pyx_t_13 = __Pyx_PySequence_ITEM(sequence, 1); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 622, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_13);
         #endif
         __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
       } else {
         Py_ssize_t index = -1;
-        __pyx_t_11 = PyObject_GetIter(__pyx_t_7); if (unlikely(!__pyx_t_11)) __PYX_ERR(0, 617, __pyx_L1_error)
+        __pyx_t_11 = PyObject_GetIter(__pyx_t_7); if (unlikely(!__pyx_t_11)) __PYX_ERR(0, 622, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_11);
         __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
         __pyx_t_29 = (CYTHON_COMPILING_IN_LIMITED_API) ? PyIter_Next : __Pyx_PyObject_GetIterNextFunc(__pyx_t_11);
@@ -9262,7 +9332,7 @@ __Pyx_RefNannySetupContext("PyInit_date_regex", 0);
         __Pyx_GOTREF(__pyx_t_3);
         index = 1; __pyx_t_13 = __pyx_t_29(__pyx_t_11); if (unlikely(!__pyx_t_13)) goto __pyx_L23_unpacking_failed;
         __Pyx_GOTREF(__pyx_t_13);
-        if (__Pyx_IternextUnpackEndCheck(__pyx_t_29(__pyx_t_11), 2) < 0) __PYX_ERR(0, 617, __pyx_L1_error)
+        if (__Pyx_IternextUnpackEndCheck(__pyx_t_29(__pyx_t_11), 2) < 0) __PYX_ERR(0, 622, __pyx_L1_error)
         __pyx_t_29 = NULL;
         __Pyx_DECREF(__pyx_t_11); __pyx_t_11 = 0;
         goto __pyx_L24_unpacking_done;
@@ -9270,35 +9340,35 @@ __Pyx_RefNannySetupContext("PyInit_date_regex", 0);
         __Pyx_DECREF(__pyx_t_11); __pyx_t_11 = 0;
         __pyx_t_29 = NULL;
         if (__Pyx_IterFinish() == 0) __Pyx_RaiseNeedMoreValuesError(index);
-        __PYX_ERR(0, 617, __pyx_L1_error)
+        __PYX_ERR(0, 622, __pyx_L1_error)
         __pyx_L24_unpacking_done:;
       }
-      if (PyDict_SetItem(__pyx_mstate_global->__pyx_d, __pyx_mstate_global->__pyx_n_u_ocr_text, __pyx_t_3) < 0) __PYX_ERR(0, 617, __pyx_L1_error)
+      if (PyDict_SetItem(__pyx_mstate_global->__pyx_d, __pyx_mstate_global->__pyx_n_u_ocr_text, __pyx_t_3) < 0) __PYX_ERR(0, 622, __pyx_L1_error)
       __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-      if (PyDict_SetItem(__pyx_mstate_global->__pyx_d, __pyx_mstate_global->__pyx_n_u_label, __pyx_t_13) < 0) __PYX_ERR(0, 617, __pyx_L1_error)
+      if (PyDict_SetItem(__pyx_mstate_global->__pyx_d, __pyx_mstate_global->__pyx_n_u_label, __pyx_t_13) < 0) __PYX_ERR(0, 622, __pyx_L1_error)
       __Pyx_DECREF(__pyx_t_13); __pyx_t_13 = 0;
-      if (PyDict_SetItem(__pyx_mstate_global->__pyx_d, __pyx_mstate_global->__pyx_n_u_idx, __pyx_t_26) < 0) __PYX_ERR(0, 617, __pyx_L1_error)
-      __pyx_t_7 = __Pyx_PyLong_AddObjC(__pyx_t_26, __pyx_mstate_global->__pyx_int_1, 1, 0, 0); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 617, __pyx_L1_error)
+      if (PyDict_SetItem(__pyx_mstate_global->__pyx_d, __pyx_mstate_global->__pyx_n_u_idx, __pyx_t_26) < 0) __PYX_ERR(0, 622, __pyx_L1_error)
+      __pyx_t_7 = __Pyx_PyLong_AddObjC(__pyx_t_26, __pyx_mstate_global->__pyx_int_1, 1, 0, 0); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 622, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_7);
       __Pyx_DECREF(__pyx_t_26);
       __pyx_t_26 = ((PyObject*)__pyx_t_7);
       __pyx_t_7 = 0;
 
-      /* "src/core/think/machine_learning/computer_vision/text_analytics/key_value_extraction/regex_module/date_regex.py":618
+      /* "src/core/think/machine_learning/computer_vision/text_analytics/key_value_extraction/regex_module/date_regex.py":623
  * 
  *     for idx, (ocr_text, label) in enumerate(test_cases, 1):
  *         result = date_extractor.process_dates([ocr_text])             # <<<<<<<<<<<<<<
  *         print(f"Test Case {idx} ({label}): {result}")
 */
       __pyx_t_13 = NULL;
-      __Pyx_GetModuleGlobalName(__pyx_t_3, __pyx_mstate_global->__pyx_n_u_date_extractor); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 618, __pyx_L1_error)
+      __Pyx_GetModuleGlobalName(__pyx_t_3, __pyx_mstate_global->__pyx_n_u_date_extractor); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 623, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_3);
-      __pyx_t_11 = __Pyx_PyObject_GetAttrStr(__pyx_t_3, __pyx_mstate_global->__pyx_n_u_process_dates); if (unlikely(!__pyx_t_11)) __PYX_ERR(0, 618, __pyx_L1_error)
+      __pyx_t_11 = __Pyx_PyObject_GetAttrStr(__pyx_t_3, __pyx_mstate_global->__pyx_n_u_process_dates); if (unlikely(!__pyx_t_11)) __PYX_ERR(0, 623, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_11);
       __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-      __Pyx_GetModuleGlobalName(__pyx_t_3, __pyx_mstate_global->__pyx_n_u_ocr_text); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 618, __pyx_L1_error)
+      __Pyx_GetModuleGlobalName(__pyx_t_3, __pyx_mstate_global->__pyx_n_u_ocr_text); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 623, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_3);
-      __pyx_t_12 = __Pyx_PyList_Pack(1, __pyx_t_3); if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 618, __pyx_L1_error)
+      __pyx_t_12 = __Pyx_PyList_Pack(1, __pyx_t_3); if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 623, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_12);
       __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
       __pyx_t_24 = 1;
@@ -9319,13 +9389,13 @@ __Pyx_RefNannySetupContext("PyInit_date_regex", 0);
         __Pyx_XDECREF(__pyx_t_13); __pyx_t_13 = 0;
         __Pyx_DECREF(__pyx_t_12); __pyx_t_12 = 0;
         __Pyx_DECREF(__pyx_t_11); __pyx_t_11 = 0;
-        if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 618, __pyx_L1_error)
+        if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 623, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_7);
       }
-      if (PyDict_SetItem(__pyx_mstate_global->__pyx_d, __pyx_mstate_global->__pyx_n_u_result, __pyx_t_7) < 0) __PYX_ERR(0, 618, __pyx_L1_error)
+      if (PyDict_SetItem(__pyx_mstate_global->__pyx_d, __pyx_mstate_global->__pyx_n_u_result, __pyx_t_7) < 0) __PYX_ERR(0, 623, __pyx_L1_error)
       __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
 
-      /* "src/core/think/machine_learning/computer_vision/text_analytics/key_value_extraction/regex_module/date_regex.py":619
+      /* "src/core/think/machine_learning/computer_vision/text_analytics/key_value_extraction/regex_module/date_regex.py":624
  *     for idx, (ocr_text, label) in enumerate(test_cases, 1):
  *         result = date_extractor.process_dates([ocr_text])
  *         print(f"Test Case {idx} ({label}): {result}")             # <<<<<<<<<<<<<<
@@ -9333,19 +9403,19 @@ __Pyx_RefNannySetupContext("PyInit_date_regex", 0);
       __pyx_t_11 = NULL;
       __Pyx_INCREF(__pyx_builtin_print);
       __pyx_t_12 = __pyx_builtin_print; 
-      __Pyx_GetModuleGlobalName(__pyx_t_13, __pyx_mstate_global->__pyx_n_u_idx); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 619, __pyx_L1_error)
+      __Pyx_GetModuleGlobalName(__pyx_t_13, __pyx_mstate_global->__pyx_n_u_idx); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 624, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_13);
-      __pyx_t_3 = __Pyx_PyObject_FormatSimple(__pyx_t_13, __pyx_mstate_global->__pyx_empty_unicode); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 619, __pyx_L1_error)
+      __pyx_t_3 = __Pyx_PyObject_FormatSimple(__pyx_t_13, __pyx_mstate_global->__pyx_empty_unicode); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 624, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_3);
       __Pyx_DECREF(__pyx_t_13); __pyx_t_13 = 0;
-      __Pyx_GetModuleGlobalName(__pyx_t_13, __pyx_mstate_global->__pyx_n_u_label); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 619, __pyx_L1_error)
+      __Pyx_GetModuleGlobalName(__pyx_t_13, __pyx_mstate_global->__pyx_n_u_label); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 624, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_13);
-      __pyx_t_17 = __Pyx_PyObject_FormatSimple(__pyx_t_13, __pyx_mstate_global->__pyx_empty_unicode); if (unlikely(!__pyx_t_17)) __PYX_ERR(0, 619, __pyx_L1_error)
+      __pyx_t_17 = __Pyx_PyObject_FormatSimple(__pyx_t_13, __pyx_mstate_global->__pyx_empty_unicode); if (unlikely(!__pyx_t_17)) __PYX_ERR(0, 624, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_17);
       __Pyx_DECREF(__pyx_t_13); __pyx_t_13 = 0;
-      __Pyx_GetModuleGlobalName(__pyx_t_13, __pyx_mstate_global->__pyx_n_u_result); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 619, __pyx_L1_error)
+      __Pyx_GetModuleGlobalName(__pyx_t_13, __pyx_mstate_global->__pyx_n_u_result); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 624, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_13);
-      __pyx_t_14 = __Pyx_PyObject_FormatSimple(__pyx_t_13, __pyx_mstate_global->__pyx_empty_unicode); if (unlikely(!__pyx_t_14)) __PYX_ERR(0, 619, __pyx_L1_error)
+      __pyx_t_14 = __Pyx_PyObject_FormatSimple(__pyx_t_13, __pyx_mstate_global->__pyx_empty_unicode); if (unlikely(!__pyx_t_14)) __PYX_ERR(0, 624, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_14);
       __Pyx_DECREF(__pyx_t_13); __pyx_t_13 = 0;
       __pyx_t_30[0] = __pyx_mstate_global->__pyx_kp_u_Test_Case;
@@ -9355,7 +9425,7 @@ __Pyx_RefNannySetupContext("PyInit_date_regex", 0);
       __pyx_t_30[4] = __pyx_mstate_global->__pyx_kp_u__8;
       __pyx_t_30[5] = __pyx_t_14;
       __pyx_t_13 = __Pyx_PyUnicode_Join(__pyx_t_30, 6, 10 + __Pyx_PyUnicode_GET_LENGTH(__pyx_t_3) + 2 + __Pyx_PyUnicode_GET_LENGTH(__pyx_t_17) + 3 + __Pyx_PyUnicode_GET_LENGTH(__pyx_t_14), 127 | __Pyx_PyUnicode_MAX_CHAR_VALUE(__pyx_t_3) | __Pyx_PyUnicode_MAX_CHAR_VALUE(__pyx_t_17) | __Pyx_PyUnicode_MAX_CHAR_VALUE(__pyx_t_14));
-      if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 619, __pyx_L1_error)
+      if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 624, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_13);
       __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
       __Pyx_DECREF(__pyx_t_17); __pyx_t_17 = 0;
@@ -9367,12 +9437,12 @@ __Pyx_RefNannySetupContext("PyInit_date_regex", 0);
         __Pyx_XDECREF(__pyx_t_11); __pyx_t_11 = 0;
         __Pyx_DECREF(__pyx_t_13); __pyx_t_13 = 0;
         __Pyx_DECREF(__pyx_t_12); __pyx_t_12 = 0;
-        if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 619, __pyx_L1_error)
+        if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 624, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_7);
       }
       __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
 
-      /* "src/core/think/machine_learning/computer_vision/text_analytics/key_value_extraction/regex_module/date_regex.py":617
+      /* "src/core/think/machine_learning/computer_vision/text_analytics/key_value_extraction/regex_module/date_regex.py":622
  *     # ]
  * 
  *     for idx, (ocr_text, label) in enumerate(test_cases, 1):             # <<<<<<<<<<<<<<
@@ -9383,7 +9453,7 @@ __Pyx_RefNannySetupContext("PyInit_date_regex", 0);
     __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
     __Pyx_DECREF(__pyx_t_26); __pyx_t_26 = 0;
 
-    /* "src/core/think/machine_learning/computer_vision/text_analytics/key_value_extraction/regex_module/date_regex.py":580
+    /* "src/core/think/machine_learning/computer_vision/text_analytics/key_value_extraction/regex_module/date_regex.py":585
  * # --- Testing ---
  * 
  * if __name__ == "__main__":             # <<<<<<<<<<<<<<
@@ -9653,6 +9723,7 @@ static const __Pyx_StringTabEntry __pyx_string_tab[] = {
   {__pyx_k_sept, sizeof(__pyx_k_sept), 0, 1, 1}, /* PyObject cname: __pyx_n_u_sept */
   {__pyx_k_september, sizeof(__pyx_k_september), 0, 1, 1}, /* PyObject cname: __pyx_n_u_september */
   {__pyx_k_set_name, sizeof(__pyx_k_set_name), 0, 1, 1}, /* PyObject cname: __pyx_n_u_set_name */
+  {__pyx_k_seven_days_ago, sizeof(__pyx_k_seven_days_ago), 0, 1, 1}, /* PyObject cname: __pyx_n_u_seven_days_ago */
   {__pyx_k_spec, sizeof(__pyx_k_spec), 0, 1, 1}, /* PyObject cname: __pyx_n_u_spec */
   {__pyx_k_spec_2, sizeof(__pyx_k_spec_2), 0, 1, 1}, /* PyObject cname: __pyx_n_u_spec_2 */
   {__pyx_k_spec_from_file_location, sizeof(__pyx_k_spec_from_file_location), 0, 1, 1}, /* PyObject cname: __pyx_n_u_spec_from_file_location */
@@ -9671,6 +9742,7 @@ static const __Pyx_StringTabEntry __pyx_string_tab[] = {
   {__pyx_k_the_s_expiry_s_date_exp_s_s_dat, sizeof(__pyx_k_the_s_expiry_s_date_exp_s_s_dat), 0, 1, 0}, /* PyObject cname: __pyx_kp_u_the_s_expiry_s_date_exp_s_s_dat */
   {__pyx_k_the_s_expiry_s_period_exp_s_s_p, sizeof(__pyx_k_the_s_expiry_s_period_exp_s_s_p), 0, 1, 0}, /* PyObject cname: __pyx_kp_u_the_s_expiry_s_period_exp_s_s_p */
   {__pyx_k_the_s_manufacturing_s_date_mfg, sizeof(__pyx_k_the_s_manufacturing_s_date_mfg), 0, 1, 0}, /* PyObject cname: __pyx_kp_u_the_s_manufacturing_s_date_mfg */
+  {__pyx_k_timedelta, sizeof(__pyx_k_timedelta), 0, 1, 1}, /* PyObject cname: __pyx_n_u_timedelta */
   {__pyx_k_tokens, sizeof(__pyx_k_tokens), 0, 1, 1}, /* PyObject cname: __pyx_n_u_tokens */
   {__pyx_k_typing, sizeof(__pyx_k_typing), 0, 1, 1}, /* PyObject cname: __pyx_n_u_typing */
   {__pyx_k_unit, sizeof(__pyx_k_unit), 0, 1, 1}, /* PyObject cname: __pyx_n_u_unit */
@@ -9692,8 +9764,8 @@ static int __Pyx_InitStrings(__Pyx_StringTabEntry const *t, PyObject **target, c
 
 static int __Pyx_InitCachedBuiltins(__pyx_mstatetype *__pyx_mstate) {
   CYTHON_UNUSED_VAR(__pyx_mstate);
-  __pyx_builtin_enumerate = __Pyx_GetBuiltinName(__pyx_mstate->__pyx_n_u_enumerate); if (!__pyx_builtin_enumerate) __PYX_ERR(0, 617, __pyx_L1_error)
-  __pyx_builtin_print = __Pyx_GetBuiltinName(__pyx_mstate->__pyx_n_u_print); if (!__pyx_builtin_print) __PYX_ERR(0, 619, __pyx_L1_error)
+  __pyx_builtin_enumerate = __Pyx_GetBuiltinName(__pyx_mstate->__pyx_n_u_enumerate); if (!__pyx_builtin_enumerate) __PYX_ERR(0, 622, __pyx_L1_error)
+  __pyx_builtin_print = __Pyx_GetBuiltinName(__pyx_mstate->__pyx_n_u_print); if (!__pyx_builtin_print) __PYX_ERR(0, 624, __pyx_L1_error)
   __pyx_builtin_filter = __Pyx_GetBuiltinName(__pyx_mstate->__pyx_n_u_filter); if (!__pyx_builtin_filter) __PYX_ERR(0, 442, __pyx_L1_error)
   __pyx_builtin_ValueError = __Pyx_GetBuiltinName(__pyx_mstate->__pyx_n_u_ValueError); if (!__pyx_builtin_ValueError) __PYX_ERR(0, 445, __pyx_L1_error)
   __pyx_builtin_AttributeError = __Pyx_GetBuiltinName(__pyx_mstate->__pyx_n_u_AttributeError); if (!__pyx_builtin_AttributeError) __PYX_ERR(0, 548, __pyx_L1_error)
@@ -9744,14 +9816,14 @@ static int __Pyx_InitCachedConstants(__pyx_mstatetype *__pyx_mstate) {
   __Pyx_GOTREF(__pyx_mstate_global->__pyx_tuple[3]);
   __Pyx_GIVEREF(__pyx_mstate_global->__pyx_tuple[3]);
 
-  /* "src/core/think/machine_learning/computer_vision/text_analytics/key_value_extraction/regex_module/date_regex.py":585
+  /* "src/core/think/machine_learning/computer_vision/text_analytics/key_value_extraction/regex_module/date_regex.py":590
  *     test_cases = [
  *         # 1. MFG + period (months, plural)
  *         ("The maximum retail price of the product is 45, the manufacturing date of the product is 07-10-2025, the expiry date is 24 months, and the batch number is M2L273B1.", "exp date with period")             # <<<<<<<<<<<<<<
  *     ]
  *     #     # 2. MFG + period (month, singular)
 */
-  __pyx_mstate_global->__pyx_tuple[4] = PyTuple_Pack(2, __pyx_mstate_global->__pyx_kp_u_The_maximum_retail_price_of_the, __pyx_mstate_global->__pyx_kp_u_exp_date_with_period); if (unlikely(!__pyx_mstate_global->__pyx_tuple[4])) __PYX_ERR(0, 585, __pyx_L1_error)
+  __pyx_mstate_global->__pyx_tuple[4] = PyTuple_Pack(2, __pyx_mstate_global->__pyx_kp_u_The_maximum_retail_price_of_the, __pyx_mstate_global->__pyx_kp_u_exp_date_with_period); if (unlikely(!__pyx_mstate_global->__pyx_tuple[4])) __PYX_ERR(0, 590, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_mstate_global->__pyx_tuple[4]);
   __Pyx_GIVEREF(__pyx_mstate_global->__pyx_tuple[4]);
   __Pyx_RefNannyFinishContext();
@@ -9835,8 +9907,8 @@ static int __Pyx_CreateCodeObjects(__pyx_mstatetype *__pyx_mstate) {
     __pyx_mstate_global->__pyx_codeobj_tab[3] = __Pyx_PyCode_New(descr, varnames, __pyx_mstate->__pyx_kp_u_src_core_think_machine_learning_3, __pyx_mstate->__pyx_n_u_extract_dates, __pyx_k_4z_S_D_a_6_1_1_BfAT_fIS_b_3a_A, tuple_dedup_map); if (unlikely(!__pyx_mstate_global->__pyx_codeobj_tab[3])) goto bad;
   }
   {
-    const __Pyx_PyCode_New_function_description descr = {2, 0, 0, 12, (unsigned int)(CO_OPTIMIZED|CO_NEWLOCALS), 493, 483};
-    PyObject* const varnames[] = {__pyx_mstate->__pyx_n_u_self, __pyx_mstate->__pyx_n_u_ocr_result, __pyx_mstate->__pyx_n_u_text, __pyx_mstate->__pyx_n_u_mfg_date_str, __pyx_mstate->__pyx_n_u_exp_info_str, __pyx_mstate->__pyx_n_u_exp_date_val, __pyx_mstate->__pyx_n_u_exp_period_val, __pyx_mstate->__pyx_n_u_current_date, __pyx_mstate->__pyx_n_u_computed, __pyx_mstate->__pyx_n_u_parsed_date, __pyx_mstate->__pyx_n_u_mfg_parsed, __pyx_mstate->__pyx_n_u_exp_parsed};
+    const __Pyx_PyCode_New_function_description descr = {2, 0, 0, 14, (unsigned int)(CO_OPTIMIZED|CO_NEWLOCALS), 493, 506};
+    PyObject* const varnames[] = {__pyx_mstate->__pyx_n_u_self, __pyx_mstate->__pyx_n_u_ocr_result, __pyx_mstate->__pyx_n_u_text, __pyx_mstate->__pyx_n_u_mfg_date_str, __pyx_mstate->__pyx_n_u_exp_info_str, __pyx_mstate->__pyx_n_u_exp_date_val, __pyx_mstate->__pyx_n_u_exp_period_val, __pyx_mstate->__pyx_n_u_current_date, __pyx_mstate->__pyx_n_u_computed, __pyx_mstate->__pyx_n_u_parsed_date, __pyx_mstate->__pyx_n_u_timedelta, __pyx_mstate->__pyx_n_u_seven_days_ago, __pyx_mstate->__pyx_n_u_mfg_parsed, __pyx_mstate->__pyx_n_u_exp_parsed};
     __pyx_mstate_global->__pyx_codeobj_tab[4] = __Pyx_PyCode_New(descr, varnames, __pyx_mstate->__pyx_kp_u_src_core_think_machine_learning_3, __pyx_mstate->__pyx_n_u_process_dates, __pyx_k_a_4_T_1L_1F_s_Qa_oT_q_q_xt2XQe3, tuple_dedup_map); if (unlikely(!__pyx_mstate_global->__pyx_codeobj_tab[4])) goto bad;
   }
   Py_DECREF(tuple_dedup_map);
@@ -12212,6 +12284,45 @@ bad:
     return module;
 }
 
+/* ImportFrom */
+static PyObject* __Pyx_ImportFrom(PyObject* module, PyObject* name) {
+    PyObject* value = __Pyx_PyObject_GetAttrStr(module, name);
+    if (unlikely(!value) && PyErr_ExceptionMatches(PyExc_AttributeError)) {
+        const char* module_name_str = 0;
+        PyObject* module_name = 0;
+        PyObject* module_dot = 0;
+        PyObject* full_name = 0;
+        PyErr_Clear();
+        module_name_str = PyModule_GetName(module);
+        if (unlikely(!module_name_str)) { goto modbad; }
+        module_name = PyUnicode_FromString(module_name_str);
+        if (unlikely(!module_name)) { goto modbad; }
+        module_dot = PyUnicode_Concat(module_name, __pyx_mstate_global->__pyx_kp_u_);
+        if (unlikely(!module_dot)) { goto modbad; }
+        full_name = PyUnicode_Concat(module_dot, name);
+        if (unlikely(!full_name)) { goto modbad; }
+        #if (CYTHON_COMPILING_IN_PYPY && PYPY_VERSION_NUM  < 0x07030400) ||\
+                CYTHON_COMPILING_IN_GRAAL
+        {
+            PyObject *modules = PyImport_GetModuleDict();
+            if (unlikely(!modules))
+                goto modbad;
+            value = PyObject_GetItem(modules, full_name);
+        }
+        #else
+        value = PyImport_GetModule(full_name);
+        #endif
+      modbad:
+        Py_XDECREF(full_name);
+        Py_XDECREF(module_dot);
+        Py_XDECREF(module_name);
+    }
+    if (unlikely(!value)) {
+        PyErr_Format(PyExc_ImportError, "cannot import name %S", name);
+    }
+    return value;
+}
+
 /* ImportDottedModule */
 static PyObject *__Pyx__ImportDottedModule_Error(PyObject *name, PyObject *parts_tuple, Py_ssize_t count) {
     PyObject *partial_name = NULL, *slice = NULL, *sep = NULL;
@@ -12343,45 +12454,6 @@ static PyObject *__Pyx_PyList_Pack(Py_ssize_t n, ...) {
     end:
     va_end(va);
     return l;
-}
-
-/* ImportFrom */
-static PyObject* __Pyx_ImportFrom(PyObject* module, PyObject* name) {
-    PyObject* value = __Pyx_PyObject_GetAttrStr(module, name);
-    if (unlikely(!value) && PyErr_ExceptionMatches(PyExc_AttributeError)) {
-        const char* module_name_str = 0;
-        PyObject* module_name = 0;
-        PyObject* module_dot = 0;
-        PyObject* full_name = 0;
-        PyErr_Clear();
-        module_name_str = PyModule_GetName(module);
-        if (unlikely(!module_name_str)) { goto modbad; }
-        module_name = PyUnicode_FromString(module_name_str);
-        if (unlikely(!module_name)) { goto modbad; }
-        module_dot = PyUnicode_Concat(module_name, __pyx_mstate_global->__pyx_kp_u_);
-        if (unlikely(!module_dot)) { goto modbad; }
-        full_name = PyUnicode_Concat(module_dot, name);
-        if (unlikely(!full_name)) { goto modbad; }
-        #if (CYTHON_COMPILING_IN_PYPY && PYPY_VERSION_NUM  < 0x07030400) ||\
-                CYTHON_COMPILING_IN_GRAAL
-        {
-            PyObject *modules = PyImport_GetModuleDict();
-            if (unlikely(!modules))
-                goto modbad;
-            value = PyObject_GetItem(modules, full_name);
-        }
-        #else
-        value = PyImport_GetModule(full_name);
-        #endif
-      modbad:
-        Py_XDECREF(full_name);
-        Py_XDECREF(module_dot);
-        Py_XDECREF(module_name);
-    }
-    if (unlikely(!value)) {
-        PyErr_Format(PyExc_ImportError, "cannot import name %S", name);
-    }
-    return value;
 }
 
 /* LimitedApiGetTypeDict */

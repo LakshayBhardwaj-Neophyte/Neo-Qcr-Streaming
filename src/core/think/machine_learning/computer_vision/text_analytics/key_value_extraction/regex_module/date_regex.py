@@ -548,13 +548,18 @@ class GetDates:
                 except (ValueError, AttributeError):
                     mfg_date_str = None
 
-        # If only expiry date is present and it's less than current date, treat it as MFG
+        # If only expiry date is present and it's more than 7 days in the past, treat it as MFG.
+        # If it's within the last 7 days (grace period), keep it as expiry.
         if exp_date_val and not mfg_date_str and not exp_period_val:
             try:
+                from datetime import timedelta
                 parsed_date = datetime.strptime(exp_date_val, '%d-%m-%Y')
-                if parsed_date < current_date:
+                seven_days_ago = current_date - timedelta(days=7)
+                if parsed_date < seven_days_ago:
+                    # Older than 7 days in the past — likely a manufacturing date
                     mfg_date_str = exp_date_val
                     exp_date_val = None
+                # else: within last 7 days or future — keep as expiry
             except (ValueError, AttributeError):
                 pass
 
