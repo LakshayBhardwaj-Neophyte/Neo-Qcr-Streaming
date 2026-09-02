@@ -1,5 +1,8 @@
 import os
+import re
+import difflib
 from datetime import datetime, timedelta
+from typing import Optional
 from pymongo import MongoClient
 from bson import ObjectId
 from src.utils.datetime import Datetime
@@ -52,12 +55,16 @@ class Mongo:
         """
         Both Reliance and Shipsy use the same default collection names
         on the shared Cosmos DB.
+        The new_eanbatch collection is available for both clients — it lives
+        in the same DB and holds ground-truth product batch records for
+        EAN-based autocorrection.
         """
         return {
             'metadata': 'metadata',
             'environment': 'environment',
             'users': 'users',
-            'store': 'store'
+            'store': 'store',
+            'eanbatch': 'new_eanbatch',   # EAN autocorrection ground-truth records
         }
 
     def set_tenant(self, client_name: str):
@@ -74,16 +81,418 @@ class Mongo:
         collection_names = self._get_collection_names(client_name)
 
         # (Re)bind collections with dynamic names
-        self.metadata = self._active_db[collection_names['metadata']]
-        self.env = self._active_db[collection_names['environment']]
-        self.user_col = self._active_db[collection_names['users']]
+        self.metadata  = self._active_db[collection_names['metadata']]
+        self.env       = self._active_db[collection_names['environment']]
+        self.user_col  = self._active_db[collection_names['users']]
         self.store_col = self._active_db[collection_names['store']]
 
+        # eanbatch — ground-truth collection for EAN autocorrection
+        eanbatch_col = collection_names.get('eanbatch')
+        self.eanbatch = self._active_db[eanbatch_col] if eanbatch_col else None
+
         print(f"[Mongo] Tenant set → client_name={client_name}, db={db_name}, "
-              f"metadata_col={collection_names['metadata']}, env_col={collection_names['environment']}")
+              f"metadata_col={collection_names['metadata']}, env_col={collection_names['environment']}, "
+              f"eanbatch_col={eanbatch_col}")
 
     # ---------- below this line, your original methods remain unchanged ----------
     # They now operate on self.metadata/self.env/... which reflect the active tenant.
+
+    # ------------------------------------------------------------------
+    # EAN-batch verification helpers
+    # ------------------------------------------------------------------
+
+    def fetch_eanbatch_docs(self, ean: str) -> list:
+        """
+        Phase-1 EAN lookup: fetch all eanbatch docs for the given EAN (exact match).
+        Safe to call from any thread — MongoClient is thread-safe.
+        Returns [] if the collection is not configured or EAN not found.
+        """
+        if self.eanbatch is None:
+            print("[EAN] eanbatch collection not configured for this tenant — skipping")
+            return []
+        try:
+            docs = list(self.eanbatch.find({"ean": str(ean)}))
+            print(f"[EAN] Found {len(docs)} doc(s) in eanbatch for ean={ean}")
+            return docs
+        except Exception as e:
+            print(f"[EAN] fetch_eanbatch_docs error: {e}")
+            return []
+
+    def fetch_eanbatch_fallback(
+        self,
+        mrp,
+        mfg_date,
+        expiry_date,
+        batch_no,
+    ) -> list:
+        """
+        Phase-2 fallback: attribute-based lookup when exact EAN search returns empty.
+        Searches eanbatch by MRP range (±5%) + date windows (±32 days) +
+        batch prefix regex (first 4 chars). Returns up to 10 candidate docs.
+
+        NOTE: Not used in the main path currently — available for future use.
+        """
+        if self.eanbatch is None:
+            return []
+
+        try:
+            query: dict = {}
+
+            # MRP: ±5% window
+            if mrp is not None:
+                try:
+                    mrp_val = float(mrp)
+                    if mrp_val > 0:
+                        query["mrp"] = {
+                            "$gte": round(mrp_val * 0.95, 2),
+                            "$lte": round(mrp_val * 1.05, 2),
+                        }
+                except (TypeError, ValueError):
+                    pass
+
+            # Dates: ±32-day window
+            def _date_range(val) -> Optional[dict]:
+                if val is None:
+                    return None
+                dt = val if isinstance(val, datetime) else None
+                if dt is None:
+                    result = self.datetime.format_datetime_array([str(val)])
+                    dt = result[0] if result else None
+                if dt is None:
+                    return None
+                return {"$gte": dt - timedelta(days=32), "$lte": dt + timedelta(days=32)}
+
+            exp_range = _date_range(expiry_date)
+            mfg_range = _date_range(mfg_date)
+            if exp_range:
+                query["expiry_date"] = exp_range
+            if mfg_range:
+                query["mfg_date"] = mfg_range
+
+            # Batch prefix: first 4 chars, case-insensitive
+            if batch_no:
+                prefix_raw = str(batch_no).strip()
+                if len(prefix_raw) >= 4:
+                    query["batch_no"] = {
+                        "$regex": f"^{re.escape(prefix_raw[:4])}",
+                        "$options": "i",
+                    }
+
+            if not query:
+                print("[EAN Fallback] No queryable attributes — skipping fallback")
+                return []
+
+            docs = list(self.eanbatch.find(query).limit(10))
+            print(f"[EAN Fallback] Attribute query returned {len(docs)} candidate(s)")
+            return docs
+
+        except Exception as exc:
+            print(f"[EAN Fallback] error: {exc}")
+            return []
+
+    def apply_eanbatch_corrections(
+        self,
+        eanbatch_docs: list,
+        predicted: dict,
+        ean_code: Optional[str] = None,
+        from_fallback: bool = False,
+    ) -> dict:
+        """
+        Full fuzzy correction logic (older method — ported for reference).
+
+        Rules:
+        1. If batch fuzzy match >= 80%: adopt DB doc (correct any non-matching fields).
+        2. If batch fuzzy match < 80%:
+             - If >= 2 out of 3 other fields (mrp, mfg, exp) match: adopt DB doc.
+             - Else: adopt nothing, return predicted.
+
+        NOTE: Not used in the main path currently — `apply_simple_corrections` is
+        the active method. Available for future use.
+        """
+        if not eanbatch_docs:
+            return {"corrected": {}, "env_flags": {"new_sku": True}, "warnings": {}}
+
+        scorable_docs = [d for d in eanbatch_docs if not d.get("manualverification")]
+        if not scorable_docs:
+            print("[EAN] All docs have manualverification=True — skipping EAN correction")
+            return {"corrected": {}, "env_flags": {}, "warnings": {}}
+        eanbatch_docs = scorable_docs
+
+        def _clean_batch(b: str) -> str:
+            if not b: return ""
+            return re.sub(r'[\.\.\s]', '', str(b).lower())
+
+        def _batch_score(pred: str, db: str) -> float:
+            cp = _clean_batch(pred)
+            cd = _clean_batch(db)
+            if not cp or not cd: return 0.0
+            if cp == cd: return 1.0
+            return difflib.SequenceMatcher(None, cp, cd).ratio()
+
+        def _mrp_match(pred_mrp, db_mrp) -> bool:
+            try:
+                p, d = float(pred_mrp), float(db_mrp)
+                if p <= 0 or d <= 0: return False
+                return abs(p - d) / max(abs(d), 0.01) <= 0.01
+            except (TypeError, ValueError):
+                return False
+
+        def _to_dt(val):
+            if val is None: return None
+            if isinstance(val, datetime): return val
+            result = self.datetime.format_datetime_array([val])
+            return result[0] if result else None
+
+        def _date_match(pred_val, db_val) -> bool:
+            a = _to_dt(pred_val)
+            b = _to_dt(db_val)
+            if a is None or b is None: return False
+            return a.date() == b.date()
+
+        pred_batch = str(predicted.get("batch_no") or "").strip()
+
+        best_doc = None
+        best_bs = -1.0
+        best_match_count = -1
+
+        for doc in eanbatch_docs:
+            bs = _batch_score(pred_batch, str(doc.get("batch_no") or ""))
+            mrp_m = _mrp_match(predicted.get("mrp"), doc.get("mrp"))
+            mfg_m = _date_match(predicted.get("mfg_date"), doc.get("mfg_date"))
+            exp_m = _date_match(predicted.get("expiry_date"), doc.get("expiry_date"))
+            mc = sum([mrp_m, mfg_m, exp_m])
+            if bs > best_bs or (bs == best_bs and mc > best_match_count):
+                best_bs = bs
+                best_match_count = mc
+                best_doc = doc
+
+        if not best_doc:
+            return {"corrected": {}, "env_flags": {"new_sku": True}, "warnings": {}}
+
+        adopt_db = best_bs >= 0.80 or best_match_count >= 2
+
+        if not adopt_db:
+            print(f"[EAN] Best doc (batch={best_bs:.2f}, matches={best_match_count}) did not meet threshold.")
+            return {"corrected": {}, "env_flags": {}, "warnings": {}}
+
+        db_batch = str(best_doc.get("batch_no") or "").strip()
+        db_mrp   = best_doc.get("mrp")
+        db_mfg   = best_doc.get("mfg_date")
+        db_exp   = best_doc.get("expiry_date")
+        db_ean   = str(best_doc.get("ean") or "").strip()
+
+        corrected: dict = {}
+        env_flags: dict = {}
+        warnings:  dict = {}
+
+        es = 1.0 if (ean_code and str(ean_code).strip() == db_ean) else (
+            difflib.SequenceMatcher(None, str(ean_code or ""), db_ean).ratio() if ean_code else 0.0
+        )
+        if from_fallback:
+            if db_ean:
+                corrected["ean"] = db_ean
+            warnings["ean_correction_needed"] = True
+            warnings["suggested_ean"] = db_ean
+        elif es < 1.0 and db_ean:
+            corrected["ean"] = db_ean
+            if es >= 0.8:
+                env_flags["ean_corrected"] = True
+            else:
+                warnings["ean_correction_needed"] = True
+                warnings["suggested_ean"] = db_ean
+
+        if best_bs < 1.0 and db_batch:
+            corrected["batch_no"] = db_batch
+            warnings["batch_no_needs_review"] = True
+            if best_bs < 0.8:
+                warnings["batch_confidence"] = "low"
+
+        if not _mrp_match(predicted.get("mrp"), db_mrp) and db_mrp is not None:
+            corrected["mrp"] = db_mrp
+            warnings["mrp_corrected"] = True
+            env_flags["mrp_corrected"] = True
+
+        if not _date_match(predicted.get("mfg_date"), db_mfg) and db_mfg is not None:
+            corrected["mfg_date"] = db_mfg
+            env_flags["mfg_date_corrected"] = True
+            warnings["mfg_date_corrected"] = True
+
+        if not _date_match(predicted.get("expiry_date"), db_exp) and db_exp is not None:
+            corrected["expiry_date"] = db_exp
+            env_flags["expiry_date_corrected"] = True
+            warnings["expiry_date_corrected"] = True
+
+        if warnings:
+            parts = []
+            if warnings.get("batch_no_needs_review"): parts.append("batch number")
+            if warnings.get("ean_correction_needed"): parts.append("EAN")
+            if warnings.get("mrp_corrected"):         parts.append("MRP")
+            if warnings.get("mfg_date_corrected"):    parts.append("manufacturing date")
+            if warnings.get("expiry_date_corrected"): parts.append("expiry date")
+            if parts:
+                subject = " and ".join(parts).capitalize()
+                verb = "were" if len(parts) > 1 else "was"
+                warnings["message"] = f"{subject} {verb} auto-corrected — please verify before submitting."
+
+        print(f"[EAN] Adopted DB doc: batch={best_bs:.2f} matches={best_match_count}. Corrections: {list(corrected.keys())}")
+        return {"corrected": corrected, "env_flags": env_flags, "warnings": warnings}
+
+    def apply_simple_corrections(
+        self,
+        eanbatch_docs: list,
+        predicted: dict,
+        ean_code: Optional[str] = None,
+    ) -> dict:
+        """
+        Simplified correction logic against new_eanbatch collection.
+
+        Case 1 — EAN matches AND batch matches 100%:
+            → Silently correct mrp / mfg_date / expiry_date from DB if mismatched.
+              A warning is emitted if any field was actually changed.
+
+        Case 2 — EAN matches BUT batch does NOT match 100%:
+            → ONLY update/correct batch_no if mfg_date AND expiry_date match 100% in DB doc.
+              Attaches check flag: env_flags["check"] = True, warnings["check"] = True.
+            → Otherwise (if mfg/exp do NOT match 100%):
+              No corrections are made.
+
+        Returns
+        -------
+        {
+            "corrected":  dict,   # fields to apply to metadata
+            "env_flags":  dict,   # persisted on environment doc
+            "warnings":   dict,   # returned to the client in the API response
+        }
+        """
+        if not eanbatch_docs:
+            return {"corrected": {}, "env_flags": {}, "warnings": {"no_eanbatch_match": True}}
+
+        # ── Helpers ──────────────────────────────────────────────────────────
+
+        def _clean_batch(b: str) -> str:
+            if not b:
+                return ""
+            return re.sub(r'[\.\.\s]', '', str(b).lower())
+
+        def _batch_score(pred: str, db: str) -> float:
+            cp = _clean_batch(pred)
+            cd = _clean_batch(db)
+            if not cp or not cd:
+                return 0.0
+            if cp == cd:
+                return 1.0
+            return difflib.SequenceMatcher(None, cp, cd).ratio()
+
+        def _mrp_similarity(pred_mrp, db_mrp) -> float:
+            """Returns 0.0–1.0 similarity. 1.0 = exact (within 1%)."""
+            try:
+                p, d = float(pred_mrp), float(db_mrp)
+                if p <= 0 or d <= 0:
+                    return 0.0
+                diff_pct = abs(p - d) / max(abs(d), 0.01)
+                if diff_pct <= 0.01:
+                    return 1.0
+                if diff_pct <= 0.20:
+                    return 1.0 - diff_pct
+                return 0.0
+            except (TypeError, ValueError):
+                return 0.0
+
+        def _to_dt(val):
+            if val is None:
+                return None
+            if isinstance(val, datetime):
+                return val
+            result = self.datetime.format_datetime_array([val])
+            return result[0] if result else None
+
+        def _date_match(pred_val, db_val) -> bool:
+            a = _to_dt(pred_val)
+            b = _to_dt(db_val)
+            if a is None or b is None:
+                return False
+            return a.date() == b.date()
+
+        valid_docs = [d for d in eanbatch_docs if not d.get("manualverification")]
+        if not valid_docs:
+            print("[EAN simple] All docs are manualverification=True — skipping")
+            return {"corrected": {}, "env_flags": {}, "warnings": {"manual_verification_required": True}}
+
+        pred_batch = str(predicted.get("batch_no") or "").strip()
+
+        corrected: dict = {}
+        env_flags: dict = {}
+        warnings:  dict = {}
+
+        # ── Case 1: Search for 100% batch match ──────────────────────────────
+        exact_batch_doc = None
+        for doc in valid_docs:
+            if _batch_score(pred_batch, str(doc.get("batch_no") or "")) >= 1.0:
+                exact_batch_doc = doc
+                break
+
+        if exact_batch_doc:
+            # Case 1: 100% batch match → correct mrp, mfg, exp from DB if mismatched
+            db_mrp = exact_batch_doc.get("mrp")
+            db_mfg = exact_batch_doc.get("mfg_date")
+            db_exp = exact_batch_doc.get("expiry_date")
+
+            if not _mrp_similarity(predicted.get("mrp"), db_mrp) >= 1.0 and db_mrp is not None:
+                corrected["mrp"] = db_mrp
+                env_flags["mrp_corrected"] = True
+
+            if not _date_match(predicted.get("mfg_date"), db_mfg) and db_mfg is not None:
+                corrected["mfg_date"] = db_mfg
+                env_flags["mfg_date_corrected"] = True
+
+            if not _date_match(predicted.get("expiry_date"), db_exp) and db_exp is not None:
+                corrected["expiry_date"] = db_exp
+                env_flags["expiry_date_corrected"] = True
+
+            if corrected:
+                warnings["warning"] = True
+                warnings["mrp_or_dates_corrected"] = True
+                warnings["message"] = f"Auto-corrected: {', '.join(corrected.keys())} from database."
+                print(f"[EAN simple] Case 1 — batch 100% match. Corrections with warning: {list(corrected.keys())}")
+            else:
+                print("[EAN simple] Case 1 — batch 100% match. All values already matched, no corrections needed.")
+
+            return {"corrected": corrected, "env_flags": env_flags, "warnings": warnings}
+
+        # ── Case 2: Batch < 100% ─────────────────────────────────────────────
+        # ONLY update batch_no if BOTH mfg_date AND expiry_date match 100% (do NOT update MRP)
+        matching_date_doc = None
+        best_bs = -1.0
+
+        for doc in valid_docs:
+            mfg_matched = _date_match(predicted.get("mfg_date"), doc.get("mfg_date"))
+            exp_matched = _date_match(predicted.get("expiry_date"), doc.get("expiry_date"))
+
+            if mfg_matched and exp_matched:
+                bs = _batch_score(pred_batch, str(doc.get("batch_no") or ""))
+                if bs > best_bs:
+                    best_bs = bs
+                    matching_date_doc = doc
+
+        if matching_date_doc:
+            db_batch = str(matching_date_doc.get("batch_no") or "").strip()
+            if db_batch:
+                corrected["batch_no"] = db_batch
+            env_flags["check"] = True
+            warnings["check"]   = True
+            warnings["message"] = (
+                "Batch number was auto-corrected based on matching MFG and EXP dates — please verify."
+            )
+            print(f"[EAN simple] Case 2 — Batch < 100% but MFG & EXP matched 100%. Updated batch_no to '{db_batch}' with check flag.")
+        else:
+            print("[EAN simple] Case 2 — Batch < 100% and MFG/EXP did not match 100%. No corrections made.")
+
+        print(
+            f"[EAN simple] Done. corrections={list(corrected.keys())}  "
+            f"flags={list(env_flags.keys())}  "
+            f"warnings={list(warnings.keys())}"
+        )
+        return {"corrected": corrected, "env_flags": env_flags, "warnings": warnings}
 
     def update_document(self, metadata_id: str, updates: dict) -> bool:
         try:
@@ -355,30 +764,50 @@ class Mongo:
 
 
     
-    def create_metadata(self,  data: dict, ean_code, env_id: str, metadata_id:str):
+    def create_metadata(
+        self,
+        data: dict,
+        ean_code,
+        env_id: str,
+        metadata_id: str,
+        env_flags: Optional[dict] = None,
+        predicted: Optional[dict] = None,
+    ):
         """
-        Create metadata for a document in mongodb ;
-        a.
+        Create a metadata document in MongoDB.
+
+        Args:
+            data        : processed data dict (root-level fields may be corrected by EAN verification)
+            ean_code    : scanned EAN
+            env_id      : environment identifier
+            metadata_id : stable ID for this capture
+            env_flags   : optional dict of boolean flags to write onto the environment doc
+                          (e.g. {"mfg_date_corrected": True, "check": True})
+            predicted   : raw model predictions — always stored as-is in the `predicted` subdoc.
+                          If None, falls back to reading from data (backwards compatible).
         """
-        metadata_doc = {
-            'timestamp': datetime.now(),
-            'img_url': data.get('img_url'),
-            'ean': ean_code,
-            'mrp': data.get('mrp'),
-            'mfg_date': data.get('mfg_date'),
+        # `predicted` always holds raw model output — never the corrected values
+        raw_predicted = predicted or data.get('predicted') or {
+            'mrp':         data.get('mrp'),
+            'mfg_date':    data.get('mfg_date'),
             'expiry_date': data.get('expiry_date'),
-            'batch_no': data.get('batch_no'),
+            'batch_no':    data.get('batch_no'),
+        }
+
+        metadata_doc = {
+            'timestamp':      datetime.now(),
+            'img_url':        data.get('img_url'),
+            'ean':            ean_code,
+            'mrp':            data.get('mrp'),
+            'mfg_date':       data.get('mfg_date'),
+            'expiry_date':    data.get('expiry_date'),
+            'batch_no':       data.get('batch_no'),
             'ocr_raw_output': str(data.get('ocr_raw_output')),
-            'env_id': env_id,
-            'present': True,
-            'metadata_id': metadata_id,
-            'qty': data.get('qty', 1),
-            'predicted': data.get('predicted', {
-                'mrp': data.get('mrp'),
-                'mfg_date': data.get('mfg_date'),
-                'expiry_date': data.get('expiry_date'),
-                'batch_no': data.get('batch_no')
-            })
+            'env_id':         env_id,
+            'present':        True,
+            'metadata_id':    metadata_id,
+            'qty':            data.get('qty', 1),
+            'predicted':      raw_predicted,
         }
         if data.get('scan_duration_sec') is not None:
             metadata_doc['scan_duration_sec'] = data.get('scan_duration_sec')
@@ -401,8 +830,21 @@ class Mongo:
             metadata_doc['rotation'] = data.get('rotation')
         if data.get('upright') is not None:
             metadata_doc['upright'] = data.get('upright')
-            
-        return self.save_document(metadata_doc)
+
+        doc_id = self.save_document(metadata_doc)
+
+        # ---- write env flags if any (e.g. mrp_corrected, check, etc.) ----
+        if env_flags:
+            try:
+                self.env.update_one(
+                    {"env_id": env_id},
+                    {"$set": env_flags},
+                )
+                print(f"[EAN] env_id={env_id} flags updated: {env_flags}")
+            except Exception as e:
+                print(f"[EAN] Failed to write env flags: {e}")
+
+        return doc_id
 
     # Root-level fields that are candidates for multicapture merging.
     # `predicted` is deliberately excluded.

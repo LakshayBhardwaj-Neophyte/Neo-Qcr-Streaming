@@ -567,10 +567,12 @@ class SdkAPI:
                     metadata_id  = metadata_id,
                     client_name  = client_name,
                     user_id      = user_id,
+                    ean_code     = ean_code,
                 )
 
                 metadata = result["metadata"]
                 snapshot = result["snapshot"]
+                warnings = result.get("warnings", {})
                 
                 # Calculate latency if session_start is provided
                 session_start = req.get("session_start")
@@ -640,6 +642,8 @@ class SdkAPI:
                 resp_content = {"metadata": metadata}
                 if request_id:
                     resp_content["request_id"] = request_id
+                if warnings:
+                    resp_content["warnings"] = warnings
 
                 return JSONResponse(status_code=200, content=resp_content)
 
@@ -713,10 +717,12 @@ class SdkAPI:
                     metadata_id  = new_metadata_id,
                     client_name  = client_name,
                     user_id      = user_id,
+                    ean_code     = ean_code,
                 )
 
                 metadata = result["metadata"]
                 snapshot = result["snapshot"]
+                warnings = result.get("warnings", {})
 
                 metadata["qty"]         = 1
                 metadata["metadata_id"] = new_metadata_id
@@ -761,6 +767,8 @@ class SdkAPI:
                 resp_content = {"metadata": metadata}
                 if request_id:
                     resp_content["request_id"] = request_id
+                if warnings:
+                    resp_content["warnings"] = warnings
 
                 return JSONResponse(status_code=200, content=resp_content)
 

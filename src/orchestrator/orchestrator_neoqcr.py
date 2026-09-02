@@ -3,6 +3,7 @@ import time
 import asyncio
 import threading
 import traceback
+from datetime import datetime
 from typing import Optional, Dict, List, Any, Tuple
 
 from PIL import Image
@@ -167,11 +168,13 @@ class Orchestrator:
         client_name: Optional[str] = None,
         recapture_flag: bool = False,
         user_id: Optional[str] = None,
+        ean_code: Optional[str] = None,
     ) -> Dict[str, Any]:
         """
         Runs inference and returns a bundle containing:
-          - "metadata"  : the dict to send back to the client
+          - "metadata"  : the dict to send back to the client (may be corrected by eanbatch)
           - "snapshot"  : thread-safe data for the background DB save
+          - "warnings"  : user-facing warning messages from EAN correction
 
         No request-specific data is stored on self.
         """
@@ -218,6 +221,18 @@ class Orchestrator:
         else:
             url_holder["complete"] = True   # Reliance: no parallel upload needed
 
+        # ---- 2b. Start EAN batch fetch in parallel with OCR -----------------
+        #
+        # asyncio.to_thread runs the blocking DB call in a thread pool while
+        # OCR inference runs concurrently.  By the time inference is done
+        # the DB fetch is almost certainly complete — zero extra latency.
+        #
+        eanbatch_task = None
+        if ean_code and self.database.eanbatch is not None:
+            eanbatch_task = asyncio.create_task(
+                asyncio.to_thread(self.database.fetch_eanbatch_docs, ean_code)
+            )
+
         # ---- 3. Run inference (while upload continues) -----------------
         ocr_query = (
             "what is the maximum retail price, manufacturing date, "
@@ -237,7 +252,19 @@ class Orchestrator:
 
         data = MetadataProcessor.create_metadata(mrp, dates, batch_no)
 
-        # ---- 5. Session cache (keyed by env_id — already isolated) -----
+        # ---- 4b. Snapshot of raw OCR output (before any EAN correction) -----
+        #
+        # raw_predicted always holds what the model actually extracted this capture.
+        # Captured BEFORE any EAN correction so it is always the true model output.
+        #
+        raw_predicted = {
+            "mrp":         data.get("mrp"),
+            "mfg_date":    data.get("mfg_date"),
+            "expiry_date": data.get("expiry_date"),
+            "batch_no":    data.get("batch_no"),
+        }
+
+        # ---- 5. Session cache (keyed by env_id — already isolated) ---------
         if recapture_flag:
             self.session_cache.set(env_id, self.get_processed_data(data, env_id))
         elif capture_type:
@@ -256,24 +283,65 @@ class Orchestrator:
         metadata = copy.deepcopy(self.session_cache.get(env_id))
         print(f"[MULTICAPTURE] Final Metadata Returned: {metadata}")
 
-        # ---- 6. Build and return the self-contained result bundle ------
+        # ---- 5b. EAN batch verification — simple two-case correction ----------
+        #
+        # Case 1: EAN found + batch 100% match → silently correct mrp/dates.
+        # Case 2: EAN found + batch < 100%     → correct with check flag.
+        # Otherwise                             → no correction.
+        #
+        env_flags: Dict[str, Any] = {}
+        warnings:  Dict[str, Any] = {}
+
+        if eanbatch_task is not None:
+            try:
+                eanbatch_docs = await eanbatch_task
+
+                verification = self.database.apply_simple_corrections(
+                    eanbatch_docs, metadata, ean_code=ean_code,
+                )
+                corrections = verification.get("corrected", {})
+                env_flags   = verification.get("env_flags", {})
+                warnings    = verification.get("warnings", {})
+
+                if corrections:
+                    print(f"[EAN simple] Applying corrections: {list(corrections.keys())}")
+                    metadata.update(corrections)
+
+                    # Convert datetime → DD-MM-YYYY string for API response consistency
+                    for date_field in ("mfg_date", "expiry_date"):
+                        val = metadata.get(date_field)
+                        if isinstance(val, datetime):
+                            metadata[date_field] = val.strftime("%d-%m-%Y")
+
+                    # Write corrected state back to session cache
+                    self.session_cache.set(env_id, copy.deepcopy(metadata))
+
+            except Exception as exc:
+                print(f"[EAN simple] Verification failed (non-fatal): {exc}")
+                traceback.print_exc()
+
+        # ---- 6. Build and return the self-contained result bundle -----------
         #
         # "snapshot" carries everything the background save thread needs.
         # url_holder is included by reference so the thread can wait for
         # the upload to complete after inference has already returned.
         #
         return {
-            "metadata":   metadata,
+            "metadata": metadata,
+            "warnings": warnings,
             "snapshot": {
-                "image":        image,            # this request's image
-                "data":         data,             # this request's extracted data
-                "ocr_raw":      ocr_result[0] if ocr_result else "N/A",
-                "dates":        dates,
-                "url_holder":   url_holder,       # per-request upload holder
-                "capture_type": capture_type,     # True = multicapture second+ shot
+                "image":         image,            # this request's image
+                "data":          data,             # raw extracted data (pre-correction)
+                "merged_data":   metadata,         # session-merged + EAN-corrected
+                "raw_predicted": raw_predicted,    # raw model output, never corrected
+                "env_flags":     env_flags,        # flags to write on env doc
+                "ocr_raw":       ocr_result[0] if ocr_result else "N/A",
+                "dates":         dates,
+                "url_holder":    url_holder,       # per-request upload holder
+                "capture_type":  capture_type,     # True = multicapture second+ shot
                 "model_time_ms": model_time_ms,
             },
-        }
+        }  # end return
 
     # ------------------------------------------------------------------
     # DB save  — fully driven by explicit parameters, reads nothing from self
@@ -312,6 +380,9 @@ class Orchestrator:
             snap_dates   = snapshot.get("dates", [])
             url_holder   = snapshot.get("url_holder", {})
             snap_model_time_ms = snapshot.get("model_time_ms")
+            raw_predicted      = snapshot.get("raw_predicted")   # raw OCR output, never corrected
+            env_flags          = snapshot.get("env_flags", {})   # verification flags for env doc
+            snap_capture_type  = snapshot.get("capture_type")    # True = multicapture
 
             store, user_id, device_id, img_name = ImageProcessor.extract_img_details(image_name)
             final_metadata_id = metadata_id or (env_id + img_name)
@@ -349,15 +420,32 @@ class Orchestrator:
             #         print(f"Plot overlay failed: {exc}")
 
             # ---- Format dates and build DB document -------------------
+            #
+            # IMPORTANT: snap_data has raw string date values from the regex parser.
+            # EAN corrections in the snapshot (if any) store datetime objects.
+            # We must handle both: convert string dates to datetime objects in-place,
+            # but pass datetime objects (EAN corrections) through unchanged.
+            #
             mfg_exp_dates = self.str_to_datetime.format_datetime_array(snap_dates)
 
             processed_data = copy.deepcopy(snap_data)
-            processed_data["mfg_date"]      = mfg_exp_dates[0] if mfg_exp_dates else None
-            processed_data["expiry_date"]   = (
-                mfg_exp_dates[1]
-                if len(mfg_exp_dates) > 1 and mfg_exp_dates[0] != mfg_exp_dates[1]
-                else None
-            )
+
+            # For date fields: prefer EAN-corrected datetime from snap_data if present,
+            # otherwise fall back to the regex-parsed dates from snap_dates.
+            for date_field, fallback_val in [
+                ("mfg_date",    mfg_exp_dates[0] if mfg_exp_dates else None),
+                ("expiry_date", mfg_exp_dates[1] if len(mfg_exp_dates) > 1 and (
+                    len(mfg_exp_dates) < 2 or mfg_exp_dates[0] != mfg_exp_dates[1]
+                ) else None),
+            ]:
+                val = processed_data.get(date_field)
+                if isinstance(val, datetime):
+                    pass   # EAN-corrected datetime — pass through as-is
+                elif isinstance(val, str) and val.strip() and val.lower() != "nan":
+                    converted = self.str_to_datetime.format_datetime_array([val])
+                    processed_data[date_field] = converted[0] if converted else None
+                else:
+                    processed_data[date_field] = fallback_val   # regex fallback
             processed_data["ocr_raw_output"] = snap_ocr_raw
             processed_data["img_url"]        = img_url
             processed_data["client_name"]    = client_name
@@ -409,11 +497,19 @@ class Orchestrator:
                     # Step 2 — always create the second-capture doc for reference
                     processed_data["capture_type"] = "multicapture"
                     print(f"[DB] Saving multicapture metadata document: {processed_data}")
-                    created_id = self.database.create_metadata(processed_data, ean_code, env_id, final_metadata_id)
+                    created_id = self.database.create_metadata(
+                        processed_data, ean_code, env_id, final_metadata_id,
+                        env_flags=env_flags or {},
+                        predicted=raw_predicted,
+                    )
                     print(f"[Multicapture] Second-capture doc {created_id} saved with capture_type=multicapture")
                 else:
                     print(f"[DB] Saving metadata document: {processed_data}")
-                    created_id = self.database.create_metadata(processed_data, ean_code, env_id, final_metadata_id)
+                    created_id = self.database.create_metadata(
+                        processed_data, ean_code, env_id, final_metadata_id,
+                        env_flags=env_flags or {},
+                        predicted=raw_predicted,
+                    )
                     print(f"Metadata {created_id} created successfully")
             else:
                 print("env_id is not defined — skipping DB write")
@@ -535,6 +631,7 @@ class Orchestrator:
         metadata_id:  Optional[str] = None,
         client_name:  Optional[str] = None,
         user_id:      Optional[str] = None,
+        ean_code:     Optional[str] = None,
     ) -> Dict[str, Any]:
         """
         Run parallel Qwen LLM inference on label patches and merge results.
@@ -544,7 +641,8 @@ class Orchestrator:
           2. Extract MRP / dates / batch_no from each successful result.
           3. Merge by majority vote (MRP, batch_no) and union (dates).
           4. Update session cache with the same logic as process_image_get_metadata.
-          5. Return same {"metadata", "snapshot"} bundle shape.
+          5. Apply EAN autocorrection (same two-case logic as process_image_get_metadata).
+          6. Return same {"metadata", "warnings", "snapshot"} bundle shape.
 
         Fallback:
           If ALL patches fail LLM inference, raises ProcessingError.
@@ -559,6 +657,13 @@ class Orchestrator:
             "what is the maximum retail price, manufacturing date, "
             "expiry date, batch number in the retail image?"
         )
+
+        # ── 1b. Start EAN batch fetch in parallel with inference ────────────
+        eanbatch_task = None
+        if ean_code and self.database.eanbatch is not None:
+            eanbatch_task = asyncio.create_task(
+                asyncio.to_thread(self.database.fetch_eanbatch_docs, ean_code)
+            )
 
         # ── 1. Parallel Qwen calls ──────────────────────────────────────
         tasks = [self.qwen_model.process_batch(patch, ocr_query) for patch in patches]
@@ -630,18 +735,61 @@ class Orchestrator:
         metadata = copy.deepcopy(self.session_cache.get(env_id))
         print(f"[Stream] Final session metadata: {metadata}")
 
+        # ── 5b. EAN batch verification (same two-case logic as process_image_get_metadata) ──
+        raw_predicted = {
+            "mrp":         data.get("mrp"),
+            "mfg_date":    data.get("mfg_date"),
+            "expiry_date": data.get("expiry_date"),
+            "batch_no":    data.get("batch_no"),
+        }
+
+        env_flags: Dict[str, Any] = {}
+        warnings:  Dict[str, Any] = {}
+
+        if eanbatch_task is not None:
+            try:
+                eanbatch_docs = await eanbatch_task
+
+                verification = self.database.apply_simple_corrections(
+                    eanbatch_docs, metadata, ean_code=ean_code,
+                )
+                corrections = verification.get("corrected", {})
+                env_flags   = verification.get("env_flags", {})
+                warnings    = verification.get("warnings", {})
+
+                if corrections:
+                    print(f"[Stream EAN simple] Applying corrections: {list(corrections.keys())}")
+                    metadata.update(corrections)
+
+                    # Convert datetime → DD-MM-YYYY string for API response consistency
+                    for date_field in ("mfg_date", "expiry_date"):
+                        val = metadata.get(date_field)
+                        if isinstance(val, datetime):
+                            metadata[date_field] = val.strftime("%d-%m-%Y")
+
+                    # Write corrected state back to session cache
+                    self.session_cache.set(env_id, copy.deepcopy(metadata))
+
+            except Exception as exc:
+                print(f"[Stream EAN simple] Verification failed (non-fatal): {exc}")
+                traceback.print_exc()
+
         # ── 6. Return result bundle ──────────────────────────────────────
         main_image = patches[0] if patches else None
 
         return {
             "metadata": metadata,
+            "warnings": warnings,
             "snapshot": {
-                "image":        main_image,
-                "data":         data,
-                "ocr_raw":      raw_outputs[0] if raw_outputs else "N/A",
-                "dates":        dates,
-                "url_holder":   {"img_url": None, "cdn_url": None, "complete": True},
-                "capture_type": capture_type,
+                "image":         main_image,
+                "data":          data,
+                "merged_data":   metadata,
+                "raw_predicted": raw_predicted,
+                "env_flags":     env_flags,
+                "ocr_raw":       raw_outputs[0] if raw_outputs else "N/A",
+                "dates":         dates,
+                "url_holder":    {"img_url": None, "cdn_url": None, "complete": True},
+                "capture_type":  capture_type,
             },
         }
 
