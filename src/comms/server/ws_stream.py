@@ -31,11 +31,11 @@ CLEAN_CLASS_NAME = "real/clean"
 # Override via environment variables if needed.
 PROCESS_SERVER_URL: str = os.getenv(
     "PROCESS_SERVER_URL",
-    "http://localhost:4097/process",
+    "http://localhost:4099/process",
 )
 RECAPTURE_SERVER_URL: str = os.getenv(
     "RECAPTURE_SERVER_URL",
-    "http://localhost:4097/recapture",
+    "http://localhost:4099/recapture",
 )
 ROTATION_API_URL: str = os.getenv(
     "ROTATION_API_URL",

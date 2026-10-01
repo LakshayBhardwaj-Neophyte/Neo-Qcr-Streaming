@@ -460,6 +460,52 @@ class SdkAPI:
         def health():
             return {"ok": True}
 
+        # ---- /auth/token ----------------------------------------------
+        from pydantic import BaseModel
+        class TokenRequest(BaseModel):
+            app_id: str
+            app_secret: str
+
+        @self.app.post("/auth/token")
+        def generate_auth_token(req: TokenRequest):
+            from datetime import datetime, timezone, timedelta
+            import jwt
+            import os
+            from fastapi import HTTPException
+
+            # Registry of allowed clients — one entry per company.
+            # app_id → (expected_secret, jwt_client_name)
+            CLIENT_REGISTRY = {
+                os.getenv("RELIANCE_APP_ID", "reliance_prod_v1"): (
+                    os.getenv("RELIANCE_APP_SECRET", ""),
+                    "reliance",
+                ),
+                os.getenv("SHIPSY_APP_ID", "shipsy_prod_v1"): (
+                    os.getenv("SHIPSY_APP_SECRET", ""),
+                    "shipsy",
+                ),
+            }
+
+            entry = CLIENT_REGISTRY.get(req.app_id)
+            if entry and entry[0] and req.app_secret == entry[0]:
+                client_name = entry[1]
+                secret_key, algo = _pick_jwt_key(client_name)
+                payload = {
+                    "sub": "Authenticated client",
+                    "iss": "trusted-issuer",
+                    "aud": "valid-audience",
+                    "exp": datetime.now(timezone.utc) + timedelta(seconds=3600),
+                    "client_id": req.app_id,
+                    "client_name": client_name,
+                }
+                token = jwt.encode(payload, secret_key, algorithm=algo)
+                print(f"[/auth/token] Token issued for app_id='{req.app_id}' client='{client_name}'")
+                return {"access_token": token, "expires_in": 3600}
+
+            print(f"[/auth/token] ❌ Invalid credentials for app_id='{req.app_id}'")
+            raise HTTPException(status_code=401, detail="Invalid App ID or App Secret")
+
+
         # ---- /process -------------------------------------------------
         @self.app.post("/process")
         async def process_image(request: Request):
