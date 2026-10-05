@@ -411,10 +411,20 @@ class Orchestrator:
                     print(f"[DB] Saving multicapture metadata document: {processed_data}")
                     created_id = self.database.create_metadata(processed_data, ean_code, env_id, final_metadata_id)
                     print(f"[Multicapture] Second-capture doc {created_id} saved with capture_type=multicapture")
+
+                    # ── EAN Corrections: update root fields only (not predicted) ────────────
+                    ean_corrections = snapshot.get("ean_corrections", {})
+                    if ean_corrections and created_id:
+                        self.database.apply_ean_corrections_to_metadata(created_id, ean_corrections)
                 else:
                     print(f"[DB] Saving metadata document: {processed_data}")
                     created_id = self.database.create_metadata(processed_data, ean_code, env_id, final_metadata_id)
                     print(f"Metadata {created_id} created successfully")
+
+                    # ── EAN Corrections: update root fields only (not predicted) ────────────
+                    ean_corrections = snapshot.get("ean_corrections", {})
+                    if ean_corrections and created_id:
+                        self.database.apply_ean_corrections_to_metadata(created_id, ean_corrections)
             else:
                 print("env_id is not defined — skipping DB write")
 
@@ -644,4 +654,21 @@ class Orchestrator:
                 "capture_type": capture_type,
             },
         }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 

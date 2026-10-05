@@ -32,6 +32,7 @@ class Mongo:
         self.env = None
         self.user_col = None
         self.store_col = None
+        self.ean_validated = None
 
         self.set_tenant("reliance")  # default tenant
         print(f"Connected to MongoDB database: {self._active_db.name}")
@@ -57,7 +58,8 @@ class Mongo:
             'metadata': 'metadata',
             'environment': 'environment',
             'users': 'users',
-            'store': 'store'
+            'store': 'store',
+            'ean_validated': 'ean_validated',
         }
 
     def set_tenant(self, client_name: str):
@@ -78,6 +80,7 @@ class Mongo:
         self.env = self._active_db[collection_names['environment']]
         self.user_col = self._active_db[collection_names['users']]
         self.store_col = self._active_db[collection_names['store']]
+        self.ean_validated = self._active_db[collection_names['ean_validated']]
 
         print(f"[Mongo] Tenant set → client_name={client_name}, db={db_name}, "
               f"metadata_col={collection_names['metadata']}, env_col={collection_names['environment']}")
@@ -288,6 +291,154 @@ class Mongo:
         except Exception as e:
             print(f"Error during user validation: {e}")
             return False, '' # Ensure this returns a tuple
+
+
+    def validate_ean_data(self, ean_code: str, predicted_data: dict) -> dict:
+        """
+        Validate VLM-predicted values against the ground-truth `ean_validated` collection.
+
+        Compares mrp, mfg_date, expiry_date, and batch_no strictly.
+        Any field that does not match is overridden with the validated value.
+
+        Rules:
+          - mrp      : strict float equality
+          - mfg_date : strict date equality (time component ignored)
+          - expiry_date : strict date equality (time component ignored)
+          - batch_no : strict string equality (stripped)
+          - The `predicted:{}` sub-document is NEVER modified here.
+
+        :param ean_code:      EAN barcode string to look up.
+        :param predicted_data: Dict with keys mrp, mfg_date, expiry_date, batch_no
+                               (values are what the VLM predicted).
+        :return: Dict containing only the fields that were corrected (empty if all match).
+        """
+        from datetime import datetime, date
+
+        def _to_date(val):
+            """Normalise any date-like value to a date object. Returns None on failure."""
+            if isinstance(val, datetime):
+                return val.date()
+            if isinstance(val, date):
+                return val
+            if isinstance(val, str):
+                for fmt in ("%d-%m-%Y", "%Y-%m-%d", "%d/%m/%Y", "%m/%d/%Y"):
+                    try:
+                        return datetime.strptime(val.strip(), fmt).date()
+                    except ValueError:
+                        continue
+            return None
+
+        try:
+            validated_doc = self.ean_validated.find_one({"ean": str(ean_code).strip()})
+            if not validated_doc:
+                print(f"[EAN Validate] No validated record found for EAN={ean_code} — skipping correction")
+                return {}
+
+            corrections = {}
+
+            # ── MRP (strict float equality) ───────────────────────────────
+            v_mrp = validated_doc.get("mrp")
+            p_mrp = predicted_data.get("mrp")
+            if v_mrp is not None:
+                try:
+                    v_mrp_f = float(v_mrp)
+                    p_mrp_f = float(p_mrp) if p_mrp is not None else None
+                    if p_mrp_f is None or v_mrp_f != p_mrp_f:
+                        corrections["mrp"] = v_mrp_f
+                        print(
+                            f"[EAN Validate] mrp MISMATCH — "
+                            f"predicted={p_mrp}  validated={v_mrp_f}"
+                        )
+                except (TypeError, ValueError) as exc:
+                    print(f"[EAN Validate] mrp comparison error: {exc}")
+
+            # ── mfg_date (strict date equality) ──────────────────────────
+            v_mfg = validated_doc.get("mfg_date")
+            p_mfg = predicted_data.get("mfg_date")
+            if v_mfg is not None:
+                v_mfg_d = _to_date(v_mfg)
+                p_mfg_d = _to_date(p_mfg)
+                if v_mfg_d is not None and (p_mfg_d is None or v_mfg_d != p_mfg_d):
+                    corrections["mfg_date"] = v_mfg  # keep original datetime for DB
+                    print(
+                        f"[EAN Validate] mfg_date MISMATCH — "
+                        f"predicted={p_mfg}  validated={v_mfg}"
+                    )
+
+            # ── expiry_date (strict date equality) ────────────────────────
+            v_exp = validated_doc.get("expiry_date")
+            p_exp = predicted_data.get("expiry_date")
+            if v_exp is not None:
+                v_exp_d = _to_date(v_exp)
+                p_exp_d = _to_date(p_exp)
+                if v_exp_d is not None and (p_exp_d is None or v_exp_d != p_exp_d):
+                    corrections["expiry_date"] = v_exp  # keep original datetime for DB
+                    print(
+                        f"[EAN Validate] expiry_date MISMATCH — "
+                        f"predicted={p_exp}  validated={v_exp}"
+                    )
+
+            # ── batch_no (strict string equality) ─────────────────────────
+            v_batch = validated_doc.get("batch_no")
+            p_batch = predicted_data.get("batch_no")
+            if v_batch is not None:
+                v_batch_s = str(v_batch).strip()
+                p_batch_s = str(p_batch).strip() if p_batch is not None else ""
+                if v_batch_s != p_batch_s:
+                    corrections["batch_no"] = v_batch_s
+                    print(
+                        f"[EAN Validate] batch_no MISMATCH — "
+                        f"predicted={p_batch!r}  validated={v_batch_s!r}"
+                    )
+
+            if corrections:
+                print(
+                    f"[EAN Validate] EAN={ean_code} — "
+                    f"{len(corrections)} field(s) corrected: {list(corrections.keys())}"
+                )
+            else:
+                print(f"[EAN Validate] EAN={ean_code} — all fields match, no corrections needed")
+
+            return corrections
+
+        except Exception as exc:
+            print(f"[EAN Validate] Error during validation for EAN={ean_code}: {exc}")
+            return {}
+
+
+    def apply_ean_corrections_to_metadata(
+        self, metadata_object_id, corrections: dict
+    ) -> bool:
+        """
+        Apply EAN-validated corrections to the ROOT fields of a saved metadata document.
+        The `predicted:{}` sub-document is deliberately left untouched.
+
+        :param metadata_object_id: ObjectId of the saved metadata document.
+        :param corrections:        Dict of field→value produced by validate_ean_data().
+        :return:                   True if update succeeded, False otherwise.
+        """
+        if not corrections or not metadata_object_id:
+            return False
+        try:
+            # Only root-level fields are updated; predicted is never in corrections
+            result = self.metadata.update_one(
+                {"_id": metadata_object_id},
+                {"$set": corrections}
+            )
+            if result.modified_count > 0:
+                print(
+                    f"[EAN Validate] Corrections applied to metadata doc {metadata_object_id}: "
+                    f"{list(corrections.keys())}"
+                )
+                return True
+            print(
+                f"[EAN Validate] No modification made to metadata doc {metadata_object_id} "
+                f"(fields may already be correct)"
+            )
+            return False
+        except Exception as exc:
+            print(f"[EAN Validate] Failed to apply corrections to {metadata_object_id}: {exc}")
+            return False
 
 
     def sdk_data_process(self, input_dict, env_id):

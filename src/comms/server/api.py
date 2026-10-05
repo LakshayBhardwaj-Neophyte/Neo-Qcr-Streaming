@@ -618,6 +618,24 @@ class SdkAPI:
                                             content={"message": "request_id is required for reliance"})
                     print(f"[/process] Reliance request_id received from SDK: {request_id}")
 
+                # ── EAN Validation ──────────────────────────────────────────────────────────────
+                # Compare VLM predictions against ean_validated collection.
+                # Corrections replace root-level metadata fields in the response.
+                # snapshot["ean_corrections"] is forwarded to the BG-save thread
+                # which applies them to root DB fields only (predicted:{} is untouched).
+                # ─────────────────────────────────────────────────────────────────────
+                ean_corrections = self.orchestrator.database.validate_ean_data(
+                    ean_code=ean_code,
+                    predicted_data=metadata,
+                )
+                if ean_corrections:
+                    # Apply corrections to the response dict
+                    metadata.update(ean_corrections)
+                    # Carry corrections into the BG-save snapshot (root fields only)
+                    snapshot["ean_corrections"] = ean_corrections
+                    print(f"[/process] EAN corrections applied to response: {list(ean_corrections.keys())}")
+                # ── END EAN Validation ────────────────────────────────────────────────────
+
                 skip_upload = client_name != "reliance"
                 threading.Thread(
                     target = self._save_metadata_bg,
@@ -739,6 +757,17 @@ class SdkAPI:
                         return JSONResponse(status_code=400,
                                             content={"message": "request_id is required for reliance"})
                     print(f"[/recapture] Reliance request_id received from SDK: {request_id}")
+
+                # ── EAN Validation ──────────────────────────────────────────────────────────────
+                ean_corrections = self.orchestrator.database.validate_ean_data(
+                    ean_code=ean_code,
+                    predicted_data=metadata,
+                )
+                if ean_corrections:
+                    metadata.update(ean_corrections)
+                    snapshot["ean_corrections"] = ean_corrections
+                    print(f"[/recapture] EAN corrections applied to response: {list(ean_corrections.keys())}")
+                # ── END EAN Validation ────────────────────────────────────────────────────
 
                 skip_upload = client_name != "reliance"
                 threading.Thread(
