@@ -629,10 +629,13 @@ class SdkAPI:
                     predicted_data=metadata,
                 )
                 if ean_corrections:
-                    # Apply corrections to the response dict
-                    metadata.update(ean_corrections)
-                    # Carry corrections into the BG-save snapshot (root fields only)
+                    # snapshot keeps datetime objects intact — needed for MongoDB ISODate storage
                     snapshot["ean_corrections"] = ean_corrections
+                    # Response metadata must be JSON-serializable:
+                    # convert any datetime corrections → DD-MM-YYYY string
+                    from datetime import datetime as _dt
+                    for _k, _v in ean_corrections.items():
+                        metadata[_k] = _v.strftime("%d-%m-%Y") if isinstance(_v, _dt) else _v
                     print(f"[/process] EAN corrections applied to response: {list(ean_corrections.keys())}")
                 # ── END EAN Validation ────────────────────────────────────────────────────
 
@@ -764,8 +767,10 @@ class SdkAPI:
                     predicted_data=metadata,
                 )
                 if ean_corrections:
-                    metadata.update(ean_corrections)
                     snapshot["ean_corrections"] = ean_corrections
+                    from datetime import datetime as _dt
+                    for _k, _v in ean_corrections.items():
+                        metadata[_k] = _v.strftime("%d-%m-%Y") if isinstance(_v, _dt) else _v
                     print(f"[/recapture] EAN corrections applied to response: {list(ean_corrections.keys())}")
                 # ── END EAN Validation ────────────────────────────────────────────────────
 
