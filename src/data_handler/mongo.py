@@ -337,13 +337,14 @@ class Mongo:
             corrections = {}
 
             # ── MRP (strict float equality) ───────────────────────────────
+            # Rule: if VLM predicted null → skip correction, keep null as-is
             v_mrp = validated_doc.get("mrp")
             p_mrp = predicted_data.get("mrp")
-            if v_mrp is not None:
+            if v_mrp is not None and p_mrp is not None:
                 try:
                     v_mrp_f = float(v_mrp)
-                    p_mrp_f = float(p_mrp) if p_mrp is not None else None
-                    if p_mrp_f is None or v_mrp_f != p_mrp_f:
+                    p_mrp_f = float(p_mrp)
+                    if v_mrp_f != p_mrp_f:
                         corrections["mrp"] = v_mrp_f
                         print(
                             f"[EAN Validate] mrp MISMATCH — "
@@ -351,45 +352,68 @@ class Mongo:
                         )
                 except (TypeError, ValueError) as exc:
                     print(f"[EAN Validate] mrp comparison error: {exc}")
+            elif v_mrp is not None and p_mrp is None:
+                print(f"[EAN Validate] mrp skipped — VLM predicted null, keeping null")
 
             # ── mfg_date (strict date equality) ──────────────────────────
+            # Rule: if VLM predicted null → skip correction, keep null as-is
             v_mfg = validated_doc.get("mfg_date")
             p_mfg = predicted_data.get("mfg_date")
-            if v_mfg is not None:
+            _p_mfg_is_null = (
+                p_mfg is None
+                or (isinstance(p_mfg, str) and p_mfg.strip().lower() in ("nan", "none", "null", ""))
+            )
+            if v_mfg is not None and not _p_mfg_is_null:
                 v_mfg_d = _to_date(v_mfg)
                 p_mfg_d = _to_date(p_mfg)
-                if v_mfg_d is not None and (p_mfg_d is None or v_mfg_d != p_mfg_d):
+                if v_mfg_d is not None and p_mfg_d is not None and v_mfg_d != p_mfg_d:
                     corrections["mfg_date"] = v_mfg  # keep original datetime for DB
                     print(
                         f"[EAN Validate] mfg_date MISMATCH — "
                         f"predicted={p_mfg}  validated={v_mfg}"
                     )
+            elif v_mfg is not None and _p_mfg_is_null:
+                print(f"[EAN Validate] mfg_date skipped — VLM predicted null, keeping null")
 
             # ── expiry_date (strict date equality) ────────────────────────
+            # Rule: if VLM predicted null → skip correction, keep null as-is
             v_exp = validated_doc.get("expiry_date")
             p_exp = predicted_data.get("expiry_date")
-            if v_exp is not None:
+            _p_exp_is_null = (
+                p_exp is None
+                or (isinstance(p_exp, str) and p_exp.strip().lower() in ("nan", "none", "null", ""))
+            )
+            if v_exp is not None and not _p_exp_is_null:
                 v_exp_d = _to_date(v_exp)
                 p_exp_d = _to_date(p_exp)
-                if v_exp_d is not None and (p_exp_d is None or v_exp_d != p_exp_d):
+                if v_exp_d is not None and p_exp_d is not None and v_exp_d != p_exp_d:
                     corrections["expiry_date"] = v_exp  # keep original datetime for DB
                     print(
                         f"[EAN Validate] expiry_date MISMATCH — "
                         f"predicted={p_exp}  validated={v_exp}"
                     )
+            elif v_exp is not None and _p_exp_is_null:
+                print(f"[EAN Validate] expiry_date skipped — VLM predicted null, keeping null")
 
             # ── batch_no (strict string equality) ─────────────────────────
+            # Rule: if VLM predicted null → skip correction, keep null as-is
             v_batch = validated_doc.get("batch_no")
             p_batch = predicted_data.get("batch_no")
-            if v_batch is not None:
+            _p_batch_is_null = (
+                p_batch is None
+                or (isinstance(p_batch, str) and p_batch.strip().lower() in ("nan", "none", "null", ""))
+            )
+            if v_batch is not None and not _p_batch_is_null:
                 v_batch_s = str(v_batch).strip()
-                p_batch_s = str(p_batch).strip() if p_batch is not None else ""
+                p_batch_s = str(p_batch).strip()
                 if v_batch_s != p_batch_s:
                     corrections["batch_no"] = v_batch_s
                     print(
                         f"[EAN Validate] batch_no MISMATCH — "
                         f"predicted={p_batch!r}  validated={v_batch_s!r}"
                     )
+            elif v_batch is not None and _p_batch_is_null:
+                print(f"[EAN Validate] batch_no skipped — VLM predicted null, keeping null")
 
             if corrections:
                 print(
