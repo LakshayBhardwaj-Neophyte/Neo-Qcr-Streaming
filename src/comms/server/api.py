@@ -548,7 +548,7 @@ class SdkAPI:
 
                 # ── ROTATION API FOR MULTICAPTURE ────────────────────────────
                 if capture_type:
-                    ROTATION_API_URL = os.getenv("ROTATION_API_URL", "https://sentinel-compute.neophyte.live/neo-orient/orient")
+                    ROTATION_API_URL = os.getenv("ROTATION_API_URL", "http://neo-oreintation:8181/orient")
                     print(f"[/process] Multicapture detected (capture_type=True), calling Rotation API {ROTATION_API_URL}...")
                     try:
                         jpeg_buf = io.BytesIO()

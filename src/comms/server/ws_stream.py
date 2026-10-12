@@ -39,7 +39,7 @@ RECAPTURE_SERVER_URL: str = os.getenv(
 )
 ROTATION_API_URL: str = os.getenv(
     "ROTATION_API_URL",
-    "https://sentinel-compute.neophyte.live/neo-orient/orient",
+    "http://neo-oreintation:8181/orient",
 )
 
 # ---------------------------------------------------------------------------
