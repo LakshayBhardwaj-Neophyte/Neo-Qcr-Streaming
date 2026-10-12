@@ -228,6 +228,7 @@ async def stream_endpoint(
     last_clean_seq:  Optional[int]        = None     # seq of the most recent clean frame
     last_clean_img:  Optional[Image.Image]= None     # PIL image of the most recent clean frame
     last_clean_bbox: Optional[list]       = None     # Bbox of the real/clean detection
+    last_clean_detection: Optional[dict]  = None     # Full detection dict (class_id, name, confidence)
     stop_signal_sent = False
 
     # ── Frame save directory (only matters when SAVE_FRAMES=True) ─────────────
@@ -360,6 +361,7 @@ async def stream_endpoint(
                 last_clean_seq = seq
                 last_clean_img = img
                 last_clean_bbox = current_bbox
+                last_clean_detection = detections[0] if detections else None
             else:
                 # Any non-clean frame breaks the streak — reset the counter
                 consecutive_clean = 0
@@ -535,6 +537,29 @@ async def stream_endpoint(
         target_url = RECAPTURE_SERVER_URL if is_recapture_bool else PROCESS_SERVER_URL
         endpoint_label = "/recapture" if is_recapture_bool else "/process"
 
+        rotation_info = "{}"
+        if 'rot_resp' in locals() and rot_resp.status_code == 200:
+            import json
+            rotation_info = json.dumps({
+                "applied_rotation": rot_resp.headers.get("x-applied-rotation"),
+                "rotation_needed": rot_resp.headers.get("x-rotation-needed"),
+                "status": rot_resp.headers.get("x-status"),
+                "sure": rot_resp.headers.get("x-sure"),
+                "boxes": rot_resp.headers.get("x-boxes"),
+                "chars": rot_resp.headers.get("x-chars"),
+                "processing_time_ms": rot_resp.headers.get("x-processing-time-ms"),
+            })
+            
+        import json
+        patch_info_dict = {}
+        if last_clean_bbox:
+            patch_info_dict["last_clean_bbox"] = last_clean_bbox
+        if last_clean_detection:
+            patch_info_dict["class_id"] = last_clean_detection.get("class_id")
+            patch_info_dict["class_name"] = last_clean_detection.get("class_name")
+            patch_info_dict["confidence"] = last_clean_detection.get("confidence")
+        patch_info = json.dumps(patch_info_dict) if patch_info_dict else "{}"
+
         # ── Step 2: POST multipart to /process or /recapture ─────────────
         # All query params from the WebSocket connection are forwarded as
         # multipart form fields, exactly as the Android SDK would send them.
@@ -551,6 +576,9 @@ async def stream_endpoint(
             "session_start":      (None, str(session_start)),
             "rotation_needed":    (None, str(rotation_needed)),
             "already_upright":    (None, str(already_upright).lower()),
+            "rotation_info":      (None, rotation_info),
+            "patch_info":         (None, patch_info),
+            "is_streaming":       (None, "true"),
             "image":              (image_name, jpeg_bytes, "image/jpeg"),
         }
 

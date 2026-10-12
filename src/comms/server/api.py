@@ -171,6 +171,8 @@ class Payload(BaseModel):
     token:        str
     pid:          Optional[str]  = None
     request_id:   Optional[str]  = None
+    rotation_info: Optional[str] = None
+    patch_info:   Optional[str]  = None
 
 
 class UserRequest(BaseModel):
@@ -264,6 +266,9 @@ class SdkAPI:
                 "session_start": form.get("session_start"),
                 "rotation_needed": form.get("rotation_needed"),
                 "already_upright": form.get("already_upright"),
+                "rotation_info": form.get("rotation_info"),
+                "patch_info": form.get("patch_info"),
+                "is_streaming": str(form.get("is_streaming")).lower() == "true",
             }
 
         if "application/json" in content_type:
@@ -285,6 +290,8 @@ class SdkAPI:
                 "session_start": None,
                 "rotation_needed": None,
                 "already_upright": None,
+                "rotation_info": payload.rotation_info,
+                "patch_info": payload.patch_info,
             }
 
         raise ValueError("Unsupported content-type — use application/json or multipart/form-data")
@@ -460,6 +467,52 @@ class SdkAPI:
         def health():
             return {"ok": True}
 
+        # ---- /auth/token ----------------------------------------------
+        from pydantic import BaseModel
+        class TokenRequest(BaseModel):
+            app_id: str
+            app_secret: str
+
+        @self.app.post("/auth/token")
+        def generate_auth_token(req: TokenRequest):
+            from datetime import datetime, timezone, timedelta
+            import jwt
+            import os
+            from fastapi import HTTPException
+
+            # Registry of allowed clients — one entry per company.
+            # app_id → (expected_secret, jwt_client_name)
+            CLIENT_REGISTRY = {
+                os.getenv("RELIANCE_APP_ID", "reliance_prod_v1"): (
+                    os.getenv("RELIANCE_APP_SECRET", ""),
+                    "reliance",
+                ),
+                os.getenv("SHIPSY_APP_ID", "shipsy_prod_v1"): (
+                    os.getenv("SHIPSY_APP_SECRET", ""),
+                    "shipsy",
+                ),
+            }
+
+            entry = CLIENT_REGISTRY.get(req.app_id)
+            if entry and entry[0] and req.app_secret == entry[0]:
+                client_name = entry[1]
+                secret_key, algo = _pick_jwt_key(client_name)
+                payload = {
+                    "sub": "Authenticated client",
+                    "iss": "trusted-issuer",
+                    "aud": "valid-audience",
+                    "exp": datetime.now(timezone.utc) + timedelta(seconds=3600),
+                    "client_id": req.app_id,
+                    "client_name": client_name,
+                }
+                token = jwt.encode(payload, secret_key, algorithm=algo)
+                print(f"[/auth/token] Token issued for app_id='{req.app_id}' client='{client_name}'")
+                return {"access_token": token, "expires_in": 3600}
+
+            print(f"[/auth/token] ❌ Invalid credentials for app_id='{req.app_id}'")
+            raise HTTPException(status_code=401, detail="Invalid App ID or App Secret")
+
+
         # ---- /process -------------------------------------------------
         @self.app.post("/process")
         async def process_image(request: Request):
@@ -601,6 +654,20 @@ class SdkAPI:
                         snapshot["data"]["rotation"] = metadata["rotation"]
                     if "upright" in metadata:
                         snapshot["data"]["upright"] = metadata["upright"]
+                    if req.get("rotation_info"):
+                        import json
+                        try:
+                            snapshot["data"]["rotation_info"] = json.loads(req["rotation_info"])
+                        except Exception:
+                            pass
+                    if req.get("patch_info"):
+                        import json
+                        try:
+                            snapshot["data"]["patch_info"] = json.loads(req["patch_info"])
+                        except Exception:
+                            pass
+                    
+                    snapshot["is_streaming"] = req.get("is_streaming", False)
 
                 print(f"[/process] metadata={metadata}")
 

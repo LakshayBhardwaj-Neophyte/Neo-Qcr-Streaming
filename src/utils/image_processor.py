@@ -57,10 +57,10 @@ class ImageProcessor:
         print(img_details)
         
         if img_name.endswith(".jpg"):
-            img_name = img_name.split('.jpg')
+            img_name = img_name.split('.jpg')[0]
         print(img_name)
             
-        return store_id, user_id, divice_id, img_name[0]
+        return store_id, user_id, divice_id, img_name
     
  
 

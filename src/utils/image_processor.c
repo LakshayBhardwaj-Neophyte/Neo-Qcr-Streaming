@@ -2472,7 +2472,7 @@ static const char __pyx_k_Invalid_base64_image_data[] = "Invalid base64 image da
 static const char __pyx_k_src_utils_image_processor[] = "src.utils.image_processor";
 static const char __pyx_k_Error_decoding_base64_image[] = "Error decoding base64 image: ";
 static const char __pyx_k_Image_successfully_saved_at[] = "Image successfully saved at: ";
-static const char __pyx_k_A_j_aq_Qa_89AQ_xvQa_Qa_z_XQa[] = "\200A\340\010\026\220j\240\006\240a\240q\330\010\022\220)\230<\240{\260!\330\010\r\210Q\210a\340\010\013\2108\2209\230A\230Q\330\014\027\220x\230v\240Q\240a\330\010\r\210Q\210a\340\010\017\210z\230\031\240+\250X\260Q\260a";
+static const char __pyx_k_A_j_aq_Qa_89AQ_xvQgQa_Qa_z_Q[] = "\200A\340\010\026\220j\240\006\240a\240q\330\010\022\220)\230<\240{\260!\330\010\r\210Q\210a\340\010\013\2108\2209\230A\230Q\330\014\027\220x\230v\240Q\240g\250Q\250a\330\010\r\210Q\210a\340\010\017\210z\230\031\240+\250Q";
 static const char __pyx_k_ImageProcessor_process_image[] = "ImageProcessor.process_image";
 static const char __pyx_k_src_utils_image_processor_py[] = "src/utils/image_processor.py";
 static const char __pyx_k_Plotted_image_stored_to_Azure[] = "Plotted image stored to Azure...";
@@ -3598,7 +3598,7 @@ static PyObject *__pyx_pf_3src_5utils_15image_processor_14ImageProcessor_2extrac
  *         print(img_details)
  * 
  *         if img_name.endswith(".jpg"):             # <<<<<<<<<<<<<<
- *             img_name = img_name.split('.jpg')
+ *             img_name = img_name.split('.jpg')[0]
  *         print(img_name)
 */
   __pyx_t_2 = __pyx_v_img_name;
@@ -3618,7 +3618,7 @@ static PyObject *__pyx_pf_3src_5utils_15image_processor_14ImageProcessor_2extrac
     /* "src/utils/image_processor.py":60
  * 
  *         if img_name.endswith(".jpg"):
- *             img_name = img_name.split('.jpg')             # <<<<<<<<<<<<<<
+ *             img_name = img_name.split('.jpg')[0]             # <<<<<<<<<<<<<<
  *         print(img_name)
  * 
 */
@@ -3632,65 +3632,66 @@ static PyObject *__pyx_pf_3src_5utils_15image_processor_14ImageProcessor_2extrac
       if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 60, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_5);
     }
-    __Pyx_DECREF_SET(__pyx_v_img_name, __pyx_t_5);
-    __pyx_t_5 = 0;
+    __pyx_t_2 = __Pyx_GetItemInt(__pyx_t_5, 0, long, 1, __Pyx_PyLong_From_long, 0, 0, 1, 1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 60, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_2);
+    __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
+    __Pyx_DECREF_SET(__pyx_v_img_name, __pyx_t_2);
+    __pyx_t_2 = 0;
 
     /* "src/utils/image_processor.py":59
  *         print(img_details)
  * 
  *         if img_name.endswith(".jpg"):             # <<<<<<<<<<<<<<
- *             img_name = img_name.split('.jpg')
+ *             img_name = img_name.split('.jpg')[0]
  *         print(img_name)
 */
   }
 
   /* "src/utils/image_processor.py":61
  *         if img_name.endswith(".jpg"):
- *             img_name = img_name.split('.jpg')
+ *             img_name = img_name.split('.jpg')[0]
  *         print(img_name)             # <<<<<<<<<<<<<<
  * 
- *         return store_id, user_id, divice_id, img_name[0]
+ *         return store_id, user_id, divice_id, img_name
 */
-  __pyx_t_2 = NULL;
+  __pyx_t_5 = NULL;
   __Pyx_INCREF(__pyx_builtin_print);
   __pyx_t_4 = __pyx_builtin_print; 
   __pyx_t_3 = 1;
   {
-    PyObject *__pyx_callargs[2] = {__pyx_t_2, __pyx_v_img_name};
-    __pyx_t_5 = __Pyx_PyObject_FastCall(__pyx_t_4, __pyx_callargs+__pyx_t_3, (2-__pyx_t_3) | (__pyx_t_3*__Pyx_PY_VECTORCALL_ARGUMENTS_OFFSET));
-    __Pyx_XDECREF(__pyx_t_2); __pyx_t_2 = 0;
+    PyObject *__pyx_callargs[2] = {__pyx_t_5, __pyx_v_img_name};
+    __pyx_t_2 = __Pyx_PyObject_FastCall(__pyx_t_4, __pyx_callargs+__pyx_t_3, (2-__pyx_t_3) | (__pyx_t_3*__Pyx_PY_VECTORCALL_ARGUMENTS_OFFSET));
+    __Pyx_XDECREF(__pyx_t_5); __pyx_t_5 = 0;
     __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-    if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 61, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_5);
+    if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 61, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_2);
   }
-  __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
+  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
 
   /* "src/utils/image_processor.py":63
  *         print(img_name)
  * 
- *         return store_id, user_id, divice_id, img_name[0]             # <<<<<<<<<<<<<<
+ *         return store_id, user_id, divice_id, img_name             # <<<<<<<<<<<<<<
  * 
  * 
 */
   __Pyx_XDECREF(__pyx_r);
-  __pyx_t_5 = __Pyx_GetItemInt(__pyx_v_img_name, 0, long, 1, __Pyx_PyLong_From_long, 0, 0, 1, 1); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 63, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_5);
-  __pyx_t_4 = PyTuple_New(4); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 63, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_4);
+  __pyx_t_2 = PyTuple_New(4); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 63, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_2);
   __Pyx_INCREF(__pyx_v_store_id);
   __Pyx_GIVEREF(__pyx_v_store_id);
-  if (__Pyx_PyTuple_SET_ITEM(__pyx_t_4, 0, __pyx_v_store_id) != (0)) __PYX_ERR(0, 63, __pyx_L1_error);
+  if (__Pyx_PyTuple_SET_ITEM(__pyx_t_2, 0, __pyx_v_store_id) != (0)) __PYX_ERR(0, 63, __pyx_L1_error);
   __Pyx_INCREF(__pyx_v_user_id);
   __Pyx_GIVEREF(__pyx_v_user_id);
-  if (__Pyx_PyTuple_SET_ITEM(__pyx_t_4, 1, __pyx_v_user_id) != (0)) __PYX_ERR(0, 63, __pyx_L1_error);
+  if (__Pyx_PyTuple_SET_ITEM(__pyx_t_2, 1, __pyx_v_user_id) != (0)) __PYX_ERR(0, 63, __pyx_L1_error);
   __Pyx_INCREF(__pyx_v_divice_id);
   __Pyx_GIVEREF(__pyx_v_divice_id);
-  if (__Pyx_PyTuple_SET_ITEM(__pyx_t_4, 2, __pyx_v_divice_id) != (0)) __PYX_ERR(0, 63, __pyx_L1_error);
-  __Pyx_GIVEREF(__pyx_t_5);
-  if (__Pyx_PyTuple_SET_ITEM(__pyx_t_4, 3, __pyx_t_5) != (0)) __PYX_ERR(0, 63, __pyx_L1_error);
-  __pyx_t_5 = 0;
-  __pyx_r = __pyx_t_4;
-  __pyx_t_4 = 0;
+  if (__Pyx_PyTuple_SET_ITEM(__pyx_t_2, 2, __pyx_v_divice_id) != (0)) __PYX_ERR(0, 63, __pyx_L1_error);
+  __Pyx_INCREF(__pyx_v_img_name);
+  __Pyx_GIVEREF(__pyx_v_img_name);
+  if (__Pyx_PyTuple_SET_ITEM(__pyx_t_2, 3, __pyx_v_img_name) != (0)) __PYX_ERR(0, 63, __pyx_L1_error);
+  __pyx_r = __pyx_t_2;
+  __pyx_t_2 = 0;
   goto __pyx_L0;
 
   /* "src/utils/image_processor.py":53
@@ -7015,7 +7016,7 @@ static int __Pyx_CreateCodeObjects(__pyx_mstatetype *__pyx_mstate) {
   {
     const __Pyx_PyCode_New_function_description descr = {1, 0, 0, 6, (unsigned int)(CO_OPTIMIZED|CO_NEWLOCALS), 53, 75};
     PyObject* const varnames[] = {__pyx_mstate->__pyx_n_u_image_name, __pyx_mstate->__pyx_n_u_img_details, __pyx_mstate->__pyx_n_u_store_id, __pyx_mstate->__pyx_n_u_user_id, __pyx_mstate->__pyx_n_u_divice_id, __pyx_mstate->__pyx_n_u_img_name};
-    __pyx_mstate_global->__pyx_codeobj_tab[1] = __Pyx_PyCode_New(descr, varnames, __pyx_mstate->__pyx_kp_u_src_utils_image_processor_py, __pyx_mstate->__pyx_n_u_extract_img_details, __pyx_k_A_j_aq_Qa_89AQ_xvQa_Qa_z_XQa, tuple_dedup_map); if (unlikely(!__pyx_mstate_global->__pyx_codeobj_tab[1])) goto bad;
+    __pyx_mstate_global->__pyx_codeobj_tab[1] = __Pyx_PyCode_New(descr, varnames, __pyx_mstate->__pyx_kp_u_src_utils_image_processor_py, __pyx_mstate->__pyx_n_u_extract_img_details, __pyx_k_A_j_aq_Qa_89AQ_xvQgQa_Qa_z_Q, tuple_dedup_map); if (unlikely(!__pyx_mstate_global->__pyx_codeobj_tab[1])) goto bad;
   }
   {
     const __Pyx_PyCode_New_function_description descr = {3, 0, 0, 9, (unsigned int)(CO_OPTIMIZED|CO_NEWLOCALS), 67, 263};

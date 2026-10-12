@@ -341,6 +341,10 @@ class Orchestrator:
 
             print(f"[save_metadata] img_url={img_url}")
 
+            if img_url and snapshot.get("is_streaming"):
+                original_blob = build_blob_name(f"{final_metadata_id}_original", client_name=client_name, user_id=user_id)
+                img_url = img_url.replace(img_blob, original_blob)
+            
             # ---- Optional plotted overlay (Reliance only) -------------
             # if client_name.lower() == "reliance":
             #     try:

@@ -576,6 +576,10 @@ class Mongo:
             metadata_doc['rotation'] = data.get('rotation')
         if data.get('upright') is not None:
             metadata_doc['upright'] = data.get('upright')
+        if data.get('rotation_info') is not None:
+            metadata_doc['rotation_info'] = data.get('rotation_info')
+        if data.get('patch_info') is not None:
+            metadata_doc['patch_info'] = data.get('patch_info')
             
         return self.save_document(metadata_doc)
 
