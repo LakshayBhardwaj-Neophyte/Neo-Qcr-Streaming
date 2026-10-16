@@ -640,6 +640,56 @@ class Mongo:
             print(f"[Mongo] merge_multicapture error: {exc}")
             return False
 
+    def update_revalidated_metadata(self, metadata_id: str, env_id: str, updates: dict) -> bool:
+        """
+        Updates metadata document when full-image revalidation recovers missing attributes.
+        Sets 're-validated': True along with newly recovered fields.
+        """
+        try:
+            query = {}
+            if metadata_id:
+                query["metadata_id"] = metadata_id
+            elif env_id:
+                query["env_id"] = env_id
+            else:
+                return False
+
+            doc = None
+            for _ in range(5):
+                doc = self.metadata.find_one(query, sort=[("_id", -1)])
+                if doc:
+                    break
+                import time
+                time.sleep(0.2)
+
+            if not doc:
+                print(f"[Mongo] update_revalidated_metadata: no doc found for {query}")
+                return False
+
+            doc_updates = {}
+            for k, v in updates.items():
+                if v is not None:
+                    if isinstance(v, str) and v.strip().lower() == "nan":
+                        continue
+                    if k in ["mfg_date", "expiry_date"] and isinstance(v, str):
+                        parsed = self.datetime.format_datetime_array([v])
+                        doc_updates[k] = parsed[0] if (parsed and parsed[0]) else v
+                    elif k == "mrp":
+                        try:
+                            doc_updates[k] = float(v)
+                        except (ValueError, TypeError):
+                            doc_updates[k] = v
+                    else:
+                        doc_updates[k] = v
+
+            doc_updates["re-validated"] = True
+
+            self.metadata.update_one({"_id": doc["_id"]}, {"$set": doc_updates})
+            print(f"[Mongo] update_revalidated_metadata: applied {list(doc_updates.keys())} to doc {doc['_id']}")
+            return True
+        except Exception as exc:
+            print(f"[Mongo] update_revalidated_metadata error: {exc}")
+            return False
 
     def check_env_doc(self, env_id):
         try:

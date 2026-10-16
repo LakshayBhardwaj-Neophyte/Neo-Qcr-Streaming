@@ -39,7 +39,7 @@ RECAPTURE_SERVER_URL: str = os.getenv(
 )
 ROTATION_API_URL: str = os.getenv(
     "ROTATION_API_URL",
-    "http://neo-oreintation:8181/orient",
+    "http://neo-oreientation:8181/orient",
 )
 
 # ---------------------------------------------------------------------------
@@ -598,6 +598,90 @@ async def stream_endpoint(
         print(f"[WS] {endpoint_label} responded HTTP {resp.status_code} in {_proc_elapsed_ms:.1f}ms")
         process_result = resp.json()
 
+        # ── Step 2.6: Check missing attributes & run full-image re-validation ──
+        _reval_elapsed_ms = 0.0
+        if resp.status_code == 200 and isinstance(process_result, dict):
+            meta = process_result.get("metadata", {})
+            if isinstance(meta, dict):
+                def _is_missing(val):
+                    if val is None:
+                        return True
+                    if isinstance(val, str) and (not val.strip() or val.strip().lower() == "nan"):
+                        return True
+                    return False
+
+                target_attrs = ["mfg_date", "expiry_date", "mrp", "batch_no"]
+                missing_fields = [attr for attr in target_attrs if _is_missing(meta.get(attr))]
+
+                if missing_fields:
+                    print(f"[WS Re-validation] Missing attributes in crop response: {missing_fields}. Processing full image...")
+                    _reval_t0 = time.perf_counter()
+                    try:
+                        # 1. Encode full image to JPEG
+                        full_jpeg_buf = io.BytesIO()
+                        last_clean_img.save(full_jpeg_buf, format="JPEG", quality=95)
+                        full_jpeg_buf.seek(0)
+                        full_jpeg_bytes = full_jpeg_buf.read()
+
+                        full_img_to_infer = last_clean_img
+                        # 2. Rotate full image via Rotation API if needed
+                        try:
+                            async with httpx.AsyncClient(timeout=30.0) as rot_client:
+                                full_rot_resp = await rot_client.post(
+                                    ROTATION_API_URL,
+                                    files={"file": (f"{image_name}_full.jpg", full_jpeg_bytes, "image/jpeg")}
+                                )
+                            if full_rot_resp.status_code == 200:
+                                full_img_to_infer = Image.open(io.BytesIO(full_rot_resp.content))
+                                print("[WS Re-validation] Full image rotated successfully via Rotation API")
+                        except Exception as rot_e:
+                            print(f"[WS Re-validation] Rotation API on full image failed: {rot_e}, proceeding with unrotated full frame")
+
+                        # 3. Model inference on full image
+                        orchestrator = websocket.app.state.orchestrator
+                        ocr_query = (
+                            "what is the maximum retail price, manufacturing date, "
+                            "expiry date, batch number in the retail image?"
+                        )
+                        full_ocr_result = await orchestrator.qwen_model.process_batch(full_img_to_infer, ocr_query)
+                        full_mrp, full_dates, full_batch = orchestrator._extract_metadata(full_ocr_result)
+                        from src.utils.metadata_processor import MetadataProcessor
+                        full_meta = MetadataProcessor.create_metadata(full_mrp, full_dates, full_batch)
+                        print(f"[WS Re-validation] Full image extraction result: {full_meta}")
+
+                        # 4. Check which missing attributes were found
+                        new_recovered = {}
+                        for attr in missing_fields:
+                            recovered_val = full_meta.get(attr)
+                            if not _is_missing(recovered_val):
+                                new_recovered[attr] = recovered_val
+
+                        # 5. Merge or fallback
+                        if new_recovered:
+                            print(f"[WS Re-validation] Successfully recovered missing attributes: {new_recovered}")
+                            meta.update(new_recovered)
+                            process_result["metadata"] = meta
+
+                            # Update MongoDB document: set recovered attributes and re-validated: true
+                            doc_meta_id = meta.get("metadata_id")
+                            try:
+                                orchestrator.database.set_tenant(client_name)
+                                orchestrator.database.update_revalidated_metadata(
+                                    metadata_id=doc_meta_id,
+                                    env_id=env_id,
+                                    updates=new_recovered,
+                                )
+                            except Exception as db_e:
+                                print(f"[WS Re-validation] Failed to update MongoDB: {db_e}")
+                        else:
+                            print(f"[WS Re-validation] Missing attributes {missing_fields} not found in full image. Returning cropped patch response as-is.")
+
+                    except Exception as reval_exc:
+                        print(f"[WS Re-validation] Error during full-image re-validation: {reval_exc}")
+                        traceback.print_exc()
+
+                    _reval_elapsed_ms = (time.perf_counter() - _reval_t0) * 1000
+
         # ── Step 3: forward the /process response back over the WebSocket ─
         response = {
             "type":       "process_result",
@@ -607,7 +691,8 @@ async def stream_endpoint(
             "timings": {
                 "crop_ms": _crop_elapsed_ms,
                 "rotation_ms": _rot_elapsed_ms,
-                "process_ms": _proc_elapsed_ms
+                "process_ms": _proc_elapsed_ms,
+                "reval_ms": _reval_elapsed_ms,
             }
         }
         try:

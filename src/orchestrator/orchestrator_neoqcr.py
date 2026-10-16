@@ -12,6 +12,7 @@ from src.core.think.machine_learning.computer_vision.text_analytics.qwen_api_cli
 from src.core.think.machine_learning.computer_vision.text_analytics.key_value_extraction.regex_module.mrp_regex import Get_mrp
 from src.core.think.machine_learning.computer_vision.text_analytics.key_value_extraction.regex_module.date_regex import GetDates
 from src.core.think.machine_learning.computer_vision.text_analytics.key_value_extraction.regex_module.batch_no_regex import GetBatchno
+from src.core.think.machine_learning.computer_vision.text_analytics.key_value_extraction.regex_module.expiry_period_calculator import calculate_expiry_date
 
 from src.utils.datetime import Datetime
 from src.data_handler.mongo import Mongo
@@ -249,6 +250,98 @@ class Orchestrator:
                     if value is None or (isinstance(value, str) and value.lower() == "nan"):
                         if key in data and data[key] is not None:
                             session_meta[key] = data[key]
+
+                # ── Multicapture expiry resolution ──────────────────────────────────
+                import re as _re
+                session_expiry = session_meta.get("expiry_date")
+                session_mfg    = session_meta.get("mfg_date")
+                new_expiry     = data.get("expiry_date")
+
+                _DATE_RE   = r'^\d{2}-\d{2}-\d{4}$'
+                _PERIOD_RE = r'\b(months?|years?|days?|weeks?)\b'
+
+                # Case A1: session has period string + new capture has DD-MM-YYYY in expiry.
+                # NeoVLM puts a single date in expiry, so that date is the MFG date.
+                if (
+                    session_expiry
+                    and isinstance(session_expiry, str)
+                    and _re.search(_PERIOD_RE, session_expiry, _re.IGNORECASE)
+                    and new_expiry
+                    and isinstance(new_expiry, str)
+                    and _re.match(_DATE_RE, new_expiry)
+                ):
+                    resolved = calculate_expiry_date(new_expiry, session_expiry)
+                    if resolved:
+                        print(
+                            f"[MULTICAPTURE] Case A1 — period '{session_expiry}' + "
+                            f"new date (as mfg) '{new_expiry}' → expiry='{resolved}'"
+                        )
+                        session_meta["mfg_date"]    = new_expiry
+                        session_meta["expiry_date"] = resolved
+
+                # Case A2: session has DD-MM-YYYY in expiry + new capture has period string in expiry.
+                elif (
+                    session_expiry
+                    and isinstance(session_expiry, str)
+                    and _re.match(_DATE_RE, session_expiry)
+                    and new_expiry
+                    and isinstance(new_expiry, str)
+                    and _re.search(_PERIOD_RE, new_expiry, _re.IGNORECASE)
+                ):
+                    resolved = calculate_expiry_date(session_expiry, new_expiry)
+                    if resolved:
+                        print(
+                            f"[MULTICAPTURE] Case A2 — date (as mfg) '{session_expiry}' + "
+                            f"new period '{new_expiry}' → expiry='{resolved}'"
+                        )
+                        session_meta["mfg_date"]    = session_expiry
+                        session_meta["expiry_date"] = resolved
+
+                # Case A (legacy): period string + mfg was null-merged into session
+                elif (
+                    session_expiry
+                    and isinstance(session_expiry, str)
+                    and _re.search(_PERIOD_RE, session_expiry, _re.IGNORECASE)
+                    and session_meta.get("mfg_date")
+                ):
+                    resolved = calculate_expiry_date(session_meta["mfg_date"], session_expiry)
+                    if resolved:
+                        print(
+                            f"[MULTICAPTURE] Case A (legacy) — period '{session_expiry}' + "
+                            f"mfg='{session_meta['mfg_date']}' → expiry='{resolved}'"
+                        )
+                        session_meta["expiry_date"] = resolved
+
+                # Case B: both captures produced a DD-MM-YYYY in expiry, no MFG yet.
+                # Apply MFG < EXP rule to assign roles.
+                elif (
+                    session_expiry
+                    and isinstance(session_expiry, str)
+                    and _re.match(_DATE_RE, session_expiry)
+                    and new_expiry
+                    and isinstance(new_expiry, str)
+                    and _re.match(_DATE_RE, new_expiry)
+                    and not session_mfg
+                ):
+                    try:
+                        from datetime import datetime as _dt
+                        d1 = _dt.strptime(session_expiry, '%d-%m-%Y')
+                        d2 = _dt.strptime(new_expiry, '%d-%m-%Y')
+                        if d1 != d2:
+                            mfg_date = session_expiry if d1 < d2 else new_expiry
+                            exp_date = new_expiry     if d1 < d2 else session_expiry
+                            print(
+                                f"[MULTICAPTURE] Case B — two dates '{session_expiry}' & '{new_expiry}' "
+                                f"→ mfg='{mfg_date}'  expiry='{exp_date}'"
+                            )
+                            session_meta["mfg_date"]    = mfg_date
+                            session_meta["expiry_date"] = exp_date
+                        else:
+                            print(
+                                f"[MULTICAPTURE] Case B — identical date '{session_expiry}' captured again; keeping as expiry"
+                            )
+                    except (ValueError, AttributeError):
+                        pass
                 self.session_cache.set(env_id, session_meta)
         else:
             self.session_cache.set(env_id, copy.deepcopy(data))
@@ -265,13 +358,14 @@ class Orchestrator:
         return {
             "metadata":   metadata,
             "snapshot": {
-                "image":        image,            # this request's image
-                "data":         data,             # this request's extracted data
-                "ocr_raw":      ocr_result[0] if ocr_result else "N/A",
-                "dates":        dates,
-                "url_holder":   url_holder,       # per-request upload holder
-                "capture_type": capture_type,     # True = multicapture second+ shot
-                "model_time_ms": model_time_ms,
+                "image":           image,            # this request's image
+                "data":            data,             # this request's extracted data
+                "ocr_raw":         ocr_result[0] if ocr_result else "N/A",
+                "dates":           dates,
+                "url_holder":      url_holder,       # per-request upload holder
+                "capture_type":    capture_type,     # True = multicapture second+ shot
+                "model_time_ms":   model_time_ms,
+                "resolved_expiry": metadata.get("expiry_date"),
             },
         }
 
@@ -362,6 +456,15 @@ class Orchestrator:
                 if len(mfg_exp_dates) > 1 and mfg_exp_dates[0] != mfg_exp_dates[1]
                 else None
             )
+
+            # If expiry_date is not yet set but multicapture resolved a real computed date,
+            # format and save it as an ISODate in MongoDB!
+            if not processed_data["expiry_date"] and snapshot.get("resolved_expiry"):
+                resolved_exp_str = snapshot.get("resolved_expiry")
+                parsed_exp = self.str_to_datetime.format_datetime_array([resolved_exp_str])
+                if parsed_exp and parsed_exp[0]:
+                    processed_data["expiry_date"] = parsed_exp[0]
+                    print(f"[save_metadata] Using resolved expiry date for DB: {parsed_exp[0]}")
             processed_data["ocr_raw_output"] = snap_ocr_raw
             processed_data["img_url"]        = img_url
             processed_data["client_name"]    = client_name
@@ -637,6 +740,96 @@ class Orchestrator:
                     if value is None or (isinstance(value, str) and value.lower() == "nan"):
                         if key in data and data[key] is not None:
                             session_meta[key] = data[key]
+
+                # ── Multicapture expiry resolution (stream) ─────────────────────
+                import re as _re
+                session_expiry = session_meta.get("expiry_date")
+                session_mfg    = session_meta.get("mfg_date")
+                new_expiry     = data.get("expiry_date")
+
+                _DATE_RE   = r'^\d{2}-\d{2}-\d{4}$'
+                _PERIOD_RE = r'\b(months?|years?|days?|weeks?)\b'
+
+                # Case A1: session has period string + new capture has DD-MM-YYYY in expiry.
+                if (
+                    session_expiry
+                    and isinstance(session_expiry, str)
+                    and _re.search(_PERIOD_RE, session_expiry, _re.IGNORECASE)
+                    and new_expiry
+                    and isinstance(new_expiry, str)
+                    and _re.match(_DATE_RE, new_expiry)
+                ):
+                    resolved = calculate_expiry_date(new_expiry, session_expiry)
+                    if resolved:
+                        print(
+                            f"[Stream][MULTICAPTURE] Case A1 — period '{session_expiry}' + "
+                            f"new date (as mfg) '{new_expiry}' → expiry='{resolved}'"
+                        )
+                        session_meta["mfg_date"]    = new_expiry
+                        session_meta["expiry_date"] = resolved
+
+                # Case A2: session has DD-MM-YYYY in expiry + new capture has period string in expiry.
+                elif (
+                    session_expiry
+                    and isinstance(session_expiry, str)
+                    and _re.match(_DATE_RE, session_expiry)
+                    and new_expiry
+                    and isinstance(new_expiry, str)
+                    and _re.search(_PERIOD_RE, new_expiry, _re.IGNORECASE)
+                ):
+                    resolved = calculate_expiry_date(session_expiry, new_expiry)
+                    if resolved:
+                        print(
+                            f"[Stream][MULTICAPTURE] Case A2 — date (as mfg) '{session_expiry}' + "
+                            f"new period '{new_expiry}' → expiry='{resolved}'"
+                        )
+                        session_meta["mfg_date"]    = session_expiry
+                        session_meta["expiry_date"] = resolved
+
+                # Case A (legacy): period string + mfg was null-merged into session
+                elif (
+                    session_expiry
+                    and isinstance(session_expiry, str)
+                    and _re.search(_PERIOD_RE, session_expiry, _re.IGNORECASE)
+                    and session_meta.get("mfg_date")
+                ):
+                    resolved = calculate_expiry_date(session_meta["mfg_date"], session_expiry)
+                    if resolved:
+                        print(
+                            f"[Stream][MULTICAPTURE] Case A (legacy) — period '{session_expiry}' + "
+                            f"mfg='{session_meta['mfg_date']}' → expiry='{resolved}'"
+                        )
+                        session_meta["expiry_date"] = resolved
+
+                # Case B: both captures produced a DD-MM-YYYY in expiry, no MFG yet.
+                elif (
+                    session_expiry
+                    and isinstance(session_expiry, str)
+                    and _re.match(_DATE_RE, session_expiry)
+                    and new_expiry
+                    and isinstance(new_expiry, str)
+                    and _re.match(_DATE_RE, new_expiry)
+                    and not session_mfg
+                ):
+                    try:
+                        from datetime import datetime as _dt
+                        d1 = _dt.strptime(session_expiry, '%d-%m-%Y')
+                        d2 = _dt.strptime(new_expiry, '%d-%m-%Y')
+                        if d1 != d2:
+                            mfg_date = session_expiry if d1 < d2 else new_expiry
+                            exp_date = new_expiry     if d1 < d2 else session_expiry
+                            print(
+                                f"[Stream][MULTICAPTURE] Case B — two dates '{session_expiry}' & '{new_expiry}' "
+                                f"→ mfg='{mfg_date}'  expiry='{exp_date}'"
+                            )
+                            session_meta["mfg_date"]    = mfg_date
+                            session_meta["expiry_date"] = exp_date
+                        else:
+                            print(
+                                f"[Stream][MULTICAPTURE] Case B — identical date '{session_expiry}' captured again; keeping as expiry"
+                            )
+                    except (ValueError, AttributeError):
+                        pass
                 self.session_cache.set(env_id, session_meta)
         else:
             self.session_cache.set(env_id, copy.deepcopy(data))
@@ -650,12 +843,13 @@ class Orchestrator:
         return {
             "metadata": metadata,
             "snapshot": {
-                "image":        main_image,
-                "data":         data,
-                "ocr_raw":      raw_outputs[0] if raw_outputs else "N/A",
-                "dates":        dates,
-                "url_holder":   {"img_url": None, "cdn_url": None, "complete": True},
-                "capture_type": capture_type,
+                "image":           main_image,
+                "data":            data,
+                "ocr_raw":         raw_outputs[0] if raw_outputs else "N/A",
+                "dates":           dates,
+                "url_holder":      {"img_url": None, "cdn_url": None, "complete": True},
+                "capture_type":    capture_type,
+                "resolved_expiry": metadata.get("expiry_date"),
             },
         }
 

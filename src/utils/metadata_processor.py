@@ -41,13 +41,15 @@ class MetadataProcessor:
         expiry_date = mfg_exp_dates_str[1] if len(mfg_exp_dates_str) > 1 else None
         expiry_period = mfg_exp_dates_str[2] if len(mfg_exp_dates_str) > 2 else None
 
-        # Determine which expiry value to use
-        final_expiry_value = expiry_date if expiry_date is not None else expiry_period
+        # If a real computed date exists use it; otherwise fall back to the raw period
+        # string (e.g. "36 months") so the client knows what was on the label.
+        # The DB save layer will NOT store a period string — only real dates go to MongoDB.
+        final_expiry = expiry_date if expiry_date is not None else expiry_period
 
         return {
             'mrp': mrp,
             'mfg_date': mfg_date,
-            'expiry_date': final_expiry_value,  # This field will now hold either a date or a period
+            'expiry_date': final_expiry,  # computed date OR raw period string ("36 months")
             'batch_no': batch_no,
         }
      

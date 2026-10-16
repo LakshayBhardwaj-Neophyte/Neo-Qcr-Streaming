@@ -523,45 +523,19 @@ class GetDates:
                     exp_date_val = computed
                     exp_period_val = None
                 else:
-                    # If calculator returned None, keep exp_period_val as None
-                    if computed is None:
-                        exp_period_val = None
+                    # Calculator returned None — MFG was missing so we couldn't compute.
+                    # Preserve the raw period string (e.g. "36 months") so multicapture
+                    # can resolve it later when MFG arrives.
+                    exp_period_val = exp_info_str
             else:
                 # Validate it's a proper date with length 10
                 if exp_info_str and len(exp_info_str) == 10:
                     exp_date_val = exp_info_str
 
-        # If only one date is present and it's greater than or equal to current date, treat it as expiry
-        # If only one date is present and it's less than current date, treat it as MFG
-        if mfg_date_str and not exp_info_str:
-            if len(mfg_date_str) == 10:
-                try:
-                    parsed_date = datetime.strptime(mfg_date_str, '%d-%m-%Y')
-                    if parsed_date >= current_date:
-                        # This is actually an expiry date (future or today)
-                        exp_date_val = mfg_date_str
-                        mfg_date_str = None
-                    else:
-                        # This is a manufacturing date (past)
-                        exp_date_val = None
-                        # mfg_date_str remains as is
-                except (ValueError, AttributeError):
-                    mfg_date_str = None
-
-        # If only expiry date is present and it's more than 7 days in the past, treat it as MFG.
-        # If it's within the last 7 days (grace period), keep it as expiry.
-        if exp_date_val and not mfg_date_str and not exp_period_val:
-            try:
-                from datetime import timedelta
-                parsed_date = datetime.strptime(exp_date_val, '%d-%m-%Y')
-                seven_days_ago = current_date - timedelta(days=7)
-                if parsed_date < seven_days_ago:
-                    # Older than 7 days in the past — likely a manufacturing date
-                    mfg_date_str = exp_date_val
-                    exp_date_val = None
-                # else: within last 7 days or future — keep as expiry
-            except (ValueError, AttributeError):
-                pass
+        # NOTE: The NeoVLM model always places a single captured date in the expiry field.
+        # We do NOT reclassify a single date from MFG→expiry or expiry→MFG based on
+        # whether the date is in the past/future. That logic has been intentionally removed.
+        # Multicapture session merge handles the case where two dates arrive across captures.
 
         # Final validation: If both dates are present, ensure MFG < EXP
         if mfg_date_str and exp_date_val:

@@ -2253,6 +2253,7 @@ static const char __pyx_k_timestamp[] = "timestamp";
 static const char __pyx_k_sap_status[] = "sap_status";
 static const char __pyx_k_A_Q_q_a_q_1[] = "\200A\360\"\000\t\n\330\014\031\230\030\240\024\240Q\330\014\030\230\001\330\014\031\230\021\330\014\027\220q\330\014\026\220a\330\014\031\230\021\330\014\027\220q\330\014\023\2201";
 static const char __pyx_k_expiry_date[] = "expiry_date";
+static const char __pyx_k_final_expiry[] = "final_expiry";
 static const char __pyx_k_is_coroutine[] = "_is_coroutine";
 static const char __pyx_k_staticmethod[] = "staticmethod";
 static const char __pyx_k_expiry_period[] = "expiry_period";
@@ -2262,10 +2263,9 @@ static const char __pyx_k_MetadataProcessor[] = "MetadataProcessor";
 static const char __pyx_k_mfg_exp_dates_str[] = "mfg_exp_dates_str";
 static const char __pyx_k_asyncio_coroutines[] = "asyncio.coroutines";
 static const char __pyx_k_cline_in_traceback[] = "cline_in_traceback";
-static const char __pyx_k_final_expiry_value[] = "final_expiry_value";
 static const char __pyx_k_src_utils_metadata_processor[] = "src.utils.metadata_processor";
-static const char __pyx_k_AJ_AV3a_B_G1_q_c_2ERwa_14Gr_PQ[] = "\200A\360J\001\000\t\024\320\023$\240A\240V\2503\250a\320/B\300\"\300G\3101\330\010\026\320\026'\240q\250\006\250c\260\021\3202E\300R\300w\310a\330\010\030\320\030)\250\021\250&\260\003\2601\3204G\300r\310\027\320PQ\360\006\000\t\036\230_\250L\270\007\270z\310\021\340\010\t\330\014\023\2201\330\014\030\230\001\330\014\033\2301\330\014\030\230\001";
 static const char __pyx_k_src_utils_metadata_processor_py[] = "src/utils/metadata_processor.py";
+static const char __pyx_k_AJ_AV3a_B_G1_q_c_2ERwa_14Gr_PQ_l[] = "\200A\360J\001\000\t\024\320\023$\240A\240V\2503\250a\320/B\300\"\300G\3101\330\010\026\320\026'\240q\250\006\250c\260\021\3202E\300R\300w\310a\330\010\030\320\030)\250\021\250&\260\003\2601\3204G\300r\310\027\320PQ\360\n\000\t\030\220\240l\260'\270\032\3001\340\010\t\330\014\023\2201\330\014\030\230\001\330\014\033\2301\330\014\030\230\001";
 static const char __pyx_k_MetadataProcessor_create_env_dat[] = "MetadataProcessor.create_env_data";
 static const char __pyx_k_MetadataProcessor_create_metadat[] = "MetadataProcessor.create_metadata";
 /* #### Code section: decls ### */
@@ -2366,7 +2366,7 @@ static __pyx_mstatetype * const __pyx_mstate_global = &__pyx_mstate_global_stati
 #define __pyx_n_u_env_id __pyx_string_tab[13]
 #define __pyx_n_u_expiry_date __pyx_string_tab[14]
 #define __pyx_n_u_expiry_period __pyx_string_tab[15]
-#define __pyx_n_u_final_expiry_value __pyx_string_tab[16]
+#define __pyx_n_u_final_expiry __pyx_string_tab[16]
 #define __pyx_n_u_func __pyx_string_tab[17]
 #define __pyx_n_u_is_coroutine __pyx_string_tab[18]
 #define __pyx_n_u_main __pyx_string_tab[19]
@@ -2556,7 +2556,7 @@ static PyObject *__pyx_pf_3src_5utils_18metadata_processor_17MetadataProcessor_c
   PyObject *__pyx_v_mfg_date = NULL;
   PyObject *__pyx_v_expiry_date = NULL;
   PyObject *__pyx_v_expiry_period = NULL;
-  PyObject *__pyx_v_final_expiry_value = NULL;
+  PyObject *__pyx_v_final_expiry = NULL;
   PyObject *__pyx_r = NULL;
   __Pyx_RefNannyDeclarations
   PyObject *__pyx_t_1 = NULL;
@@ -2615,7 +2615,7 @@ static PyObject *__pyx_pf_3src_5utils_18metadata_processor_17MetadataProcessor_c
  *         expiry_date = mfg_exp_dates_str[1] if len(mfg_exp_dates_str) > 1 else None
  *         expiry_period = mfg_exp_dates_str[2] if len(mfg_exp_dates_str) > 2 else None             # <<<<<<<<<<<<<<
  * 
- *         # Determine which expiry value to use
+ *         # If a real computed date exists use it; otherwise fall back to the raw period
 */
   __pyx_t_2 = PyObject_Length(__pyx_v_mfg_exp_dates_str); if (unlikely(__pyx_t_2 == ((Py_ssize_t)-1))) __PYX_ERR(0, 42, __pyx_L1_error)
   __pyx_t_3 = (__pyx_t_2 > 2);
@@ -2631,10 +2631,10 @@ static PyObject *__pyx_pf_3src_5utils_18metadata_processor_17MetadataProcessor_c
   __pyx_v_expiry_period = __pyx_t_1;
   __pyx_t_1 = 0;
 
-  /* "src/utils/metadata_processor.py":45
- * 
- *         # Determine which expiry value to use
- *         final_expiry_value = expiry_date if expiry_date is not None else expiry_period             # <<<<<<<<<<<<<<
+  /* "src/utils/metadata_processor.py":47
+ *         # string (e.g. "36 months") so the client knows what was on the label.
+ *         # The DB save layer will NOT store a period string  only real dates go to MongoDB.
+ *         final_expiry = expiry_date if expiry_date is not None else expiry_period             # <<<<<<<<<<<<<<
  * 
  *         return {
 */
@@ -2646,11 +2646,11 @@ static PyObject *__pyx_pf_3src_5utils_18metadata_processor_17MetadataProcessor_c
     __Pyx_INCREF(__pyx_v_expiry_period);
     __pyx_t_1 = __pyx_v_expiry_period;
   }
-  __pyx_v_final_expiry_value = __pyx_t_1;
+  __pyx_v_final_expiry = __pyx_t_1;
   __pyx_t_1 = 0;
 
-  /* "src/utils/metadata_processor.py":47
- *         final_expiry_value = expiry_date if expiry_date is not None else expiry_period
+  /* "src/utils/metadata_processor.py":49
+ *         final_expiry = expiry_date if expiry_date is not None else expiry_period
  * 
  *         return {             # <<<<<<<<<<<<<<
  *             'mrp': mrp,
@@ -2658,43 +2658,43 @@ static PyObject *__pyx_pf_3src_5utils_18metadata_processor_17MetadataProcessor_c
 */
   __Pyx_XDECREF(__pyx_r);
 
-  /* "src/utils/metadata_processor.py":48
+  /* "src/utils/metadata_processor.py":50
  * 
  *         return {
  *             'mrp': mrp,             # <<<<<<<<<<<<<<
  *             'mfg_date': mfg_date,
- *             'expiry_date': final_expiry_value,  # This field will now hold either a date or a period
+ *             'expiry_date': final_expiry,  # computed date OR raw period string ("36 months")
 */
-  __pyx_t_1 = __Pyx_PyDict_NewPresized(4); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 48, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_PyDict_NewPresized(4); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 50, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
-  if (PyDict_SetItem(__pyx_t_1, __pyx_mstate_global->__pyx_n_u_mrp, __pyx_v_mrp) < 0) __PYX_ERR(0, 48, __pyx_L1_error)
+  if (PyDict_SetItem(__pyx_t_1, __pyx_mstate_global->__pyx_n_u_mrp, __pyx_v_mrp) < 0) __PYX_ERR(0, 50, __pyx_L1_error)
 
-  /* "src/utils/metadata_processor.py":49
+  /* "src/utils/metadata_processor.py":51
  *         return {
  *             'mrp': mrp,
  *             'mfg_date': mfg_date,             # <<<<<<<<<<<<<<
- *             'expiry_date': final_expiry_value,  # This field will now hold either a date or a period
+ *             'expiry_date': final_expiry,  # computed date OR raw period string ("36 months")
  *             'batch_no': batch_no,
 */
-  if (PyDict_SetItem(__pyx_t_1, __pyx_mstate_global->__pyx_n_u_mfg_date, __pyx_v_mfg_date) < 0) __PYX_ERR(0, 48, __pyx_L1_error)
+  if (PyDict_SetItem(__pyx_t_1, __pyx_mstate_global->__pyx_n_u_mfg_date, __pyx_v_mfg_date) < 0) __PYX_ERR(0, 50, __pyx_L1_error)
 
-  /* "src/utils/metadata_processor.py":50
+  /* "src/utils/metadata_processor.py":52
  *             'mrp': mrp,
  *             'mfg_date': mfg_date,
- *             'expiry_date': final_expiry_value,  # This field will now hold either a date or a period             # <<<<<<<<<<<<<<
+ *             'expiry_date': final_expiry,  # computed date OR raw period string ("36 months")             # <<<<<<<<<<<<<<
  *             'batch_no': batch_no,
  *         }
 */
-  if (PyDict_SetItem(__pyx_t_1, __pyx_mstate_global->__pyx_n_u_expiry_date, __pyx_v_final_expiry_value) < 0) __PYX_ERR(0, 48, __pyx_L1_error)
+  if (PyDict_SetItem(__pyx_t_1, __pyx_mstate_global->__pyx_n_u_expiry_date, __pyx_v_final_expiry) < 0) __PYX_ERR(0, 50, __pyx_L1_error)
 
-  /* "src/utils/metadata_processor.py":51
+  /* "src/utils/metadata_processor.py":53
  *             'mfg_date': mfg_date,
- *             'expiry_date': final_expiry_value,  # This field will now hold either a date or a period
+ *             'expiry_date': final_expiry,  # computed date OR raw period string ("36 months")
  *             'batch_no': batch_no,             # <<<<<<<<<<<<<<
  *         }
  * 
 */
-  if (PyDict_SetItem(__pyx_t_1, __pyx_mstate_global->__pyx_n_u_batch_no, __pyx_v_batch_no) < 0) __PYX_ERR(0, 48, __pyx_L1_error)
+  if (PyDict_SetItem(__pyx_t_1, __pyx_mstate_global->__pyx_n_u_batch_no, __pyx_v_batch_no) < 0) __PYX_ERR(0, 50, __pyx_L1_error)
   __pyx_r = __pyx_t_1;
   __pyx_t_1 = 0;
   goto __pyx_L0;
@@ -2717,13 +2717,13 @@ static PyObject *__pyx_pf_3src_5utils_18metadata_processor_17MetadataProcessor_c
   __Pyx_XDECREF(__pyx_v_mfg_date);
   __Pyx_XDECREF(__pyx_v_expiry_date);
   __Pyx_XDECREF(__pyx_v_expiry_period);
-  __Pyx_XDECREF(__pyx_v_final_expiry_value);
+  __Pyx_XDECREF(__pyx_v_final_expiry);
   __Pyx_XGIVEREF(__pyx_r);
   __Pyx_RefNannyFinishContext();
   return __pyx_r;
 }
 
-/* "src/utils/metadata_processor.py":54
+/* "src/utils/metadata_processor.py":56
  *         }
  * 
  *     @staticmethod             # <<<<<<<<<<<<<<
@@ -2774,44 +2774,44 @@ PyObject *__pyx_args, PyObject *__pyx_kwds
   {
     PyObject ** const __pyx_pyargnames[] = {&__pyx_mstate_global->__pyx_n_u_store_id,&__pyx_mstate_global->__pyx_n_u_device_id,&__pyx_mstate_global->__pyx_n_u_user_id,&__pyx_mstate_global->__pyx_n_u_env_id,0};
     const Py_ssize_t __pyx_kwds_len = (__pyx_kwds) ? __Pyx_NumKwargs_FASTCALL(__pyx_kwds) : 0;
-    if (unlikely(__pyx_kwds_len) < 0) __PYX_ERR(0, 54, __pyx_L3_error)
+    if (unlikely(__pyx_kwds_len) < 0) __PYX_ERR(0, 56, __pyx_L3_error)
     if (__pyx_kwds_len > 0) {
       switch (__pyx_nargs) {
         case  4:
         values[3] = __Pyx_ArgRef_FASTCALL(__pyx_args, 3);
-        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[3])) __PYX_ERR(0, 54, __pyx_L3_error)
+        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[3])) __PYX_ERR(0, 56, __pyx_L3_error)
         CYTHON_FALLTHROUGH;
         case  3:
         values[2] = __Pyx_ArgRef_FASTCALL(__pyx_args, 2);
-        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[2])) __PYX_ERR(0, 54, __pyx_L3_error)
+        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[2])) __PYX_ERR(0, 56, __pyx_L3_error)
         CYTHON_FALLTHROUGH;
         case  2:
         values[1] = __Pyx_ArgRef_FASTCALL(__pyx_args, 1);
-        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[1])) __PYX_ERR(0, 54, __pyx_L3_error)
+        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[1])) __PYX_ERR(0, 56, __pyx_L3_error)
         CYTHON_FALLTHROUGH;
         case  1:
         values[0] = __Pyx_ArgRef_FASTCALL(__pyx_args, 0);
-        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[0])) __PYX_ERR(0, 54, __pyx_L3_error)
+        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[0])) __PYX_ERR(0, 56, __pyx_L3_error)
         CYTHON_FALLTHROUGH;
         case  0: break;
         default: goto __pyx_L5_argtuple_error;
       }
       const Py_ssize_t kwd_pos_args = __pyx_nargs;
-      if (__Pyx_ParseKeywords(__pyx_kwds, __pyx_kwvalues, __pyx_pyargnames, 0, values, kwd_pos_args, __pyx_kwds_len, "create_env_data", 0) < 0) __PYX_ERR(0, 54, __pyx_L3_error)
+      if (__Pyx_ParseKeywords(__pyx_kwds, __pyx_kwvalues, __pyx_pyargnames, 0, values, kwd_pos_args, __pyx_kwds_len, "create_env_data", 0) < 0) __PYX_ERR(0, 56, __pyx_L3_error)
       for (Py_ssize_t i = __pyx_nargs; i < 4; i++) {
-        if (unlikely(!values[i])) { __Pyx_RaiseArgtupleInvalid("create_env_data", 1, 4, 4, i); __PYX_ERR(0, 54, __pyx_L3_error) }
+        if (unlikely(!values[i])) { __Pyx_RaiseArgtupleInvalid("create_env_data", 1, 4, 4, i); __PYX_ERR(0, 56, __pyx_L3_error) }
       }
     } else if (unlikely(__pyx_nargs != 4)) {
       goto __pyx_L5_argtuple_error;
     } else {
       values[0] = __Pyx_ArgRef_FASTCALL(__pyx_args, 0);
-      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[0])) __PYX_ERR(0, 54, __pyx_L3_error)
+      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[0])) __PYX_ERR(0, 56, __pyx_L3_error)
       values[1] = __Pyx_ArgRef_FASTCALL(__pyx_args, 1);
-      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[1])) __PYX_ERR(0, 54, __pyx_L3_error)
+      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[1])) __PYX_ERR(0, 56, __pyx_L3_error)
       values[2] = __Pyx_ArgRef_FASTCALL(__pyx_args, 2);
-      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[2])) __PYX_ERR(0, 54, __pyx_L3_error)
+      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[2])) __PYX_ERR(0, 56, __pyx_L3_error)
       values[3] = __Pyx_ArgRef_FASTCALL(__pyx_args, 3);
-      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[3])) __PYX_ERR(0, 54, __pyx_L3_error)
+      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[3])) __PYX_ERR(0, 56, __pyx_L3_error)
     }
     __pyx_v_store_id = values[0];
     __pyx_v_device_id = values[1];
@@ -2820,7 +2820,7 @@ PyObject *__pyx_args, PyObject *__pyx_kwds
   }
   goto __pyx_L6_skip;
   __pyx_L5_argtuple_error:;
-  __Pyx_RaiseArgtupleInvalid("create_env_data", 1, 4, 4, __pyx_nargs); __PYX_ERR(0, 54, __pyx_L3_error)
+  __Pyx_RaiseArgtupleInvalid("create_env_data", 1, 4, 4, __pyx_nargs); __PYX_ERR(0, 56, __pyx_L3_error)
   __pyx_L6_skip:;
   goto __pyx_L4_argument_unpacking_done;
   __pyx_L3_error:;
@@ -2855,7 +2855,7 @@ static PyObject *__pyx_pf_3src_5utils_18metadata_processor_17MetadataProcessor_2
   int __pyx_clineno = 0;
   __Pyx_RefNannySetupContext("create_env_data", 0);
 
-  /* "src/utils/metadata_processor.py":71
+  /* "src/utils/metadata_processor.py":73
  *             dict: Environment data dictionary with processed information.
  *         """
  *         return {             # <<<<<<<<<<<<<<
@@ -2864,19 +2864,19 @@ static PyObject *__pyx_pf_3src_5utils_18metadata_processor_17MetadataProcessor_2
 */
   __Pyx_XDECREF(__pyx_r);
 
-  /* "src/utils/metadata_processor.py":72
+  /* "src/utils/metadata_processor.py":74
  *         """
  *         return {
  *             'timestamp': datetime.now(),             # <<<<<<<<<<<<<<
  *             'store_id': store_id,
  *             'device_id': device_id,
 */
-  __pyx_t_1 = __Pyx_PyDict_NewPresized(8); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 72, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_PyDict_NewPresized(8); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 74, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __pyx_t_3 = NULL;
-  __Pyx_GetModuleGlobalName(__pyx_t_4, __pyx_mstate_global->__pyx_n_u_datetime); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 72, __pyx_L1_error)
+  __Pyx_GetModuleGlobalName(__pyx_t_4, __pyx_mstate_global->__pyx_n_u_datetime); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 74, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_4);
-  __pyx_t_5 = __Pyx_PyObject_GetAttrStr(__pyx_t_4, __pyx_mstate_global->__pyx_n_u_now); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 72, __pyx_L1_error)
+  __pyx_t_5 = __Pyx_PyObject_GetAttrStr(__pyx_t_4, __pyx_mstate_global->__pyx_n_u_now); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 74, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_5);
   __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
   __pyx_t_6 = 1;
@@ -2896,71 +2896,71 @@ static PyObject *__pyx_pf_3src_5utils_18metadata_processor_17MetadataProcessor_2
     __pyx_t_2 = __Pyx_PyObject_FastCall(__pyx_t_5, __pyx_callargs+__pyx_t_6, (1-__pyx_t_6) | (__pyx_t_6*__Pyx_PY_VECTORCALL_ARGUMENTS_OFFSET));
     __Pyx_XDECREF(__pyx_t_3); __pyx_t_3 = 0;
     __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
-    if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 72, __pyx_L1_error)
+    if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 74, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_2);
   }
-  if (PyDict_SetItem(__pyx_t_1, __pyx_mstate_global->__pyx_n_u_timestamp, __pyx_t_2) < 0) __PYX_ERR(0, 72, __pyx_L1_error)
+  if (PyDict_SetItem(__pyx_t_1, __pyx_mstate_global->__pyx_n_u_timestamp, __pyx_t_2) < 0) __PYX_ERR(0, 74, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
 
-  /* "src/utils/metadata_processor.py":73
+  /* "src/utils/metadata_processor.py":75
  *         return {
  *             'timestamp': datetime.now(),
  *             'store_id': store_id,             # <<<<<<<<<<<<<<
  *             'device_id': device_id,
  *             'user_id': user_id,
 */
-  if (PyDict_SetItem(__pyx_t_1, __pyx_mstate_global->__pyx_n_u_store_id, __pyx_v_store_id) < 0) __PYX_ERR(0, 72, __pyx_L1_error)
+  if (PyDict_SetItem(__pyx_t_1, __pyx_mstate_global->__pyx_n_u_store_id, __pyx_v_store_id) < 0) __PYX_ERR(0, 74, __pyx_L1_error)
 
-  /* "src/utils/metadata_processor.py":74
+  /* "src/utils/metadata_processor.py":76
  *             'timestamp': datetime.now(),
  *             'store_id': store_id,
  *             'device_id': device_id,             # <<<<<<<<<<<<<<
  *             'user_id': user_id,
  *             'env_id': env_id,
 */
-  if (PyDict_SetItem(__pyx_t_1, __pyx_mstate_global->__pyx_n_u_device_id, __pyx_v_device_id) < 0) __PYX_ERR(0, 72, __pyx_L1_error)
+  if (PyDict_SetItem(__pyx_t_1, __pyx_mstate_global->__pyx_n_u_device_id, __pyx_v_device_id) < 0) __PYX_ERR(0, 74, __pyx_L1_error)
 
-  /* "src/utils/metadata_processor.py":75
+  /* "src/utils/metadata_processor.py":77
  *             'store_id': store_id,
  *             'device_id': device_id,
  *             'user_id': user_id,             # <<<<<<<<<<<<<<
  *             'env_id': env_id,
  *             'sap_status':False,
 */
-  if (PyDict_SetItem(__pyx_t_1, __pyx_mstate_global->__pyx_n_u_user_id, __pyx_v_user_id) < 0) __PYX_ERR(0, 72, __pyx_L1_error)
+  if (PyDict_SetItem(__pyx_t_1, __pyx_mstate_global->__pyx_n_u_user_id, __pyx_v_user_id) < 0) __PYX_ERR(0, 74, __pyx_L1_error)
 
-  /* "src/utils/metadata_processor.py":76
+  /* "src/utils/metadata_processor.py":78
  *             'device_id': device_id,
  *             'user_id': user_id,
  *             'env_id': env_id,             # <<<<<<<<<<<<<<
  *             'sap_status':False,
  *             'present': True,
 */
-  if (PyDict_SetItem(__pyx_t_1, __pyx_mstate_global->__pyx_n_u_env_id, __pyx_v_env_id) < 0) __PYX_ERR(0, 72, __pyx_L1_error)
+  if (PyDict_SetItem(__pyx_t_1, __pyx_mstate_global->__pyx_n_u_env_id, __pyx_v_env_id) < 0) __PYX_ERR(0, 74, __pyx_L1_error)
 
-  /* "src/utils/metadata_processor.py":77
+  /* "src/utils/metadata_processor.py":79
  *             'user_id': user_id,
  *             'env_id': env_id,
  *             'sap_status':False,             # <<<<<<<<<<<<<<
  *             'present': True,
  *             '__v': 1
 */
-  if (PyDict_SetItem(__pyx_t_1, __pyx_mstate_global->__pyx_n_u_sap_status, Py_False) < 0) __PYX_ERR(0, 72, __pyx_L1_error)
+  if (PyDict_SetItem(__pyx_t_1, __pyx_mstate_global->__pyx_n_u_sap_status, Py_False) < 0) __PYX_ERR(0, 74, __pyx_L1_error)
 
-  /* "src/utils/metadata_processor.py":78
+  /* "src/utils/metadata_processor.py":80
  *             'env_id': env_id,
  *             'sap_status':False,
  *             'present': True,             # <<<<<<<<<<<<<<
  *             '__v': 1
  *         }
 */
-  if (PyDict_SetItem(__pyx_t_1, __pyx_mstate_global->__pyx_n_u_present, Py_True) < 0) __PYX_ERR(0, 72, __pyx_L1_error)
-  if (PyDict_SetItem(__pyx_t_1, __pyx_mstate_global->__pyx_n_u_v, __pyx_mstate_global->__pyx_int_1) < 0) __PYX_ERR(0, 72, __pyx_L1_error)
+  if (PyDict_SetItem(__pyx_t_1, __pyx_mstate_global->__pyx_n_u_present, Py_True) < 0) __PYX_ERR(0, 74, __pyx_L1_error)
+  if (PyDict_SetItem(__pyx_t_1, __pyx_mstate_global->__pyx_n_u_v, __pyx_mstate_global->__pyx_int_1) < 0) __PYX_ERR(0, 74, __pyx_L1_error)
   __pyx_r = __pyx_t_1;
   __pyx_t_1 = 0;
   goto __pyx_L0;
 
-  /* "src/utils/metadata_processor.py":54
+  /* "src/utils/metadata_processor.py":56
  *         }
  * 
  *     @staticmethod             # <<<<<<<<<<<<<<
@@ -3402,7 +3402,7 @@ __Pyx_RefNannySetupContext("PyInit_metadata_processor", 0);
   if (__Pyx_SetNameInClass(__pyx_t_3, __pyx_mstate_global->__pyx_n_u_create_metadata, __pyx_t_2) < 0) __PYX_ERR(0, 3, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
 
-  /* "src/utils/metadata_processor.py":54
+  /* "src/utils/metadata_processor.py":56
  *         }
  * 
  *     @staticmethod             # <<<<<<<<<<<<<<
@@ -3412,7 +3412,7 @@ __Pyx_RefNannySetupContext("PyInit_metadata_processor", 0);
   __pyx_t_5 = NULL;
   __Pyx_INCREF(__pyx_builtin_staticmethod);
   __pyx_t_6 = __pyx_builtin_staticmethod; 
-  __pyx_t_4 = __Pyx_CyFunction_New(&__pyx_mdef_3src_5utils_18metadata_processor_17MetadataProcessor_3create_env_data, __Pyx_CYFUNCTION_STATICMETHOD, __pyx_mstate_global->__pyx_n_u_MetadataProcessor_create_env_dat, NULL, __pyx_mstate_global->__pyx_n_u_src_utils_metadata_processor, __pyx_mstate_global->__pyx_d, ((PyObject *)__pyx_mstate_global->__pyx_codeobj_tab[1])); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 54, __pyx_L1_error)
+  __pyx_t_4 = __Pyx_CyFunction_New(&__pyx_mdef_3src_5utils_18metadata_processor_17MetadataProcessor_3create_env_data, __Pyx_CYFUNCTION_STATICMETHOD, __pyx_mstate_global->__pyx_n_u_MetadataProcessor_create_env_dat, NULL, __pyx_mstate_global->__pyx_n_u_src_utils_metadata_processor, __pyx_mstate_global->__pyx_d, ((PyObject *)__pyx_mstate_global->__pyx_codeobj_tab[1])); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 56, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_4);
   __pyx_t_7 = 1;
   {
@@ -3421,10 +3421,10 @@ __Pyx_RefNannySetupContext("PyInit_metadata_processor", 0);
     __Pyx_XDECREF(__pyx_t_5); __pyx_t_5 = 0;
     __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
     __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
-    if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 54, __pyx_L1_error)
+    if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 56, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_2);
   }
-  if (__Pyx_SetNameInClass(__pyx_t_3, __pyx_mstate_global->__pyx_n_u_create_env_data, __pyx_t_2) < 0) __PYX_ERR(0, 54, __pyx_L1_error)
+  if (__Pyx_SetNameInClass(__pyx_t_3, __pyx_mstate_global->__pyx_n_u_create_env_data, __pyx_t_2) < 0) __PYX_ERR(0, 56, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
 
   /* "src/utils/metadata_processor.py":2
@@ -3527,7 +3527,7 @@ static const __Pyx_StringTabEntry __pyx_string_tab[] = {
   {__pyx_k_env_id, sizeof(__pyx_k_env_id), 0, 1, 1}, /* PyObject cname: __pyx_n_u_env_id */
   {__pyx_k_expiry_date, sizeof(__pyx_k_expiry_date), 0, 1, 1}, /* PyObject cname: __pyx_n_u_expiry_date */
   {__pyx_k_expiry_period, sizeof(__pyx_k_expiry_period), 0, 1, 1}, /* PyObject cname: __pyx_n_u_expiry_period */
-  {__pyx_k_final_expiry_value, sizeof(__pyx_k_final_expiry_value), 0, 1, 1}, /* PyObject cname: __pyx_n_u_final_expiry_value */
+  {__pyx_k_final_expiry, sizeof(__pyx_k_final_expiry), 0, 1, 1}, /* PyObject cname: __pyx_n_u_final_expiry */
   {__pyx_k_func, sizeof(__pyx_k_func), 0, 1, 1}, /* PyObject cname: __pyx_n_u_func */
   {__pyx_k_is_coroutine, sizeof(__pyx_k_is_coroutine), 0, 1, 1}, /* PyObject cname: __pyx_n_u_is_coroutine */
   {__pyx_k_main, sizeof(__pyx_k_main), 0, 1, 1}, /* PyObject cname: __pyx_n_u_main */
@@ -3614,11 +3614,11 @@ static int __Pyx_CreateCodeObjects(__pyx_mstatetype *__pyx_mstate) {
   if (unlikely(!tuple_dedup_map)) return -1;
   {
     const __Pyx_PyCode_New_function_description descr = {3, 0, 0, 7, (unsigned int)(CO_OPTIMIZED|CO_NEWLOCALS), 3, 113};
-    PyObject* const varnames[] = {__pyx_mstate->__pyx_n_u_mrp, __pyx_mstate->__pyx_n_u_mfg_exp_dates_str, __pyx_mstate->__pyx_n_u_batch_no, __pyx_mstate->__pyx_n_u_mfg_date, __pyx_mstate->__pyx_n_u_expiry_date, __pyx_mstate->__pyx_n_u_expiry_period, __pyx_mstate->__pyx_n_u_final_expiry_value};
-    __pyx_mstate_global->__pyx_codeobj_tab[0] = __Pyx_PyCode_New(descr, varnames, __pyx_mstate->__pyx_kp_u_src_utils_metadata_processor_py, __pyx_mstate->__pyx_n_u_create_metadata, __pyx_k_AJ_AV3a_B_G1_q_c_2ERwa_14Gr_PQ, tuple_dedup_map); if (unlikely(!__pyx_mstate_global->__pyx_codeobj_tab[0])) goto bad;
+    PyObject* const varnames[] = {__pyx_mstate->__pyx_n_u_mrp, __pyx_mstate->__pyx_n_u_mfg_exp_dates_str, __pyx_mstate->__pyx_n_u_batch_no, __pyx_mstate->__pyx_n_u_mfg_date, __pyx_mstate->__pyx_n_u_expiry_date, __pyx_mstate->__pyx_n_u_expiry_period, __pyx_mstate->__pyx_n_u_final_expiry};
+    __pyx_mstate_global->__pyx_codeobj_tab[0] = __Pyx_PyCode_New(descr, varnames, __pyx_mstate->__pyx_kp_u_src_utils_metadata_processor_py, __pyx_mstate->__pyx_n_u_create_metadata, __pyx_k_AJ_AV3a_B_G1_q_c_2ERwa_14Gr_PQ_l, tuple_dedup_map); if (unlikely(!__pyx_mstate_global->__pyx_codeobj_tab[0])) goto bad;
   }
   {
-    const __Pyx_PyCode_New_function_description descr = {4, 0, 0, 4, (unsigned int)(CO_OPTIMIZED|CO_NEWLOCALS), 54, 51};
+    const __Pyx_PyCode_New_function_description descr = {4, 0, 0, 4, (unsigned int)(CO_OPTIMIZED|CO_NEWLOCALS), 56, 51};
     PyObject* const varnames[] = {__pyx_mstate->__pyx_n_u_store_id, __pyx_mstate->__pyx_n_u_device_id, __pyx_mstate->__pyx_n_u_user_id, __pyx_mstate->__pyx_n_u_env_id};
     __pyx_mstate_global->__pyx_codeobj_tab[1] = __Pyx_PyCode_New(descr, varnames, __pyx_mstate->__pyx_kp_u_src_utils_metadata_processor_py, __pyx_mstate->__pyx_n_u_create_env_data, __pyx_k_A_Q_q_a_q_1, tuple_dedup_map); if (unlikely(!__pyx_mstate_global->__pyx_codeobj_tab[1])) goto bad;
   }
